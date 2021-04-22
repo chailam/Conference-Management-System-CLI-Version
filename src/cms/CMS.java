@@ -39,4 +39,9 @@ public class CMS {
         UserInterface ui = new UserInterface();
 
     }
+
+    public void verifyInput(){
+        // TODO: To be implemented
+
+    }
 }
