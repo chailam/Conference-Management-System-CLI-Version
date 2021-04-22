@@ -9,7 +9,7 @@ import cms.*;
 import java.util.*;
 
 
-public class CMS {
+public class CMSController {
     public ArrayList<String> availableTopicAreas = new ArrayList<String>(){
         {
             add("Artificial Intelligence");
@@ -24,12 +24,8 @@ public class CMS {
             add("Database & Information Systems");
         }
     };
-
-    private ArrayList<User> userList = new ArrayList<User>();
-    private ArrayList<Paper> paperList= new ArrayList<Paper>();
-    private ArrayList<Conference> conferenceList = new ArrayList<Conference>();
     
-    public CMS(){
+    public CMSController(){
         /**
          * Constructor for the CMS controller class.
          * 
