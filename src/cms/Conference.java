@@ -26,12 +26,12 @@ public class Conference {
      * @param submissionDue is the paper submission due date of the conference
      * @param reviewDue is the paper review due date of the conference
      **/
-        name = this.name;
-        place = this.place;
-        topic = this.chosenTopicAreas;
-        date = this.date;
-        submissionDue = this.paperSubmissionDueDate;
-        reviewDue = this.paperReviewDueDate;
+        this.name = name;
+        this.place = place;
+        this.chosenTopicAreas = topic;
+        this.date = date;
+        this.paperSubmissionDueDate = submissionDue;
+        this.paperReviewDueDate = reviewDue;
     }
 
     public String getName(){
@@ -139,5 +139,11 @@ public class Conference {
      * @param 	the paper review due date of the conference
      **/
        this.paperReviewDueDate = date;
+    }
+
+    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
+    @Override
+    public String toString(){
+        return String.format("name: " + getName() + ", topic: " + retrieveChosenTopicAreas() + ", submit due: " + getPaperSubmissionDue() + ", review due: " + getPaperReviewDue());
     }
 }

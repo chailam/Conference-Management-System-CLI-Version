@@ -28,4 +28,20 @@ public class User {
      **/
         return this.emailAddress;
     }
+
+
+    public String getPassword(){
+    /**
+     * Getter for Password
+     * @return 	the Password of the user. 
+     **/
+        return this.password;
+    }
+
+
+    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
+    @Override
+    public String toString(){
+        return String.format("emailAddress: " + getEmail()+ ", password: " + getPassword());
+    }
 }

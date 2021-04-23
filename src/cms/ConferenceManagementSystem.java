@@ -8,17 +8,15 @@ package cms;
 import cms.*;
 import java.util.*;
 
+
 public class ConferenceManagementSystem {
     private ArrayList<User> userList = new ArrayList<User>();
     private ArrayList<Paper> paperList= new ArrayList<Paper>();
     private ArrayList<Conference> conferenceList = new ArrayList<Conference>();
 
     public ConferenceManagementSystem(){
-        /**
-         * Constructor for the ConferenceManagementSystem class.
-         * 
-         **/
     }
+
 
 
     public void addUser(User u){
@@ -120,28 +118,27 @@ public class ConferenceManagementSystem {
     }
 
 
-    public void printUser(){
-    //TODO: to be implemented! should it be here? or in controller?
+    public ArrayList<User> retrieveUserList(){
     /**
-     * To print the list of users 
+     * @return a list of user
      */
+        return userList;
     }
 
 
-    public void printPaper(){
-    //TODO: to be implemented! should it be here? or in controller?
+    public ArrayList<Paper> retrievePaperList(){
     /**
-     * To print the list of papers 
+     * @return a list of paper
      */
+        return paperList;
     }
 
 
-    public void printConference(){
-    //TODO: to be implemented! should it be here? or in controller?
+    public ArrayList<Conference> retrieveConferenceList(){
     /**
-     * To print the list of conferences 
+     * @return a list of conference
      */
-
+        return conferenceList;
     }
 
 }

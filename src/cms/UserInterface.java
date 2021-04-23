@@ -9,8 +9,16 @@ import java.util.Scanner;
 
 
 public class UserInterface {
-    String [] header = {"DISPLAY HEADER IMAGE HERE"};
-    String [] footer = {"DISPLAY FOOTER IMAGE HERE"};
+    String [] header = {"*****************************************************",
+                        "                                                     ",
+                        "         Conference Management System (CMS)          ",
+                        "                                                     ",
+                        "*****************************************************"};
+
+    String [] footer = {"*****************************************************",
+                        "            powered by Monash Conference Centre (MCC)",
+                        "*****************************************************"};
+
     private Scanner instream;
 
     public UserInterface(){
@@ -22,7 +30,17 @@ public class UserInterface {
     /**
      * To print the conststent header of the system
      */
-        System.out.println(header);
+        for(String line: header) {
+            System.out.println(line);
+        }
+    }
+
+    public void displayGreeting (String name){
+    /**
+     * To greet the user
+     * @param the name of user to be greet
+     */
+        System.out.println("Hi "+ name);
     }
 
 
@@ -30,8 +48,12 @@ public class UserInterface {
     /**
      * To print the conststent footer of the system
      */
-        System.out.println(footer);
+        for(String line: footer) {
+            System.out.println(line);
+        }
     }
+
+
 
 
     public void getUserSelection (){

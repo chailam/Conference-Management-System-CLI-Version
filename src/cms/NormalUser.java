@@ -16,11 +16,11 @@ public class NormalUser extends User {
     private String highestQualification;
     private String occupation;
     private String employerDetail;
-    private int mobileNumber;
+    private String mobileNumber;
     private ArrayList<String> notification = new ArrayList<String>();
-    private Conference conference;
+    private String conferenceName;
 
-    public NormalUser(String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, int mobileNumber){
+    public NormalUser(String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber){
     /**
      * Constructor for the NormalUser class. 
      * @param emailAddress is the email address of that user to login the account
@@ -41,13 +41,27 @@ public class NormalUser extends User {
         this.mobileNumber = mobileNumber;
     }
 
-    public NormalUser(String emailAddress, String password){
+    public NormalUser(String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conferenceName){
     /**
      * Constructor for the NormalUser class. 
      * @param emailAddress is the email address of that user to login the account
      * @param password is the hashed password of that user
+     * @param firstName is the first name of that user
+     * @param lastName is the last name of that user
+     * @param highestQualification is the highest qualification of that user
+     * @param occupation is the occupation of that user
+     * @param employerDetail is the employer detail provided
+     * @param mobileNumber is the mobile number of that user
+     * @param conference of the user attended
     **/
         super(emailAddress, password);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.highestQualification = highestQualification;
+        this.occupation = occupation;
+        this.employerDetail = employerDetail;
+        this.mobileNumber = mobileNumber;
+        this.conferenceName = conferenceName;
     }
 
     public String getFirstName(){
@@ -104,7 +118,7 @@ public class NormalUser extends User {
     }
 
             
-    public int getMobileNumber(){
+    public String getMobileNumber(){
     /**
      * Getter for mobile number
      * @return 	the mobile number of the user 
@@ -113,12 +127,12 @@ public class NormalUser extends User {
     }
 
             
-    public Conference getConference(){
+    public String getConferenceName(){
     /**
      * Getter for conference
      * @return 	the conference of the user 
      **/
-        return this.conference;
+        return this.conferenceName;
     }
 
             
@@ -136,7 +150,7 @@ public class NormalUser extends User {
      * Setter for first name
      * @param the first name of the user 
      **/
-        firstName = this.firstName;
+        this.firstName = firstName;
     }
 
     public void setLastName(String lastName){
@@ -144,7 +158,7 @@ public class NormalUser extends User {
      * Setter for last name
      * @param the last name of the user 
      **/
-        lastName = this.lastName;
+        this.lastName = lastName;
     }
 
     public void setHighestQualification(String highestQualification){
@@ -152,7 +166,7 @@ public class NormalUser extends User {
      * Setter for highest qualification
      * @param the highest qualification of the user 
      **/
-        highestQualification = this.highestQualification;
+        this.highestQualification = highestQualification;
     }
             
     public void setOccupation(String occupation){
@@ -160,7 +174,7 @@ public class NormalUser extends User {
      * Setter for occupation
      * @param the occupation of the user
      **/
-        occupation = this.occupation;
+        this.occupation = occupation;
     }
 
             
@@ -169,25 +183,25 @@ public class NormalUser extends User {
      * Setter for employer detail
      * @param the employer detail of the user 
      **/
-        employerDetail = this.employerDetail;
+        this.employerDetail = employerDetail;
     }
 
             
-    public void setMobileNumber(int mobileNumber){
+    public void setMobileNumber(String mobileNumber){
     /**
      * Setter for mobile number
      * @param the mobile number of the user 
      **/
-        mobileNumber = this.mobileNumber;
+        this.mobileNumber = mobileNumber;
     }
 
             
-    public void setConference(Conference conference){
+    public void setConference(String conferenceName){
     /**
      * Setter for conference
      * @param the conference of the user 
      **/
-        conference = this.conference;
+        this.conferenceName = conferenceName;
     }
 
             
@@ -197,11 +211,12 @@ public class NormalUser extends User {
      * @param 	the notification to be added to the list
      **/
         this.notification.add(notification);
+    }  
+
+
+    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
+    @Override
+    public String toString(){
+        return String.format("emailAddress: " + getEmail() + ", password: " + getPassword() + ", firstName: " + getFirstName() + ", conferenceName: " + getConferenceName());
     }
-        
-    
-
-
-
-    
 }

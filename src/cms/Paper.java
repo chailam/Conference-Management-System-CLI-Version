@@ -15,20 +15,11 @@ public class Paper {
     private String content;
     private int noOfReviewer;
     private ArrayList<String> evaluation = new ArrayList<String>();
-    private Conference conference;
+    private String conferenceName;
     private ArrayList<String> chosenTopicAreas= new ArrayList<String>();
-    public ArrayList<String> availableProgressStatus = new ArrayList<String>(){
-        {
-            add("Review Due");
-            add("Being Reviewed");
-            add("Reviewed");
-            add("Rejected");
-            add("Accepted");
-        }
-    };
     private String currentProgressStatus;
 
-    public Paper(String title, String author, Conference conference, ArrayList<String> topic){
+    public Paper(String title, String author, String conferenceName, ArrayList<String> topic){
     /**
 	 * Constructor for the Paper.
      * @param name is the name of the paper
@@ -36,12 +27,35 @@ public class Paper {
      * @param conference is the conference where the paper submitted
      * @param topic is the topic areas of the paper
      **/
-        title = this.title;
-        author = this.author;
-        conference = this.conference;
-        topic = this.chosenTopicAreas;
+        this.title = title;
+        this.author = author;
+        this.conferenceName = conferenceName;
+        this.chosenTopicAreas = topic;
         this.currentProgressStatus = "Being Reviewed";
     }
+
+
+    public Paper(String title, String author, String content, int noOfReviewer, ArrayList<String> evaluation, String conferenceName, ArrayList<String> topic, String progress){
+        /**
+         * Constructor for the Paper.
+         * @param name is the name of the paper
+         * @param author is the author of the paper in full name
+         * @param content of the paper
+         * @param noOfReviewer assigned to this paper
+         * @param evaluation submitted
+         * @param conference is the conference where the paper submitted
+         * @param topic is the topic areas of the paper
+         * @param the progress of current paper
+         **/
+            this.title = title;
+            this.author = author;
+            this.content = content;
+            this.noOfReviewer = noOfReviewer;
+            this.evaluation = evaluation;
+            this.conferenceName = conferenceName;
+            this.chosenTopicAreas = topic;
+            this.currentProgressStatus = progress;
+        }
 
 
     public String getTitle(){
@@ -62,12 +76,12 @@ public class Paper {
     }
 
 
-    public Conference getConference(){
+    public String getConferenceName(){
     /**
      * Getter for conference where the paper submitted
-     * @return 	the conference where the paper submitted
+     * @return 	the conference name where the paper submitted
      **/
-        return this.conference;
+        return this.conferenceName;
     }
 
 
@@ -98,6 +112,15 @@ public class Paper {
     }
 
 
+    public ArrayList<String> retrieveEvaluation(){
+    /**
+     * Retrieve the evaluation
+     * @return 	the evaluation
+     **/
+        return this.evaluation;
+    }
+
+
     public ArrayList<String> retrieveTopicAreas(){
     /**
      * Retrieve the chosen topic areas
@@ -112,7 +135,7 @@ public class Paper {
      * Setter for title of the paper
      * @param 	the title of the paper
      **/
-        title = this.title;
+        this.title = title;
     }
 
 
@@ -121,16 +144,16 @@ public class Paper {
      * Setter for author of the paper in full name
      * @param 	the  author of the paper in full name
      **/
-        author = this.author;
+        this.author = author;
     }
 
 
-    public void setConference(Conference c){
+    public void setConference(String cName){
     /**
      * Setter for conference where the paper submitted
-     * @param 	the conference where the paper submitted
+     * @param 	the conference name where the paper submitted
      **/
-        c = this.conference;
+        this.conferenceName = cName;
     }
 
 
@@ -139,7 +162,7 @@ public class Paper {
      * Setter for content of the paper
      * @param 	the content of the paper
      **/
-        content = this.content;
+        this.content = content;
     }
 
 
@@ -148,7 +171,7 @@ public class Paper {
      * Setter for the number of reviewer of paper
      * @param 	the number of reviewer of paper
      **/
-        number = this.noOfReviewer;
+        this.noOfReviewer = number;
     }
 
 
@@ -157,7 +180,7 @@ public class Paper {
      * Setter for current progress of paper
      * @param 	the current progress of paper
      **/
-        progress = this.currentProgressStatus;
+        this.currentProgressStatus = progress;
     }
 
 
@@ -168,5 +191,22 @@ public class Paper {
      **/
         this.chosenTopicAreas.add(topic);
     }
+
+
+    public void addEvaluation(String eva){
+    /**
+     * Retrieve the evaluation
+     * @param 	the evaluation
+     **/
+        this.evaluation.add(eva);
+    }
     
+
+
+
+    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
+    @Override
+    public String toString(){
+        return String.format("title: " + getTitle() + ", author: " + getAuthor() + ", content : " + getContent() + ", no of reviewer: " + getNoOfReviewer() + ", evaluation: " + retrieveEvaluation() + ", topic: " + retrieveTopicAreas() + ", conference: " + getConferenceName() + ", progress: " + getProgressStatus());
+    }
 }

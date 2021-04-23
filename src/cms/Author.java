@@ -10,18 +10,9 @@ import java.util.*;
 
 
 public class Author extends NormalUser {
-    private ArrayList<Paper> paper = new ArrayList<Paper>();
+    private ArrayList<String> paper = new ArrayList<String>();
 
-    // The available option for Author
-    public ArrayList <String> availableOption = new ArrayList<String>(){
-        {
-            add("Submit Paper");
-            add("Paper Review Result");
-            add("Conference Information");
-        }
-    };
-
-    public Author (String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, int mobileNumber){
+    public Author (String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conferenceName){
         /**
          * Constructor for the Auhor class. 
          * @param emailAddress is the email address of that user to login the account
@@ -32,33 +23,42 @@ public class Author extends NormalUser {
          * @param occupation is the occupation of that user
          * @param employerDetail is the employer detail provided
          * @param mobileNumber is the mobile number of that user
+         * @param the conference of the author attended
         **/
-        super(emailAddress, password, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber);
+        super(emailAddress, password, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber,conferenceName);
     }
     
-    public Author (String emailAddress, String password) {
-        /**
-         * Constructor for the Author class.
-         * 
-         * @param emailAddress is the email address of that user to login the account
-         * @param password     is the hashed password of that user
-         **/
-        super(emailAddress, password);
-    }
 
-    public Paper submitPaper(String title, String author, Conference conf, ArrayList<String> topic){
+
+    public void addPaper(String pName){
         /**
-         * Author's method to submit paper in the system.
-         * @param name is the name of the paper
-         * @param author is the author of the paper in full name
-         * @param conference is the conference where the paper submitted
-         * @param topic is the topic areas of the paper
+         * Add paper name to the paper list
+         * @param name of the paper to be added
          */
-        Paper p = new Paper (title, author, conf, topic);
-        return p;
+        this.paper.add(pName);
     }
 
-    public void viewProgressStatus (){
-        // TODO : see whether need to implement this as it is not in the requirements!!!!
+    public ArrayList<String> retrievePaper(){
+        /**
+         * Retrieve a list of paper name
+         * @return a list of paper name the author submitted
+         */
+        return this.paper;
+    }
+
+
+    public  void setPaper(ArrayList<String> papers){
+        /**
+         * Set the paper list
+         * @return a list of paper name
+         */
+        this.paper = papers;
+    }
+
+
+    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
+    @Override
+    public String toString(){
+        return String.format("emailAddress: " + getEmail() + ", password: " + getPassword() + ", firstName: " + getFirstName() + ", conferenceName: " + getConferenceName() + ", paperlist: " + retrievePaper());
     }
 }
