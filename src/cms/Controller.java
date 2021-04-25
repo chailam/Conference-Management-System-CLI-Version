@@ -11,8 +11,13 @@ public abstract class Controller {
     //Instantiate utility class
     protected Utility ut = new Utility();
 
+    // Define the path to NormalUser.csv, Conference.csv, and Paper.csv
+    protected String pathNormalUserCSV = "src/resource/NormalUser.csv";
+    protected String pathConferenceCSV = "src/resource/Conference.csv";
+    protected String pathPaperCSV = "src/resource/Paper.csv";
 
-    protected User createUserEntity (String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, ArrayList<String>topicAreas, ArrayList<String>paper){
+
+    protected User createUserEntity (String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, ArrayList<String> topicAreas, ArrayList<String>paper){
         /**
          * To create the User entity 
          * @param all the user data 

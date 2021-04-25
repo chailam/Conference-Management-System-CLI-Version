@@ -72,7 +72,7 @@ public class Reviewer extends NormalUser{
      **/
         this.assignedPaper = papers;
     }
-
+    
 
     //TODO: delete it when submit assignment, this is for developer debug purpose!!!
     @Override

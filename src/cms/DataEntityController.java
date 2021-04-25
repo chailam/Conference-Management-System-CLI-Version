@@ -15,20 +15,6 @@ import java.text.SimpleDateFormat;
 
 public class DataEntityController extends Controller {
 
-    // Define the path to NormalUser.csv, Conference.csv, and Paper.csv
-    private String pathNormalUserCSV = "../resource/NormalUser.csv";
-    private String pathConferenceCSV = "../resource/Conference.csv";
-    private String pathPaperCSV = "../resource/Paper.csv";
-
-
-    public DataEntityController(){
-    /**
-     * The contructor to initialize the ConferenceManagementSystem
-     */
-        this.initializeConferenceManagementSystem();
-    }
-
-
     private ArrayList<String> processCSV (String filePath){
         /**
          * To read the data from csv file (as database) and put the data to the arraylist structure
@@ -37,8 +23,7 @@ public class DataEntityController extends Controller {
             String currentLine;
             ArrayList<String> csvData = new ArrayList<String>();
             try {
-                java.net.URL url = getClass().getResource(filePath);
-                FileReader fileReader = new FileReader(url.getPath());
+                FileReader fileReader = new FileReader(filePath);
                 BufferedReader bufReader = new BufferedReader(fileReader);
                 int counter = 0;  // not reading the first line
     
@@ -51,21 +36,21 @@ public class DataEntityController extends Controller {
                 bufReader.close();
             }
             catch (Exception e){
-                System.out.println("File Error: " + e);
+                System.out.println("File Read Error: " + e);
             }
             return csvData;
         }
     
 
     
-    private void initializeConferenceManagementSystem(){
+    public void initializeConferenceManagementSystem(){
         /**
          * It initialized the ConferenceManagementSystem, to read all data from csv file, 
          * which act as database, and create entity for each of them.
          */
-        ArrayList<String> resultUser = processCSV (this.pathNormalUserCSV);
-        ArrayList<String> resultConference = processCSV (this.pathConferenceCSV);
-        ArrayList<String> resultPaper = processCSV (this.pathPaperCSV);
+        ArrayList<String> resultUser = processCSV (pathNormalUserCSV);
+        ArrayList<String> resultConference = processCSV (pathConferenceCSV);
+        ArrayList<String> resultPaper = processCSV (pathPaperCSV);
 
         String delimit = ",";
         String [] tmp;

@@ -8,7 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets; 
-import java.math.BigInteger; 
+import java.math.BigInteger;
+import java.io.*;
 
 public class Utility {
 
@@ -49,6 +50,34 @@ public class Utility {
             }
             else{
                 return null;
+            }
+        }
+
+
+    public void writeToCSV(String filePath, String [] dataToWrite, boolean bol){
+        /**
+         *  The method to write data to csv file
+         * @param the file path of the file to write
+         * @param the data to write to file
+         * @boolean where true is append and false is overwrite
+         */
+            try {
+                FileWriter fileWriter = new FileWriter(filePath, bol);
+                for (int i = 0; i < dataToWrite.length; i++){
+                    fileWriter.append(dataToWrite[i]);
+                    if (i != dataToWrite.length-1){
+                        // no need to append comma for last item
+                        fileWriter.append(",");
+                    }
+                    else{
+                        fileWriter.append("\n");
+                    }
+                }
+                fileWriter.flush();
+                fileWriter.close();
+            }
+            catch (Exception e){
+                System.out.println("File Write Error: " + e);
             }
         }
 }
