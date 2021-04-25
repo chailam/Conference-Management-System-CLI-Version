@@ -108,19 +108,11 @@ public class UserInterface {
     }
 
 
-    public void displayResult(String result){
+    public void displayMessage(String msg){
     /**
-     * To print the result processed by controller
+     * To print the message 
      */
-        System.out.println(result);
-    }
-
-
-    public void displayErrorMessage(String errorMsg){
-    /**
-     * To print the error message
-     */
-        System.out.println(errorMsg);
+        System.out.println(msg);
     }
 
 
@@ -149,8 +141,8 @@ public class UserInterface {
      */
         this.displayHeader();
         this.displayGreeting("Guest");
-        this.displayErrorMessage("Error: User is not valid.");
-        this.displayErrorMessage("Please login again or enter contact admin for any questions.");
+        this.displayMessage("Error: User is not valid.");
+        this.displayMessage("Please login again or enter contact admin for any questions.");
         this.displayFooter();
         TimeUnit.SECONDS.sleep(2);
     }
