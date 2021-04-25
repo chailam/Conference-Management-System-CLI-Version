@@ -12,7 +12,7 @@ import java.util.*;
 public class Author extends NormalUser {
     private ArrayList<String> paper = new ArrayList<String>();
 
-    public Author (String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conferenceName){
+    public Author (String role, String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conferenceName){
         /**
          * Constructor for the Auhor class. 
          * @param emailAddress is the email address of that user to login the account
@@ -25,7 +25,7 @@ public class Author extends NormalUser {
          * @param mobileNumber is the mobile number of that user
          * @param the conference of the author attended
         **/
-        super(emailAddress, password, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber,conferenceName);
+        super(role, emailAddress, password, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber,conferenceName);
     }
     
 

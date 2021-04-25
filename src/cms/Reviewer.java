@@ -13,7 +13,7 @@ public class Reviewer extends NormalUser{
     private ArrayList<String> chosenTopicAreas= new ArrayList<String>();
     private ArrayList<String> assignedPaper = new ArrayList<String>();
 
-    public Reviewer(String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conferenceName){
+    public Reviewer(String role, String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conferenceName){
         /**
          * Constructor for the Reviewer class. 
          * @param emailAddress is the email address of that user to login the account
@@ -26,7 +26,7 @@ public class Reviewer extends NormalUser{
          * @param mobileNumber is the mobile number of that user
          * @param the conference the reviewer attended
         **/
-        super(emailAddress, password, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber,conferenceName);
+        super(role, emailAddress, password, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber,conferenceName);
     }
 
 

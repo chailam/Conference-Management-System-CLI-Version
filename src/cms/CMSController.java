@@ -1,17 +1,19 @@
 /**
  * The controller class to handle the business logic.
  */
-
-
 package cms;
 
 import cms.*;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets; 
+import java.math.BigInteger; 
 
 
-public class CMSController {
+public class CMSController{
     // The user interface invoked
     UserInterface ui = new UserInterface();
 
@@ -20,6 +22,16 @@ public class CMSController {
 
     List<String> avaiableTopics = new ArrayList<>(Arrays.asList("Artificial Intelligence", "Human Computer Interaction", "Data Mining & Information Retrieval", "Image Processing", "Big Data", "Computer Networks", "Software Engineering ", "Security & Cryptography", "Robotics & Automation", "Database & Information Systems"));
     List<String> availableProgressStatus = new ArrayList<>(Arrays.asList("Review Due", "Being Reviewed", "Reviewed", "Rejected", "Accepted"));
+    
+    // Main page, Home Page, Admin, Chair, Author, Reviewer option
+    // The option shown here are just the functionalities assigned by tutor.
+    // The option for not assigned functionality are not shown here
+    String[] mainPageOp = {"Register", "Login"};
+    String[] homePageOp = {"Manage Your Conference","Create Conference"};
+    String[] adminOp = {"Retrieve User Information", "Retrieve Conference Information","Logout"};
+    String[] authorOp = {"Submit Paper", "Previous"};
+    String[] chairOp = {"Final Decision on Paper", "Assign Reviewer to Paper","Previous"};
+    String[] reviewerOp = {"Submit Evaluation of Paper","Previous"};
     
     // Define the path to NormalUser.csv, Conference.csv, and Paper.csv
     String p2NormalUser = "../resource/NormalUser.csv";
@@ -35,37 +47,161 @@ public class CMSController {
 
         this.initializeConferenceManagementSystem();
 
-        ///////************TEST */
-        ArrayList<Conference> testC = new ArrayList<>();
-        ArrayList<Paper> testP = new ArrayList<>();
-        ArrayList<User> testU = new ArrayList<>();
-        testC = cmsSystem.retrieveConferenceList();
-        testP = cmsSystem.retrievePaperList();
-        testU = cmsSystem.retrieveUserList();
+        // /////////TESTTTTTTTTTTTTTTTT///
+        // String op = ui.getUserOption(adminOp);
 
-        System.out.println(testC);
-        System.out.println(testP);
-        System.out.println(testU);
-        ///////************TEST END */
+    
+        // System.out.println("option selecteddddddd: "+op);
+
+        // ArrayList<Conference> testC = new ArrayList<>();
+        // ArrayList<Paper> testP = new ArrayList<>();
+        // ArrayList<User> testU = new ArrayList<>();
+        // testC = cmsSystem.retrieveConferenceList();
+        // testP = cmsSystem.retrievePaperList();
+        // testU = cmsSystem.retrieveUserList();
+
+        // System.out.println(testC);
+        // System.out.println(testP);
+        // System.out.println(testU);
+        // ///////************TEST END */
         
     }
 
+    //***********************************Kick Start Method********************************************************** */
+    private void run(){
+    /**
+     * The method to kick start the program. 
+     */
+        try{
+            // string to represent the user input
+            String op;
+            op = ui.getUserOption(mainPageOp,"Guest");
 
-    public void verifyInput(){
-        // TODO: To be implemented
+            if (op.equals("Register")){
+                // create user u (check if duplicated!)
+                // add to list
+                // write to csv
 
+
+            }
+            else if (op.equals("Login")){
+                User u = authentication();
+                if (u.getRole().equals("Admin")){
+                    adminPage();
+                }
+                else if (u.getRole().equals("Chair")){
+                    // TODO: chairPage function will be here!!
+                }
+                else if (u.getRole().equals("Author")){
+                    // TODO: authorPage function will be here!!
+                }
+                else if (u.getRole().equals("Reviewer")){
+                    // TODO: reviewerPage function will be here!!
+                }
+                
+
+
+
+            }
+        }
+        catch (NoSuchAlgorithmException | InterruptedException e) { 
+            System.out.println("Exception: " + e); 
+        }
     }
 
 
-    private void authentication(String emailAddress, String password){
+    private void adminPage(){
+        String op = ui.getUserOption(adminOp, "Admin");
+        if (op.equals("Retrieve User Information")){
+            //TODO: get the userlist and use UserInterface displayResult method to print out the information
+            // remember to print the header and footer as shown in other method
 
 
+            // if exit is entered, return to admin page
+            if (ui.getExitCommand() == true){
+                this.adminPage();
+            }
+
+        }
+        else if (op.equals("Retrieve Conference Information")){
+            //TODO: get the userlist and use UserInterface displayResult method to print out the information
+            // remember to print the header and footer as shown in other method
+
+
+            // if exit is entered, return to admin page
+            if (ui.getExitCommand() == true){
+                this.adminPage();
+            }
+        }
+        else if (op.equals("Logout")){
+            this.run();
+        }
+    }
+
+
+    private User authentication() throws NoSuchAlgorithmException, InterruptedException{
+    /**
+     * The method to authenticate user.
+     * It gets the user input boundary and check the email address and password
+     * @return the user who authenticated
+     */
+        // a variable to check if user is authenticated
+        boolean authenticated = false;
+        User u = null;
+        while (authenticated == false){
+            // Retrieve the input from boundary
+            String[] inputAuthenticate = ui.getAuthentication();
+            String emailAddress = inputAuthenticate[0];
+            String password = inputAuthenticate[1];
+
+            // Get the user with that email address
+            u = this.cmsSystem.searchUser(emailAddress);
+
+            // if the user exists, validate password
+            if (u != null){
+                String hashedPassword = this.hashSHA256(password);
+                if (hashedPassword.equalsIgnoreCase(u.getPassword())){
+                // set choice to be true as user is authenticated
+                authenticated = true;
+                }
+            }
+            // if not, loop the authenticate method
+            else{
+                ui.displayAuthenErrMsg();
+            }
+        }
+        return u;
     }
 
 
     private void registration(){
+    /**
+     *  The method to register user.
+     */
         
     }
+
+
+
+//***********************************Utility Method********************************************************** */
+    private String hashSHA256(String text) throws NoSuchAlgorithmException{
+    /**
+     * This method is used to hashed the text, mainly the password, using SHA256. 
+     * @param the text to be hashed
+     * @return the hashed text
+     */
+        // Use the SHA256
+        MessageDigest md = MessageDigest.getInstance("SHA-256"); 
+        byte[] hashedByte = md.digest(text.getBytes(StandardCharsets.UTF_8));
+        BigInteger theNumber = new BigInteger(1, hashedByte); 
+        StringBuilder hashedText = new StringBuilder(theNumber.toString(16));
+        // Pad with leading zeros
+        while (hashedText.length() < 32){ 
+            hashedText.insert(0, '0'); 
+        } 
+        return hashedText.toString(); 
+    }
+
 
     public ArrayList<String> stringToArrayList (String longString, String delimit){
         /**
@@ -89,6 +225,8 @@ public class CMSController {
         }
 
 
+//***********************************Create Entity Method********************************************************** */
+
     private User createUserEntity (String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, ArrayList<String>topicAreas, ArrayList<String>paper){
     /**
      * To create the User entity 
@@ -99,15 +237,15 @@ public class CMSController {
         try {
             // if is admin
             if (role.equals("admin")){
-                u = new User(emailAddress,hashedPassword);
+                u = new Admin("Admin",emailAddress,hashedPassword);
             } 
             // if is chair
             else if (role.equals("chair")){
-                u = new Chair(emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
+                u = new Chair("Chair",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
             }
             // if is reviewer
             else if (role.equals("reviewer")){
-                u = new Reviewer(emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
+                u = new Reviewer("Reviewer",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
                 if (topicAreas != null){
                     ((Reviewer)u).setTopicArea(topicAreas);
                 }
@@ -117,14 +255,14 @@ public class CMSController {
             }
             // if is author
             else if (role.equals("author")){
-                u = new Author(emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
+                u = new Author("Author",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
                 if (paper != null){
                     ((Author)u).setPaper(paper);
                 }
             }
             // if normal user
             else if (role.equals("normal")){
-                u = new NormalUser(emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber);
+                u = new NormalUser("Normal",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber);
             }
         }
         catch (Exception e){
@@ -169,8 +307,12 @@ public class CMSController {
         return p;
     }
 
+//***********************************Write to CSV Method********************************************************** */
 
-//***********************************Initialization Process Method**************************************** */
+
+
+
+//************************Read CSV to initialize ConferenceManagementSystem Method**************************************** */
     private ArrayList<String> processCSV (String filePath){
     /**
      * To read the data from csv file (as database) and put the data to the arraylist structure
@@ -197,6 +339,7 @@ public class CMSController {
         }
         return csvData;
     }
+
 
     private void initializeConferenceManagementSystem(){
         /**
@@ -261,21 +404,13 @@ public class CMSController {
         }
     }
 
-//***********************************Initialization Process Method End**************************************** */
-
-
 
 //***********************************Main**************************************** */
 
     public static void main(String args[]) {
-        CMSController cmsc = new CMSController();
+        CMSController cmsC = new CMSController();
+        cmsC.run();
 
-
-
-
-        // ui.displayHeader();
-        // ui.displayResult("hihihihihih");
-        // ui.displayFooter();
 
         }
 }

@@ -20,7 +20,7 @@ public class NormalUser extends User {
     private ArrayList<String> notification = new ArrayList<String>();
     private String conferenceName;
 
-    public NormalUser(String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber){
+    public NormalUser(String role, String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber){
     /**
      * Constructor for the NormalUser class. 
      * @param emailAddress is the email address of that user to login the account
@@ -32,7 +32,7 @@ public class NormalUser extends User {
      * @param employerDetail is the employer detail provided
      * @param mobileNumber is the mobile number of that user
     **/
-        super(emailAddress, password);
+        super(role, emailAddress, password);
         this.firstName = firstName;
         this.lastName = lastName;
         this.highestQualification = highestQualification;
@@ -41,7 +41,7 @@ public class NormalUser extends User {
         this.mobileNumber = mobileNumber;
     }
 
-    public NormalUser(String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conferenceName){
+    public NormalUser(String role, String emailAddress, String password, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conferenceName){
     /**
      * Constructor for the NormalUser class. 
      * @param emailAddress is the email address of that user to login the account
@@ -54,7 +54,7 @@ public class NormalUser extends User {
      * @param mobileNumber is the mobile number of that user
      * @param conference of the user attended
     **/
-        super(emailAddress, password);
+        super(role, emailAddress, password);
         this.firstName = firstName;
         this.lastName = lastName;
         this.highestQualification = highestQualification;

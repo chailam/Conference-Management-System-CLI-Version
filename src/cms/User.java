@@ -9,8 +9,9 @@ package cms;
 public class User {
     private String emailAddress;
     private String password;
+    public String role;
 
-    public User(String emailAddress, String password){
+    public User (String role, String emailAddress, String password){
     /**
 	 * Constructor for the User.
      * @param emailAddress is the email address of that user to login the account
@@ -18,6 +19,7 @@ public class User {
      **/
         this.emailAddress = emailAddress;
         this.password = password;
+        this.role = role;
     }
 
 
@@ -38,6 +40,14 @@ public class User {
         return this.password;
     }
 
+
+    public String getRole(){
+    /**
+     * Getter method to get the user roles 
+     */
+        return this.role;
+    }
+    
 
     //TODO: delete it when submit assignment, this is for developer debug purpose!!!
     @Override

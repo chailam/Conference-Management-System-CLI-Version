@@ -8,14 +8,13 @@ package cms;
 
 public class Admin extends User{
 
-    public Admin (String emailAddress, String password) {
+    public Admin (String role, String emailAddress, String password) {
         /**
          * Constructor for the Admin class.
          * 
          * @param emailAddress is the email address of that user to login the account
          * @param password     is the hashed password of that user
          **/
-        super(emailAddress, password);
+        super(role, emailAddress, password);
     }
-    
 }
