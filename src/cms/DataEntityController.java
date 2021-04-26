@@ -74,9 +74,9 @@ public class DataEntityController extends Controller {
                 for (String line : resultConference){
                     tmp = line.split(delimit);
                     // Change the data to Date format
-                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(tmp[3]);
-                    Date submitDueDate = new SimpleDateFormat("dd/MM/yyyy").parse(tmp[4]);
-                    Date reviewDueDate = new SimpleDateFormat("dd/MM/yyyy").parse(tmp[5]);
+                    Date date = new SimpleDateFormat("dd/mm/yyyy").parse(tmp[3]);
+                    Date submitDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(tmp[4]);
+                    Date reviewDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(tmp[5]);
                     // Change the topicAreas to ArrayList
                     ArrayList<String> topic = ut.stringToArrayList(tmp[2],"/");
                     // Create conference entity and add into the conferenceList

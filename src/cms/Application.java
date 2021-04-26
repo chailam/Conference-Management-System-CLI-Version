@@ -2,6 +2,9 @@ package cms;
 
 import cms.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Application {
 
     // Kick start the program
@@ -10,5 +13,6 @@ public class Application {
         deC.initializeConferenceManagementSystem();
         BoundaryController cmsC = new BoundaryController();
         cmsC.run();
+
     }
 }

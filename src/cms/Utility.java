@@ -5,6 +5,8 @@
 package cms;
 
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets; 
@@ -37,7 +39,7 @@ public class Utility {
          * To change the split the list using delimit specify and then convert to ArrayList
          * @param the string to be splitted into array list
          * @param the delimit to be used to split the string
-         * @return the arraylist or null
+         * @return the arraylist or null if list is empty
          */
             String tmp [];
             ArrayList<String> theArrayList = new ArrayList<String>();
@@ -52,6 +54,74 @@ public class Utility {
                 return null;
             }
         }
+
+
+    public String arrayListToString (ArrayList<String> list, String delimit){
+    /**
+     * To change the combine arraylist with delimit to string
+     * @param the arraylist to be combined into string
+     * @param the delimit to be used to combine the string
+     * @return the string or null
+     */
+        StringBuilder sb = new StringBuilder();
+        for (String st : list) {
+            sb.append(st);
+            sb.append(delimit);
+        }
+        return sb.toString();
+    }
+
+
+    public String dateToString(Date date){
+    /**
+     * To convert the date format to string format
+     * @param the date
+     * @return the string
+     */
+        DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+        String str = dateFormat.format(date);
+        return str;
+    }
+
+
+    public ArrayList<String> indexToElement(ArrayList<String> index,ArrayList<String> list){
+    /**
+     * To find the element in the list using index
+     * @param the list of index
+     * @param the list of elements
+     * @return list with all elements from index
+     */
+        ArrayList<String> elements = new ArrayList<String>();
+        for (String ind : index){
+            int no = Integer.parseInt(ind);
+            String element = list.get(no);
+            elements.add(element);
+        }
+        return elements;
+    }
+
+
+    public boolean indexCheck (ArrayList<String> index, int listLength){
+        /**
+         * Check the bound and type of index.
+         * @param the index list
+         * @param the length of the list
+         * @return true if index valid, false otherwise
+         */
+        boolean check = true;
+        // check if the index invalid
+        for (String ind : index) {
+            try {
+                int no = Integer.parseInt(ind);
+                if (no > listLength || no < 0) {
+                    check = false;
+                }
+            } catch (NumberFormatException e) {
+                check = false;
+            }
+        }
+        return check;
+    }
 
 
     public void writeToCSV(String filePath, String [] dataToWrite, boolean bol){
