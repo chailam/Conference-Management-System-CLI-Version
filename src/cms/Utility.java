@@ -78,6 +78,7 @@ public class Utility {
             }
             catch (Exception e){
                 System.out.println("File Write Error: " + e);
+                System.exit(0);
             }
         }
 }
