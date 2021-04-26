@@ -26,16 +26,16 @@ public abstract class Controller {
             User u = null;
             try {
                 // if is admin
-                if (role.equals("admin")){
-                    u = new Admin("Admin",emailAddress,hashedPassword);
+                if (role.equalsIgnoreCase("admin")){
+                    u = new Admin("admin",emailAddress,hashedPassword);
                 } 
                 // if is chair
-                else if (role.equals("chair")){
-                    u = new Chair("Chair",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
+                else if (role.equalsIgnoreCase("chair")){
+                    u = new Chair("chair",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
                 }
                 // if is reviewer
-                else if (role.equals("reviewer")){
-                    u = new Reviewer("Reviewer",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
+                else if (role.equalsIgnoreCase("reviewer")){
+                    u = new Reviewer("reviewer",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
                     if (topicAreas != null){
                         ((Reviewer)u).setTopicArea(topicAreas);
                     }
@@ -44,15 +44,15 @@ public abstract class Controller {
                     }
                 }
                 // if is author
-                else if (role.equals("author")){
-                    u = new Author("Author",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
+                else if (role.equalsIgnoreCase("author")){
+                    u = new Author("author",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference);
                     if (paper != null){
                         ((Author)u).setPaper(paper);
                     }
                 }
                 // if normal user
-                else if (role.equals("normal")){
-                    u = new NormalUser("Normal",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber);
+                else if (role.equalsIgnoreCase("normal")){
+                    u = new NormalUser("normal",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber);
                 }
             }
             catch (Exception e){

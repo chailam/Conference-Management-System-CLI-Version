@@ -61,7 +61,7 @@ public class BoundaryController extends Controller{
         try{
             // string to represent the user input
             String op;
-            op = ui.getUserOption(mainPageOp,"Guest");
+            op = ui.getUserOption(mainPageOp,"Guest",true);
 
             if (op.equals("Register")){
                 this.registration();
@@ -86,15 +86,14 @@ public class BoundaryController extends Controller{
     /**
      * The option available for user and its operation.
      */
-        String op = ui.getUserOption(homePageOp, name);
+        String op = ui.getUserOption(homePageOp, name,true);
         if (op.equals("Manage Your Conference")){
         // List all the conference available for that user.
              ArrayList<String> userConf = cms.getUserConference(emailAddress);
              userConf.add("Back");
-             System.out.println(userConf);
-             System.out.println(userConf.get(0));
+             // if user has conference
              if (userConf.size() > 1 && userConf.get(0) != null){ 
-                String conf = ui.getUserOption(userConf, name);
+                String conf = ui.getUserOption(userConf, name,true);
                 if (conf.equals("Back")){
                     // go back to previous page
                     this.homePageChoices(name, emailAddress);
@@ -140,7 +139,7 @@ public class BoundaryController extends Controller{
     /**
      * The option available for chair and its operation.
      */
-        String op = ui.getUserOption(chairOp, name);
+        String op = ui.getUserOption(chairOp, name,true);
         if (op.equals("Back")){
             homePageChoices(name, emailAddress);
         }
@@ -162,7 +161,7 @@ public class BoundaryController extends Controller{
     /**
      * The option available for author and its operation.
      */
-        String op = ui.getUserOption(authorOp, name);
+        String op = ui.getUserOption(authorOp, name,true);
         if (op.equals("Back")){
             homePageChoices(name, emailAddress);
         }
@@ -179,7 +178,7 @@ public class BoundaryController extends Controller{
     /**
      * The option available for reviewer and its operation.
      */
-        String op = ui.getUserOption(reviewerOp, name);
+        String op = ui.getUserOption(reviewerOp, name,true);
         if (op.equals("Back")){
             homePageChoices(name, emailAddress);
         }
@@ -196,7 +195,7 @@ public class BoundaryController extends Controller{
     /**
      * The option available for admin and its operation.
      */
-        String op = ui.getUserOption(adminOp, "Admin");
+        String op = ui.getUserOption(adminOp, "Admin",true);
         if (op.equals("Retrieve User Information")){
             //TODO: get the userlist and use UserInterface displayResult method to print out the information
             // remember to print the header and footer as shown in other method
@@ -279,6 +278,8 @@ public class BoundaryController extends Controller{
         String employerDetail = info[6];
         String mobileNumber = info[7];
         // if user exists
+        System.out.println(emailAddress);
+        System.out.println(cms.retrieveUserList());
         if (cms.hasUser(emailAddress) == true){
             ui.displayErrMsg("The user already exists!\nReturn back to Main Page...");
             this.run();
@@ -288,7 +289,8 @@ public class BoundaryController extends Controller{
             // confrim registration
             ui.confirmRegistration(firstName, lastName, emailAddress, highestQualification, occupation, employerDetail, mobileNumber);
             ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList("Register","Back","Exit"));
-            String op = ui.getUserOption(confirmOption, "");
+            String op = ui.getUserOption(confirmOption, "", false);
+            ui.displayFooter();
             if (op.equals("Register")){
                  //creat user entity
                 User u = createUserEntity("normal", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, "null", null, null);

@@ -58,15 +58,18 @@ public class UserInterface {
     }
 
 
-    public String getUserOption (ArrayList<String> options, String name){
+    public String getUserOption (ArrayList<String> options, String name, boolean bo){
         /**
          * To display the option available and then get the user input within option length
          * @param the option selected
          * @param the name to be greet
+         * @param true to show header and footer; false otherwise
          */
-        this.displayHeader();
-        if (!name.equals("")){
-            this.displayGreeting(name);
+        if (bo == true){
+            this.displayHeader();
+            if (!name.equals("")){
+                this.displayGreeting(name);
+            }
         }
         System.out.println("Please enter your options:");
 
@@ -74,8 +77,11 @@ public class UserInterface {
         for( int i = 0; i < options.size(); i++){
             System.out.println((i+1) + ". " + options.get(i));
         }
-        // Print the footer
-        this.displayFooter();
+
+        if (bo == true){
+            // Print the footer
+            this.displayFooter();
+        }
 
         int choice = 0; 
 		while (choice < 1 || choice > options.size()) {//loop until a valid option has been obtained
@@ -169,6 +175,7 @@ public class UserInterface {
      * To get the required registration information from the user
      * @return the information retrieved
      */
+        this.displayHeader();
         this.displayMessage("Registration Process (1/2)\n\nEnter user details.");
         System.out.print("First Name: ");
         String firstName = scanner.nextLine(); // Read the user input
@@ -186,6 +193,7 @@ public class UserInterface {
         String employerDetail = scanner.nextLine(); // Read the user input
         System.out.print("Mobile number: ");
         String mobileNumber = scanner.nextLine(); // Read the user input
+        this.displayFooter();
 
         return new String[] {firstName, lastName, emailAddress, password, highestQualification, occupation, employerDetail, mobileNumber};
     }
@@ -196,6 +204,7 @@ public class UserInterface {
      * The message to confirm the registration
      * @return the information retrieved
      */
+        this.displayHeader();
         this.displayMessage("Registration Process (2/2)\n\nPlease confirm your user details.");
         System.out.println("First Name: " + firstName);
         System.out.println("Last Name: " + lastName);
@@ -204,7 +213,5 @@ public class UserInterface {
         System.out.println("Occupation: " + occupation);
         System.out.println("Employer's details: " + employerDetail);
         System.out.println("Mobile number: " + mobileNumber);
-
-
     }
 }
