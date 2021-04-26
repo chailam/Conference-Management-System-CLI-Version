@@ -64,9 +64,11 @@ public class Utility {
      * @return the string or null
      */
         StringBuilder sb = new StringBuilder();
-        for (String st : list) {
-            sb.append(st);
-            sb.append(delimit);
+        for (int i = 0; i < list.size() ; i++) {
+            sb.append(list.get(i));
+            if (i != list.size()-1) {
+                sb.append(delimit);
+            }
         }
         return sb.toString();
     }
@@ -84,39 +86,59 @@ public class Utility {
     }
 
 
-    public ArrayList<String> indexToElement(ArrayList<String> index,ArrayList<String> list){
+    public ArrayList<String> indexToElement(ArrayList<Integer> index, ArrayList<String> list){
     /**
-     * To find the element in the list using index
+     * To find the element in the list using index.
      * @param the list of index
      * @param the list of elements
-     * @return list with all elements from index
+     * @return list with all elements from index; null if error
      */
         ArrayList<String> elements = new ArrayList<String>();
-        for (String ind : index){
-            int no = Integer.parseInt(ind);
-            String element = list.get(no);
-            elements.add(element);
+        for (Integer ind : index){
+            try {
+                String element = list.get(ind);
+                elements.add(element);
+            } catch (IndexOutOfBoundsException e){
+                return null;
+            }
         }
         return elements;
     }
 
-
-    public boolean indexCheck (ArrayList<String> index, int listLength){
+    public ArrayList<Integer> convertUserIndToSysInd(ArrayList<String> index){
         /**
-         * Check the bound and type of index.
-         * @param the index list
-         * @param the length of the list
-         * @return true if index valid, false otherwise
+         * Convert the user input index, which starting from 1,
+         * to programmer index, which starting from 0
+         * @param the index list inputted by user in list of string
+         * @return the index of programmer in list of integer
          */
-        boolean check = true;
-        // check if the index invalid
+        ArrayList<Integer> list = new ArrayList<>();
         for (String ind : index) {
             try {
-                int no = Integer.parseInt(ind);
-                if (no > listLength || no < 0) {
-                    check = false;
-                }
-            } catch (NumberFormatException e) {
+                int number = Integer.parseInt(ind);
+                number = number - 1; // since the input is entered by user, starting is 1
+                list.add(number);
+            }
+            catch (NumberFormatException | NullPointerException e){
+                return null;
+            }
+        }
+        return list;
+    }
+
+
+    public boolean indexCheck(ArrayList<Integer> index, int listLength){
+        /**
+         * Check the bound and type of index inputted by user.
+         * @param the index list inputted by user
+         * @param the length of the list
+         * @return the list of input starting from 0
+         */
+        boolean check = true;
+        System.out.println(index);
+        // check if the index invalid
+        for (Integer ind : index) {
+            if ((ind >= listLength) || (ind < 0)) {
                 check = false;
             }
         }

@@ -40,14 +40,14 @@ public class BoundaryController extends Controller{
     
         // System.out.println("option selecteddddddd: "+op);
 
-        // ArrayList<Conference> testC = new ArrayList<>();
+        //ArrayList<Conference> testC = new ArrayList<>();
         // ArrayList<Paper> testP = new ArrayList<>();
         // ArrayList<User> testU = new ArrayList<>();
-        // testC = cms.retrieveConferenceList();
+        //testC = cms.retrieveConferenceList();
         // testP = cms.retrievePaperList();
         // testU = cms.retrieveUserList();
 
-        // System.out.println(testC);
+        //System.out.println(testC);
         // System.out.println(testP);
         // System.out.println(testU);
         ///////************TEST END */
@@ -92,8 +92,9 @@ public class BoundaryController extends Controller{
         // List all the conference available for that user.
              ArrayList<String> userConf = cms.getUserConference(emailAddress);
              userConf.add("Back");
+             System.out.println(userConf);
              // if user has conference
-             if (userConf.size() > 1 && userConf.get(0) != null){ 
+             if (userConf.size() >= 2 ){
                 String conf = ui.getUserOption(userConf, name,true);
                 if (conf.equals("Back")){
                     // go back to previous page
@@ -101,13 +102,16 @@ public class BoundaryController extends Controller{
                 }
                 else{
                     String role = cms.getUserConferenceRole(emailAddress, conf);
-                    if (role.equals("Chair")){
+                    if (role == null){
+                        ui.displayMsgWithSleep("The role is null!");
+                    }
+                    if (role.equalsIgnoreCase("Chair")){
                         chairChoices(name,emailAddress);
                     }
-                    else if (role.equals("Author")){
+                    else if (role.equalsIgnoreCase("Author")){
                         authorChoices(name,emailAddress);
                     }
-                    else if (role.equals("Reviewer")){
+                    else if (role.equalsIgnoreCase("Reviewer")){
                         reviewerChoices(name,emailAddress);
                     }
                 }
@@ -119,10 +123,7 @@ public class BoundaryController extends Controller{
              }
         }
         else if (op.equals("Create Conference")){
-        // TODO: Implement create conference functionality here
-        // ask user enter option, validate option, use create conference entity function on Controller to create conference object
-        // add conference object to listConference, then add conference object to csv file
-            String [] confInfo = ui.getCreateConference();
+            this.createConferenceOption(name, emailAddress);
 
         
 
@@ -164,41 +165,53 @@ public class BoundaryController extends Controller{
         String [] confInfo = ui.getCreateConference();
         String confName = confInfo[0];
         String place = confInfo[1];
+        System.out.println(confInfo[2].length());
         try {
             // check date validity
-            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(confInfo[2]);
+            if ((confInfo[2].length() != 10) || (confInfo[3].length() != 10) || (confInfo[4].length() != 10)) {
+                ui.displayMsgWithSleep("Please enter a valid date.");
+                // jump back to home page.
+                this.createConferenceOption(name, emailAddress);
+            }
+            Date date = new SimpleDateFormat("dd/mm/yyyy").parse(confInfo[2]);
             Date submitDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(confInfo[3]);
             Date reviewDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(confInfo[4]);
 
             // check if existing conference
             if (cms.hasConference(confName) == true) {
-                ui.displayHeader();
-                ui.displayMsgWithSleep("The conference already exists. \nPlease try to inout other name.");
+                ui.displayMsgWithSleep("The conference already exists. \nPlease try to input other name.");
                 // jump back to home page.
-                homePageChoices(name, emailAddress);
+                this.homePageChoices(name, emailAddress);
             }
             // if new conference
             ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
 
-            // Conference Comfirmation
+            // Conference Confirmation
             ui.confirmConferenceCreation(confName,place, ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate), ut.arrayListToString(topicName,","));
             ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList("Create","Back","Exit"));
             String op = ui.getUserOption(confirmOption, "", false);
             ui.displayFooter();
             if (op.equals("Create")){
                 // create conference entity
-                Conference c = createConferenceEntity(name, place, topicName, date, submitDueDate, reviewDueDate);
+                Conference c = createConferenceEntity(confName, place, topicName, date, submitDueDate, reviewDueDate);
                 // add conference entity to conferenceList
                 if (c != null){
+                    //Write conference entity to csv file
+                    String[] confData = {confName, place, ut.arrayListToString(topicName,"/"), ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate)};
+                    ut.writeToCSV(pathConferenceCSV,confData,true);
                     ui.displayMsgWithSleep("Congratulations!\nYou have created the Conference.\n");
                     cms.addConference(c);
+                    // Set the conference of the user to this conference
+                    User u = cms.searchUser(emailAddress);
+                    NormalUser nu = (NormalUser)u;
+                    User createdu = createUserEntity("Chair",u.getEmail(),u.getPassword(),nu.getFirstName(),nu.getLastName(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),confName,null,null);
+                    cms.addUser(createdu);
+                    String[] userData = {"Chair",u.getEmail(),u.getPassword(),nu.getFirstName(),nu.getLastName(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),confName,null,null};
+                    ut.writeToCSV(pathNormalUserCSV,userData,true);
                 }
                 else{
                     ui.displayMsgWithSleep("Conference is null?!!!");
                 }
-                //Write conference entity to csv file
-                String[] confData = {name, place, ut.arrayListToString(topicName,"/"), ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate)};
-                ut.writeToCSV(pathConferenceCSV,confData,true);
                 // jump to home page
                 this.homePageChoices(name, emailAddress);
             }
@@ -212,7 +225,6 @@ public class BoundaryController extends Controller{
             }
         }
         catch (ParseException e) {
-            System.out.println(e);
             ui.displayMsgWithSleep("Please enter a valid date.");
             // jump back to create conference screen.
             this.createConferenceOption(name, emailAddress);
@@ -231,20 +243,33 @@ public class BoundaryController extends Controller{
         // delimit the information
         ArrayList<String> topicInd = ut.stringToArrayList(topicTmp[0], ",");
         ArrayList<String> topicName = ut.stringToArrayList(topicTmp[1], ",");
-        // check if the topic areas invalid
-        Boolean result = ut.indexCheck(topicInd,avaiableTopics.size());
-        // if topic incorrect, try again
-        if (result == false) {
+        // if is empty
+        if (topicInd == null){
             ui.displayMsgWithSleep("Please enter a valid topic number.");
-            this.createConferenceOption(name, emailAddress);
+            this.topicAreasProcess(name, emailAddress);
+        }
+        // convert user input index to programmer index
+        ArrayList<Integer> topicInt = ut.convertUserIndToSysInd(topicInd);
+        // if is empty
+        if (topicInt == null){
+            ui.displayMsgWithSleep("Please enter a valid topic number.");
+            this.topicAreasProcess(name, emailAddress);
+        }
+        // check index bound
+        Boolean result = ut.indexCheck(topicInt,avaiableTopics.size());
+        // if topic incorrect, try again
+        if ((topicInt == null) || (result == false)){
+            ui.displayMsgWithSleep("Please enter a valid topic number.");
+            this.topicAreasProcess(name, emailAddress);
         }
         //use index of topic to retrieve index
-        ArrayList<String> topicName2 = ut.indexToElement(topicInd,avaiableTopics);
+        ArrayList<String> topicName2 = ut.indexToElement(topicInt,avaiableTopics);
         if (topicName.size() > 0) {
             topicName2.addAll(topicName);
         }
         return topicName2;
     }
+
 
     private void authorChoices(String name, String emailAddress) throws InterruptedException{
     /**
@@ -380,7 +405,7 @@ public class BoundaryController extends Controller{
             ui.displayFooter();
             if (op.equals("Register")){
                  //creat user entity
-                User u = createUserEntity("normal", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, "null", null, null);
+                User u = createUserEntity("normal", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, null, null, null);
                 // add new user to userList
                 cms.addUser(u);
                 //add new user to csv file

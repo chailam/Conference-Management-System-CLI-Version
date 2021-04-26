@@ -245,7 +245,7 @@ public class UserInterface {
         System.out.println("Conference Date (dd/mm/yyyy): " + date);
         System.out.println("Paper Submission Due Date (dd/mm/yyyy): " + submitDueDate);
         System.out.println("Paper Review Due Date (dd/mm/yyyy): " + reviewDueDate);
-        System.out.println("Topic Areas " + topic);
+        System.out.println("Topic Areas: " + topic);
     }
 
 
@@ -256,16 +256,16 @@ public class UserInterface {
          */
         this.displayHeader();
         System.out.println("Conference Creation Process (2/3)");
-        System.out.print("Please choose relevant the topic areas by \nentering their number index, separated by comma. ");
+        System.out.println("Please choose relevant the topic areas by \nentering their number index, separated by comma. ");
         System.out.println("For example, input: 1,2,3");
         // print our all topic areas available
         for (int i = 0; i < topicAreas.size() ; i++){
-            System.out.println(i + " . " + topicAreas.get(i));
+            System.out.println((i+1) + " . " + topicAreas.get(i));
         }
         System.out.print("Please enter your topic areas number index: ");
         String topicsInd = scanner.nextLine(); // Read the user input
-        System.out.print("If your topics are not in the list, please \ntype your topic areas here, separated by comma.");
-        System.out.println("for example, input: Information Technology, Cybersecurity");
+        System.out.println("If your topics are not in the list, please \ntype your topic areas here, separated by comma.");
+        System.out.println("For example, input: Information Technology, Cybersecurity");
         System.out.print("Please enter your topic areas name: ");
         String topicsName = scanner.nextLine(); // Read the user input
         this.displayFooter();
