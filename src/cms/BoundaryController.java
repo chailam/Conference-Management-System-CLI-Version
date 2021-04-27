@@ -7,7 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.security.NoSuchAlgorithmException;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class BoundaryController extends Controller{
@@ -385,12 +386,22 @@ public class BoundaryController extends Controller{
         String [] info = ui.getRegistration();
         String firstName = info[0];
         String lastName = info[1];
-        String emailAddress = info[2]; 
+        String emailAddress = info[2];
+        //checking password requirement
+        if (this.passwordValidator(info[3]) == false){
+            ui.displayMsgWithSleep("Password must at least 8 characters long, \nmust include at least 1 upper case, \n1 lower case, 1 number.\n Please try again.");
+            this.registration();
+        }
         String hashedPassword = ut.hashSHA256(info[3]);
         String highestQualification = info[4];
         String occupation = info[5];
         String employerDetail = info[6];
         String mobileNumber = info[7];
+        // check if data input is zero
+        if ((firstName.length()==0) || (lastName.length()==0)||(emailAddress.length()==0)||(highestQualification.length()==0)||(occupation.length()==0)||(employerDetail.length()==0)||(mobileNumber.length()==0)){
+            ui.displayMsgWithSleep("Please enter valid information!");
+            this.registration();
+        }
         // if user exists
         if (cms.hasUser(emailAddress) == true){
             ui.displayMsgWithSleep("The user already exists!\nReturn back to Main Page...");
@@ -404,7 +415,7 @@ public class BoundaryController extends Controller{
             String op = ui.getUserOption(confirmOption, "", false);
             ui.displayFooter();
             if (op.equals("Register")){
-                 //creat user entity
+                 //create user entity
                 User u = createUserEntity("normal", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, null, null, null);
                 // add new user to userList
                 cms.addUser(u);
@@ -424,6 +435,22 @@ public class BoundaryController extends Controller{
                 this.run();
             }
         }
+    }
+
+
+    private boolean passwordValidator(String password){
+        /**
+         * To check whether fulfill the requirement of password,
+         * which are must at least 8 characters long, must include at least 1 upper case, 1 lower case, 1 number.
+         * @param the password to be checked
+         * @return true if valid, false otherwise
+         */
+        boolean checker = true;
+        // regex inorder for uppercase at least one, lower case at least one, number at least one, no white space and more than 8 characters
+        String regexCheck = "(?=.*[A-Z])" + "(?=.*[a-z])" +  "(?=.*[0-9])"+ "(?=\\S+$)" + ".{8,}" + "$";
+        Pattern passPattern = Pattern.compile(regexCheck);
+        Matcher matcher = passPattern.matcher(password);
+        return matcher.matches();
     }
 }
     
