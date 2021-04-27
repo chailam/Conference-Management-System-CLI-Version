@@ -17,7 +17,7 @@ public class BoundaryController extends Controller{
 
     private ArrayList<String> avaiableTopics = new ArrayList<>(Arrays.asList("Artificial Intelligence", "Human Computer Interaction", "Data Mining & Information Retrieval", "Image Processing", "Big Data", "Computer Networks", "Software Engineering ", "Security & Cryptography", "Robotics & Automation", "Database & Information Systems"));
     private ArrayList<String> availableProgressStatus = new ArrayList<>(Arrays.asList("Review Due", "Being Reviewed", "Reviewed", "Rejected", "Accepted"));
-    
+
     // Main page, Home Page, Admin, Chair, Author, Reviewer option
     // The option shown here are just the functionalities assigned by tutor.
     // The option for not assigned functionality are not shown here
@@ -38,28 +38,28 @@ public class BoundaryController extends Controller{
         // /////////TESTTTTTTTTTTTTTTTT///
         // String op = ui.getUserOption(adminOp);
 
-    
+
         // System.out.println("option selecteddddddd: "+op);
 
         ArrayList<Conference> testC = new ArrayList<>();
-         ArrayList<Paper> testP = new ArrayList<>();
-         ArrayList<User> testU = new ArrayList<>();
+        ArrayList<Paper> testP = new ArrayList<>();
+        ArrayList<User> testU = new ArrayList<>();
         testC = cms.retrieveConferenceList();
-         testP = cms.retrievePaperList();
-         testU = cms.retrieveUserList();
+        testP = cms.retrievePaperList();
+        testU = cms.retrieveUserList();
 
         System.out.println(testC);
-         System.out.println(testP);
-         System.out.println(testU);
+        System.out.println(testP);
+        System.out.println(testU);
         ///////************TEST END */
-        
+
     }
 
 
     public void run(){
-    /**
-     * The method to kick start the program. 
-     */
+        /**
+         * The method to kick start the program.
+         */
         try{
             // string to represent the user input
             String op;
@@ -78,24 +78,24 @@ public class BoundaryController extends Controller{
                 }
             }
         }
-        catch (NoSuchAlgorithmException | InterruptedException e) { 
-            System.out.println("Exception: " + e); 
+        catch (NoSuchAlgorithmException | InterruptedException e) {
+            System.out.println("Exception: " + e);
         }
     }
 
 
     private void homePageChoices(String name, String emailAddress) throws InterruptedException{
-    /**
-     * The option available for user and its operation.
-     */
+        /**
+         * The option available for user and its operation.
+         */
         String op = ui.getUserOption(homePageOp, name,true);
         if (op.equals("Manage Your Conference")){
-        // List all the conference available for that user.
-             ArrayList<String> userConf = cms.getUserConference(emailAddress);
-             userConf.add("Back");
-             System.out.println(userConf);
-             // if user has conference
-             if (userConf.size() >= 2 ){
+            // List all the conference available for that user.
+            ArrayList<String> userConf = cms.getUserConference(emailAddress);
+            userConf.add("Back");
+            System.out.println(userConf);
+            // if user has conference
+            if (userConf.size() >= 2 ){
                 String conf = ui.getUserOption(userConf, name,true);
                 if (conf.equals("Back")){
                     // go back to previous page
@@ -116,17 +116,17 @@ public class BoundaryController extends Controller{
                         reviewerChoices(name,emailAddress);
                     }
                 }
-             }
-             else {
-                 // if conference number is zero
+            }
+            else {
+                // if conference number is zero
                 ui.displayMsgWithSleep("You have no conference to manage.");
                 homePageChoices(name, emailAddress);
-             }
+            }
         }
         else if (op.equals("Create Conference")){
             this.createConferenceOption(name, emailAddress);
 
-        
+
 
         }
         else if (op.equals("Logout")){
@@ -138,9 +138,9 @@ public class BoundaryController extends Controller{
 
 
     private void chairChoices(String name, String emailAddress) throws InterruptedException{
-    /**
-     * The option available for chair and its operation.
-     */
+        /**
+         * The option available for chair and its operation.
+         */
         String op = ui.getUserOption(chairOp, name,true);
         if (op.equals("Back")){
             homePageChoices(name, emailAddress);
@@ -166,7 +166,15 @@ public class BoundaryController extends Controller{
         String [] confInfo = ui.getCreateConference();
         String confName = confInfo[0];
         String place = confInfo[1];
-        System.out.println(confInfo[2].length());
+        // truncate white space and non visible character
+        confName = confName.replaceAll("\\s","");
+        place = place.replaceAll("\\s","");
+        // // check if data input is zero
+        if ((confName.length() == 0) || (place.length() == 0)){
+            ui.displayMsgWithSleep("Information could not be empty.");
+            // jump back to home page.
+            this.createConferenceOption(name, emailAddress);
+        }
         try {
             // check date validity
             if ((confInfo[2].length() != 10) || (confInfo[3].length() != 10) || (confInfo[4].length() != 10)) {
@@ -273,9 +281,9 @@ public class BoundaryController extends Controller{
 
 
     private void authorChoices(String name, String emailAddress) throws InterruptedException{
-    /**
-     * The option available for author and its operation.
-     */
+        /**
+         * The option available for author and its operation.
+         */
         String op = ui.getUserOption(authorOp, name,true);
         if (op.equals("Back")){
             homePageChoices(name, emailAddress);
@@ -290,9 +298,9 @@ public class BoundaryController extends Controller{
 
 
     private void reviewerChoices(String name,String emailAddress) throws InterruptedException{
-    /**
-     * The option available for reviewer and its operation.
-     */
+        /**
+         * The option available for reviewer and its operation.
+         */
         String op = ui.getUserOption(reviewerOp, name,true);
         if (op.equals("Back")){
             homePageChoices(name, emailAddress);
@@ -307,14 +315,14 @@ public class BoundaryController extends Controller{
 
 
     private void adminChoices(){
-    /**
-     * The option available for admin and its operation.
-     */
+        /**
+         * The option available for admin and its operation.
+         */
         String op = ui.getUserOption(adminOp, "Admin",true);
         if (op.equals("Retrieve User Information")){
             //TODO: get the userlist and use UserInterface displayResult method to print out the information
             // remember to print the header and footer as shown in other method
-            
+
 
 
             // if exit is entered, return to admin page
@@ -341,11 +349,11 @@ public class BoundaryController extends Controller{
 
 
     private User authentication() throws NoSuchAlgorithmException, InterruptedException{
-    /**
-     * The method to authenticate user.
-     * It gets the user input boundary and check the email address and password
-     * @return the user who authenticated
-     */
+        /**
+         * The method to authenticate user.
+         * It gets the user input boundary and check the email address and password
+         * @return the user who authenticated
+         */
         // a variable to check if user is authenticated
         boolean authenticated = false;
         User u = null;
@@ -362,7 +370,7 @@ public class BoundaryController extends Controller{
             if (u != null){
                 String hashedPassword = ut.hashSHA256(password);
                 if (hashedPassword.equalsIgnoreCase(u.getPassword())){
-                // set choice to be true as user is authenticated
+                    // set choice to be true as user is authenticated
                     authenticated = true;
                 }
                 // password incorrect
@@ -380,9 +388,9 @@ public class BoundaryController extends Controller{
 
 
     private void registration() throws InterruptedException, NoSuchAlgorithmException{
-    /**
-     *  The method to register user.
-     */
+        /**
+         *  The method to register user.
+         */
         String [] info = ui.getRegistration();
         String firstName = info[0];
         String lastName = info[1];
@@ -397,9 +405,17 @@ public class BoundaryController extends Controller{
         String occupation = info[5];
         String employerDetail = info[6];
         String mobileNumber = info[7];
-        // check if data input is zero
+        // truncate white space and non visible character
+        firstName = firstName.replaceAll("\\s","");
+        lastName = lastName.replaceAll("\\s","");
+        emailAddress = emailAddress.replaceAll("\\s","");
+        highestQualification = highestQualification.replaceAll("\\s","");
+        occupation = occupation.replaceAll("\\s","");
+        employerDetail = employerDetail.replaceAll("\\s","");
+        mobileNumber = mobileNumber.replaceAll("\\s","");
+        // check if data input is zero/null
         if ((firstName.length()==0) || (lastName.length()==0)||(emailAddress.length()==0)||(highestQualification.length()==0)||(occupation.length()==0)||(employerDetail.length()==0)||(mobileNumber.length()==0)){
-            ui.displayMsgWithSleep("Please enter valid information!");
+            ui.displayMsgWithSleep("Information could not be empty.!");
             this.registration();
         }
         // if user exists
@@ -415,7 +431,7 @@ public class BoundaryController extends Controller{
             String op = ui.getUserOption(confirmOption, "", false);
             ui.displayFooter();
             if (op.equals("Register")){
-                 //create user entity
+                //create user entity
                 User u = createUserEntity("normal", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, null, null, null);
                 // add new user to userList
                 cms.addUser(u);
@@ -453,4 +469,5 @@ public class BoundaryController extends Controller{
         return matcher.matches();
     }
 }
+
     
