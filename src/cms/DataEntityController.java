@@ -8,6 +8,9 @@
 
 package cms;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+
 import java.util.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -15,25 +18,17 @@ import java.text.SimpleDateFormat;
 
 public class DataEntityController extends Controller {
 
-    private ArrayList<String> processCSV (String filePath){
+    private List<String[]> processCSV (String filePath){
         /**
          * To read the data from csv file (as database) and put the data to the arraylist structure
          * @param the file path of the csv file to be read
          */
             String currentLine;
-            ArrayList<String> csvData = new ArrayList<String>();
+            List<String[]> csvData = new ArrayList<>();
             try {
                 FileReader fileReader = new FileReader(filePath);
-                BufferedReader bufReader = new BufferedReader(fileReader);
-                int counter = 0;  // not reading the first line
-    
-                while((currentLine = bufReader.readLine()) != null) {
-                    if (counter != 0){
-                        csvData.add(currentLine);
-                    }
-                    counter += 1;
-                }
-                bufReader.close();
+                CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
+                csvData = csvReader.readAll();
             }
             catch (Exception e){
                 System.out.println("File Read Error: " + e);
@@ -48,22 +43,21 @@ public class DataEntityController extends Controller {
          * It initialized the ConferenceManagementSystem, to read all data from csv file, 
          * which act as database, and create entity for each of them.
          */
-        ArrayList<String> resultUser = processCSV (pathNormalUserCSV);
-        ArrayList<String> resultConference = processCSV (pathConferenceCSV);
-        ArrayList<String> resultPaper = processCSV (pathPaperCSV);
+        List<String[]> resultUser = processCSV (pathNormalUserCSV);
+        List<String[]> resultConference = processCSV (pathConferenceCSV);
+        List<String[]> resultPaper = processCSV (pathPaperCSV);
 
         String delimit = ",";
         String [] tmp;
         try {
             // Add the User Entity from csv file to object list
             if (resultUser.isEmpty() == false){
-                for (String line : resultUser){
-                    tmp = line.split(delimit);
+                for (String[] line : resultUser){
                     // Change the topicAreas and paper to ArrayList
-                    ArrayList<String> topic = ut.stringToArrayList(tmp[10],"/");
-                    ArrayList<String> paper = ut.stringToArrayList(tmp[11],"/");
+                    ArrayList<String> topic = ut.stringToArrayList(line[10],"/");
+                    ArrayList<String> paper = ut.stringToArrayList(line[11],"/");
                     // Create user entity and add into the userList
-                    User u = createUserEntity(tmp[0],tmp[1],tmp[2],tmp[3],tmp[4],tmp[5],tmp[6],tmp[7],tmp[8],tmp[9],topic,paper);
+                    User u = createUserEntity(line[0],line[1],line[2],line[3],line[4],line[5],line[6],line[7],line[8],line[9],topic,paper);
                     if (u != null){
                         cms.addUser(u);
                     }
@@ -71,16 +65,15 @@ public class DataEntityController extends Controller {
             }
             // Add the Conference Entity from csv file to object list
             if (resultConference.isEmpty() == false){
-                for (String line : resultConference){
-                    tmp = line.split(delimit);
+                for (String[] line : resultConference){
                     // Change the data to Date format
-                    Date date = new SimpleDateFormat("dd/mm/yyyy").parse(tmp[3]);
-                    Date submitDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(tmp[4]);
-                    Date reviewDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(tmp[5]);
+                    Date date = new SimpleDateFormat("dd/mm/yyyy").parse(line[3]);
+                    Date submitDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(line[4]);
+                    Date reviewDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(line[5]);
                     // Change the topicAreas to ArrayList
-                    ArrayList<String> topic = ut.stringToArrayList(tmp[2],"/");
+                    ArrayList<String> topic = ut.stringToArrayList(line[2],"/");
                     // Create conference entity and add into the conferenceList
-                    Conference c = createConferenceEntity(tmp[0],tmp[1],topic,date,submitDueDate,reviewDueDate);
+                    Conference c = createConferenceEntity(line[0],line[1],topic,date,submitDueDate,reviewDueDate);
                     if (c != null){
                         cms.addConference(c);
                     }
@@ -88,13 +81,12 @@ public class DataEntityController extends Controller {
             }
             // Add the Paper Entity from csv file to object list
             if (resultPaper.isEmpty() == false){
-                for (String line : resultPaper){
-                    tmp = line.split(delimit);
+                for (String[] line : resultPaper){
                     // Change the topicAreas to ArrayList
-                    ArrayList<String> topic = ut.stringToArrayList(tmp[6],"/");
+                    ArrayList<String> topic = ut.stringToArrayList(line[6],"/");
                     // Change the evaluation to ArrayList
-                    ArrayList<String> evaluation = ut.stringToArrayList(tmp[4],"/");
-                    Paper p = createPaperEntity(tmp[0],tmp[1],tmp[2],Integer.parseInt(tmp[3]),evaluation,tmp[5],topic,tmp[7]);
+                    ArrayList<String> evaluation = ut.stringToArrayList(line[4],"/");
+                    Paper p = createPaperEntity(line[0],line[1],line[2],Integer.parseInt(line[3]),evaluation,line[5],topic,line[7]);
                     if (p != null){
                         cms.addPaper(p);
                     }

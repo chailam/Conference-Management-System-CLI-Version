@@ -40,16 +40,16 @@ public class BoundaryController extends Controller{
     
         // System.out.println("option selecteddddddd: "+op);
 
-        //ArrayList<Conference> testC = new ArrayList<>();
-        // ArrayList<Paper> testP = new ArrayList<>();
-        // ArrayList<User> testU = new ArrayList<>();
-        //testC = cms.retrieveConferenceList();
-        // testP = cms.retrievePaperList();
-        // testU = cms.retrieveUserList();
+        ArrayList<Conference> testC = new ArrayList<>();
+         ArrayList<Paper> testP = new ArrayList<>();
+         ArrayList<User> testU = new ArrayList<>();
+        testC = cms.retrieveConferenceList();
+         testP = cms.retrievePaperList();
+         testU = cms.retrieveUserList();
 
-        //System.out.println(testC);
-        // System.out.println(testP);
-        // System.out.println(testU);
+        System.out.println(testC);
+         System.out.println(testP);
+         System.out.println(testU);
         ///////************TEST END */
         
     }

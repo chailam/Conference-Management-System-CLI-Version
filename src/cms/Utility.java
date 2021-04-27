@@ -4,6 +4,8 @@
 
 package cms;
 
+import com.opencsv.CSVWriter;
+
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -155,18 +157,9 @@ public class Utility {
          */
             try {
                 FileWriter fileWriter = new FileWriter(filePath, bol);
-                for (int i = 0; i < dataToWrite.length; i++){
-                    fileWriter.append(dataToWrite[i]);
-                    if (i != dataToWrite.length-1){
-                        // no need to append comma for last item
-                        fileWriter.append(",");
-                    }
-                    else{
-                        fileWriter.append("\n");
-                    }
-                }
-                fileWriter.flush();
-                fileWriter.close();
+                CSVWriter writer = new CSVWriter(fileWriter);
+                writer.writeNext(dataToWrite);
+                writer.close();
             }
             catch (Exception e){
                 System.out.println("File Write Error: " + e);
