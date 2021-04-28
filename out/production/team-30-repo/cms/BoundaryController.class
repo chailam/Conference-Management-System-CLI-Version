@@ -319,20 +319,18 @@ public class BoundaryController extends Controller{
         if (op.equalsIgnoreCase("Retrieve User Information")){
             // get the userlist and print out the information
             ArrayList<User> userList = cms.retrieveUserList();
-            ui.displayMessageLn("-----------------Registered User Information-----------------");
-            ui.displayMessageLn("       First Name     |        Last Name     |      Email      |       Highest Qualification       |       Occupation      |       Employer's Details      |       Mobile Number       |       Conference      |       Role        ");
+            ui.displayHeader();
+            ui.displayMessageLn("---------------------------------------Registered User Information---------------------------------------");
+            System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s","First Name","Last Name","Email","Highest Qualification","Occupation","Employer's Details","Mobile Number","Conference","Role");
+            ui.displayMessageLn("");
             for (User u: userList){
                 if (!u.getRole().equalsIgnoreCase("admin")){
                     NormalUser nu = (NormalUser) u;
-                    ui.displayMessageLn("   " + nu.getFirstName() + "   " + nu.getLastName() + "   " + nu.getEmail() + "   " + nu.getHighestQualification() + "   " + nu.getOccupation() + "   " + nu.getEmployerDetail() + "   " + nu.getMobileNumber() + "   " + nu.getConferenceName() + "   " + nu.getRole());
+                    System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s",nu.getFirstName(),nu.getLastName(),nu.getEmail(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),nu.getConferenceName(),nu.getRole());
+                    ui.displayMessageLn("");
                 }
-
-
-
             }
-
-
-
+            ui.displayFooter();
             // if exit is entered, return to admin page
             if (ui.getExitCommand() == true){
                 this.adminChoices();
@@ -340,8 +338,7 @@ public class BoundaryController extends Controller{
 
         }
         else if (op.equalsIgnoreCase("Retrieve Conference Information")){
-            //TODO: get the userlist and use UserInterface displayResult method to print out the information
-            // remember to print the header and footer as shown in other method
+            //get the conferenceList
 
 
             // if exit is entered, return to admin page
@@ -383,12 +380,12 @@ public class BoundaryController extends Controller{
                 }
                 // password incorrect
                 else{
-                    ui.displayMsgWithSleep("Error: User is not valid. \nPlease login again or enter contact admin for any questions.");
+                    ui.displayMsgWithSleep("Error: User is not valid. \n\tPlease login again or enter contact admin for any questions.");
                 }
             }
             // user does not exist
             else{
-                ui.displayMsgWithSleep("Error: User is not valid. \nPlease login again or enter contact admin for any questions.");
+                ui.displayMsgWithSleep("Error: User is not valid. \n\tPlease login again or enter contact admin for any questions.");
             }
         }
         return u;
