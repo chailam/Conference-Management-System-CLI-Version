@@ -338,9 +338,17 @@ public class BoundaryController extends Controller{
 
         }
         else if (op.equalsIgnoreCase("Retrieve Conference Information")){
-            //get the conferenceList
-
-
+            //get the conferenceList and print out the information
+            ArrayList<Conference> confList = cms.retrieveConferenceList();
+            ui.displayHeader();
+            ui.displayMessageLn("---------------------------------------Registered Conference Information---------------------------------------");
+            System.out.format("%20s %20s %15s %15s %15s %40s","Name","Place","Date","Submission Due","Review Due","Topic Areas");
+            ui.displayMessageLn("");
+            for (Conference c: confList){
+                System.out.format("%20s %20s %15s %15s %15s %40s",c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperSubmissionDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
+                ui.displayMessageLn("");
+            }
+            ui.displayFooter();
             // if exit is entered, return to admin page
             if (ui.getExitCommand() == true){
                 this.adminChoices();
