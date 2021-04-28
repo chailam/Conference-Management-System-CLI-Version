@@ -41,16 +41,16 @@ public class BoundaryController extends Controller{
 
         // System.out.println("option selecteddddddd: "+op);
 
-        ArrayList<Conference> testC = new ArrayList<>();
-        ArrayList<Paper> testP = new ArrayList<>();
-        ArrayList<User> testU = new ArrayList<>();
-        testC = cms.retrieveConferenceList();
-        testP = cms.retrievePaperList();
-        testU = cms.retrieveUserList();
-
-        System.out.println(testC);
-        System.out.println(testP);
-        System.out.println(testU);
+//        ArrayList<Conference> testC = new ArrayList<>();
+//        ArrayList<Paper> testP = new ArrayList<>();
+//        ArrayList<User> testU = new ArrayList<>();
+//        testC = cms.retrieveConferenceList();
+//        testP = cms.retrievePaperList();
+//        testU = cms.retrieveUserList();
+//
+//        System.out.println(testC);
+//        System.out.println(testP);
+//        System.out.println(testU);
         ///////************TEST END */
 
     }
@@ -65,12 +65,12 @@ public class BoundaryController extends Controller{
             String op;
             op = ui.getUserOption(mainPageOp,"Guest",true);
 
-            if (op.equals("Register")){
+            if (op.equalsIgnoreCase("Register")){
                 this.registration();
             }
-            else if (op.equals("Login")){
+            else if (op.equalsIgnoreCase("Login")){
                 User u = authentication();
-                if (u.getRole().equals("Admin")){
+                if (u.getRole().equalsIgnoreCase("Admin")){
                     adminChoices();
                 }
                 else{
@@ -89,15 +89,14 @@ public class BoundaryController extends Controller{
          * The option available for user and its operation.
          */
         String op = ui.getUserOption(homePageOp, name,true);
-        if (op.equals("Manage Your Conference")){
+        if (op.equalsIgnoreCase("Manage Your Conference")){
             // List all the conference available for that user.
             ArrayList<String> userConf = cms.getUserConference(emailAddress);
             userConf.add("Back");
-            System.out.println(userConf);
             // if user has conference
             if (userConf.size() >= 2 ){
                 String conf = ui.getUserOption(userConf, name,true);
-                if (conf.equals("Back")){
+                if (conf.equalsIgnoreCase("Back")){
                     // go back to previous page
                     this.homePageChoices(name, emailAddress);
                 }
@@ -123,13 +122,11 @@ public class BoundaryController extends Controller{
                 homePageChoices(name, emailAddress);
             }
         }
-        else if (op.equals("Create Conference")){
+        else if (op.equalsIgnoreCase("Create Conference")){
             this.createConferenceOption(name, emailAddress);
 
-
-
         }
-        else if (op.equals("Logout")){
+        else if (op.equalsIgnoreCase("Logout")){
             // return to main page
             this.run();
         }
@@ -142,14 +139,14 @@ public class BoundaryController extends Controller{
          * The option available for chair and its operation.
          */
         String op = ui.getUserOption(chairOp, name,true);
-        if (op.equals("Back")){
+        if (op.equalsIgnoreCase("Back")){
             homePageChoices(name, emailAddress);
         }
-        else if (op.equals("Final Decision on Paper")){
+        else if (op.equalsIgnoreCase("Final Decision on Paper")){
             //TODO: implement here the final decision on paper, either approve or reject
             // write to csv file
         }
-        else if (op.equals("Assign Reviewer to Paper")){
+        else if (op.equalsIgnoreCase("Assign Reviewer to Paper")){
             //TODO: implement here the manually assign reviewer
             // write to csv file
 
@@ -200,7 +197,7 @@ public class BoundaryController extends Controller{
             ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList("Create","Back","Exit"));
             String op = ui.getUserOption(confirmOption, "", false);
             ui.displayFooter();
-            if (op.equals("Create")){
+            if (op.equalsIgnoreCase("Create")){
                 // create conference entity
                 Conference c = createConferenceEntity(confName, place, topicName, date, submitDueDate, reviewDueDate);
                 // add conference entity to conferenceList
@@ -224,11 +221,11 @@ public class BoundaryController extends Controller{
                 // jump to home page
                 this.homePageChoices(name, emailAddress);
             }
-            else if (op.equals("Back")){
+            else if (op.equalsIgnoreCase("Back")){
                 // return to register page
                 this.createConferenceOption(name, emailAddress);
             }
-            else if(op.equals("Exit")){
+            else if(op.equalsIgnoreCase("Exit")){
                 // return back to main page
                 this.homePageChoices(name, emailAddress);
             }
@@ -285,10 +282,10 @@ public class BoundaryController extends Controller{
          * The option available for author and its operation.
          */
         String op = ui.getUserOption(authorOp, name,true);
-        if (op.equals("Back")){
+        if (op.equalsIgnoreCase("Back")){
             homePageChoices(name, emailAddress);
         }
-        else if (op.equals("Submit Paper")){
+        else if (op.equalsIgnoreCase("Submit Paper")){
             //TODO: implement here the submit paper
             //create paper object using method in Controller.java
             // write to csv file
@@ -302,10 +299,10 @@ public class BoundaryController extends Controller{
          * The option available for reviewer and its operation.
          */
         String op = ui.getUserOption(reviewerOp, name,true);
-        if (op.equals("Back")){
+        if (op.equalsIgnoreCase("Back")){
             homePageChoices(name, emailAddress);
         }
-        else if (op.equals("Submit Evaluation of Paper")){
+        else if (op.equalsIgnoreCase("Submit Evaluation of Paper")){
             //TODO: implement here the submit evaluation
             // write to csv file
 
@@ -319,29 +316,45 @@ public class BoundaryController extends Controller{
          * The option available for admin and its operation.
          */
         String op = ui.getUserOption(adminOp, "Admin",true);
-        if (op.equals("Retrieve User Information")){
-            //TODO: get the userlist and use UserInterface displayResult method to print out the information
-            // remember to print the header and footer as shown in other method
-
-
-
+        if (op.equalsIgnoreCase("Retrieve User Information")){
+            // get the userlist and print out the information
+            ArrayList<User> userList = cms.retrieveUserList();
+            ui.displayHeader();
+            ui.displayMessageLn("---------------------------------------Registered User Information---------------------------------------");
+            System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s","First Name","Last Name","Email","Highest Qualification","Occupation","Employer's Details","Mobile Number","Conference","Role");
+            ui.displayMessageLn("");
+            for (User u: userList){
+                if (!u.getRole().equalsIgnoreCase("admin")){
+                    NormalUser nu = (NormalUser) u;
+                    System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s",nu.getFirstName(),nu.getLastName(),nu.getEmail(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),nu.getConferenceName(),nu.getRole());
+                    ui.displayMessageLn("");
+                }
+            }
+            ui.displayFooter();
             // if exit is entered, return to admin page
             if (ui.getExitCommand() == true){
                 this.adminChoices();
             }
 
         }
-        else if (op.equals("Retrieve Conference Information")){
-            //TODO: get the userlist and use UserInterface displayResult method to print out the information
-            // remember to print the header and footer as shown in other method
-
-
+        else if (op.equalsIgnoreCase("Retrieve Conference Information")){
+            //get the conferenceList and print out the information
+            ArrayList<Conference> confList = cms.retrieveConferenceList();
+            ui.displayHeader();
+            ui.displayMessageLn("---------------------------------------Registered Conference Information---------------------------------------");
+            System.out.format("%20s %20s %15s %15s %15s %40s","Name","Place","Date","Submission Due","Review Due","Topic Areas");
+            ui.displayMessageLn("");
+            for (Conference c: confList){
+                System.out.format("%20s %20s %15s %15s %15s %40s",c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperSubmissionDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
+                ui.displayMessageLn("");
+            }
+            ui.displayFooter();
             // if exit is entered, return to admin page
             if (ui.getExitCommand() == true){
                 this.adminChoices();
             }
         }
-        else if (op.equals("Logout")){
+        else if (op.equalsIgnoreCase("Logout")){
             // return to main page
             this.run();
         }
@@ -375,12 +388,12 @@ public class BoundaryController extends Controller{
                 }
                 // password incorrect
                 else{
-                    ui.displayMsgWithSleep("Error: User is not valid. \nPlease login again or enter contact admin for any questions.");
+                    ui.displayMsgWithSleep("Error: User is not valid. \n\tPlease login again or enter contact admin for any questions.");
                 }
             }
             // user does not exist
             else{
-                ui.displayMsgWithSleep("Error: User is not valid. \nPlease login again or enter contact admin for any questions.");
+                ui.displayMsgWithSleep("Error: User is not valid. \n\tPlease login again or enter contact admin for any questions.");
             }
         }
         return u;
@@ -430,7 +443,7 @@ public class BoundaryController extends Controller{
             ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList("Register","Back","Exit"));
             String op = ui.getUserOption(confirmOption, "", false);
             ui.displayFooter();
-            if (op.equals("Register")){
+            if (op.equalsIgnoreCase("Register")){
                 //create user entity
                 User u = createUserEntity("normal", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, null, null, null);
                 // add new user to userList
@@ -442,11 +455,11 @@ public class BoundaryController extends Controller{
                 ui.displayMsgWithSleep("You have succcessfully registered!\nEnjoy your conferences!\nPlease login again!");
                 this.run();
             }
-            else if (op.equals("Back")){
+            else if (op.equalsIgnoreCase("Back")){
                 // return to register page
                 this.registration();
             }
-            else if(op.equals("Exit")){
+            else if(op.equalsIgnoreCase("Exit")){
                 // return back to main page
                 this.run();
             }
