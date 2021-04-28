@@ -12,17 +12,17 @@ import java.util.*;
 
 
 public class UserInterface {
-    String [] header = {"                                                     ",
-                        "                                                     ",
-                        "*****************************************************",
-                        "                                                     ",
-                        "         Conference Management System (CMS)          ",
-                        "                                                     ",
-                        "*****************************************************"};
+    String [] header = {"                                                                                                          ",
+                        "                                                                                                          ",
+                        "**********************************************************************************************************",
+                        "                                                                                                          ",
+                        "                                      Conference Management System (CMS)                                  ",
+                        "                                                                                                          ",
+                        "**********************************************************************************************************"};
 
-    String [] footer = {"*****************************************************",
-                        "            powered by Monash Conference Centre (MCC)",
-                        "*****************************************************"};
+    String [] footer = {"***********************************************************************************************************",
+                        "                                                              powered by Monash Conference Centre (MCC)   ",
+                        "***********************************************************************************************************"};
 
     private Scanner scanner;
 
@@ -51,9 +51,9 @@ public class UserInterface {
      * To greet the user
      * @param the name of user to be greet
      */
-        System.out.println("Hi "+ name);
-        System.out.println("");
-        System.out.println("");
+        this.displayMessageLn("Hi "+ name );
+        this.displayMessageLn("");
+        this.displayMessageLn("");
     }
 
 
@@ -70,11 +70,11 @@ public class UserInterface {
                 this.displayGreeting(name);
             }
         }
-        System.out.println("Please enter your options:");
+        this.displayMessageLn("Please enter your options:");
 
         // Print out all options
         for( int i = 0; i < options.size(); i++){
-            System.out.println((i+1) + ". " + options.get(i));
+            this.displayMessageLn((i+1) + ". " + options.get(i));
         }
         if (bo == true){
             // Print the footer
@@ -83,19 +83,19 @@ public class UserInterface {
         int choice = 0; 
 		while (choice < 1 || choice > options.size()) {//loop until a valid option has been obtained
             if ( choice > options.size()){
-                System.out.println("Error: Invalid value. Please enter a valid value.");
+                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
             }
-            System.out.print("Enter option (1 - "+ options.size() +"): ");
+            this.displayMessage("Enter option (1 - "+ options.size() +"): ");
 			try{
 				choice = Integer.parseInt(scanner.nextLine());
                 // verify boundary value
                 if (choice <= 0){
-                    System.out.println("Error: Invalid value. Please enter a valid value.");
+                    this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
                 }
                 
 			}catch (InputMismatchException | NumberFormatException e) { //catching the non integer inputs
                 choice = 0;
-                System.out.println("Error: Invalid value. Please enter a valid value.");
+                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
 			}
 		}
 		return options.get(choice-1);//return the option value selected	
@@ -106,8 +106,8 @@ public class UserInterface {
     /**
      * To print the conststent footer of the system
      */
-        System.out.println("");
-        System.out.println("");
+        this.displayMessageLn("");
+        this.displayMessageLn("");
         for(String line: footer) {
             System.out.println(line);
         }
@@ -116,9 +116,16 @@ public class UserInterface {
 
     public void displayMessage(String msg){
     /**
-     * To print the message 
+     * To print the message without new line
      */
-        System.out.println(msg);
+        System.out.print("    " + msg);
+    }
+
+    public void displayMessageLn(String msg){
+        /**
+         * To print the message with new line
+         */
+        System.out.println("    " + msg);
     }
 
 
@@ -129,11 +136,11 @@ public class UserInterface {
      */
         this.displayHeader();
         this.displayGreeting("Guest");
-        
-        System.out.println("Please enter your user credentials.");
-        System.out.print("Email Address: ");
+
+        this.displayMessageLn("Please enter your user credentials.");
+        this.displayMessage("Email Address: ");
         String emailAddress = scanner.nextLine(); // Read the user input
-        System.out.print("Password: ");
+        this.displayMessage("Password: ");
         String password = scanner.nextLine(); // Read the user input
         this.displayFooter();
 
@@ -147,7 +154,7 @@ public class UserInterface {
      * It will sleep for 2 seconds before jumping to other screen
      */
         this.displayHeader();
-        System.out.println(message);
+        this.displayMessageLn(message);
         this.displayFooter();
         TimeUnit.SECONDS.sleep(2);
     }
@@ -160,7 +167,7 @@ public class UserInterface {
      */
         String input = "";
         while (!input.equals("exit")){
-            System.out.print("Enter \"exit\" to return to previous page: ");
+            this.displayMessageLn("Enter \"exit\" to return to previous page: ");
             input = scanner.nextLine();
         }
         return true;
@@ -173,22 +180,23 @@ public class UserInterface {
      * @return the information retrieved
      */
         this.displayHeader();
-        System.out.println("Registration Process (1/2)\n\nEnter user details.");
-        System.out.print("First Name: ");
+        this.displayMessageLn("Registration Process (1/2)");
+        this.displayMessageLn("Enter user details.");
+        this.displayMessage("First Name: ");
         String firstName = scanner.nextLine(); // Read the user input
-        System.out.print("Last Name: ");
+        this.displayMessage("Last Name: ");
         String lastName = scanner.nextLine(); // Read the user input
-        System.out.print("Email Address: ");
+        this.displayMessage("Email Address: ");
         String emailAddress = scanner.nextLine(); // Read the user input
-        System.out.print("Password: ");
+        this.displayMessage("Password: ");
         String password = scanner.nextLine(); // Read the user input
-        System.out.print("Highest Qualification: ");
+        this.displayMessage("Highest Qualification: ");
         String highestQualification = scanner.nextLine(); // Read the user input
-        System.out.print("Occupation: ");
+        this.displayMessage("Occupation: ");
         String occupation = scanner.nextLine(); // Read the user input
-        System.out.print("Employer's details: ");
+        this.displayMessage("Employer's details: ");
         String employerDetail = scanner.nextLine(); // Read the user input
-        System.out.print("Mobile number: ");
+        this.displayMessage("Mobile number: ");
         String mobileNumber = scanner.nextLine(); // Read the user input
         this.displayFooter();
 
@@ -201,14 +209,15 @@ public class UserInterface {
      * The message to confirm the registration
      */
         this.displayHeader();
-        System.out.println("Registration Process (2/2)\n\nPlease confirm your user details.");
-        System.out.println("First Name: " + firstName);
-        System.out.println("Last Name: " + lastName);
-        System.out.println("Email Address: " + emailAddress);
-        System.out.println("Highest Qualification: " + highestQualification);
-        System.out.println("Occupation: " + occupation);
-        System.out.println("Employer's details: " + employerDetail);
-        System.out.println("Mobile number: " + mobileNumber);
+        this.displayMessageLn("Registration Process (2/2)");
+        this.displayMessageLn("Please confirm your user details.");
+        this.displayMessageLn("First Name: " + firstName);
+        this.displayMessageLn("Last Name: " + lastName);
+        this.displayMessageLn("Email Address: " + emailAddress);
+        this.displayMessageLn("Highest Qualification: " + highestQualification);
+        this.displayMessageLn("Occupation: " + occupation);
+        this.displayMessageLn("Employer's details: " + employerDetail);
+        this.displayMessageLn("Mobile number: " + mobileNumber);
     }
 
     public String[] getCreateConference() {
@@ -217,16 +226,17 @@ public class UserInterface {
          * @return the information retrieved
          */
         this.displayHeader();
-        System.out.println("Conference Creation Process (1/3)\n\nPlease enter the conference details.");
-        System.out.print("Conference Name: ");
+        this.displayMessageLn("Conference Creation Process (1/3)");
+        this.displayMessageLn("Please enter the conference details.");
+        this.displayMessage("Conference Name: ");
         String confName = scanner.nextLine(); // Read the user input
-        System.out.print("Conference Place: ");
+        this.displayMessage("Conference Place: ");
         String place = scanner.nextLine(); // Read the user input
-        System.out.print("Conference Date (dd/mm/yyyy): ");
+        this.displayMessage("Conference Date (dd/mm/yyyy): ");
         String date = scanner.nextLine(); // Read the user input
-        System.out.print("Paper Submission Due Date (dd/mm/yyyy): ");
+        this.displayMessage("Paper Submission Due Date (dd/mm/yyyy): ");
         String submitDueDate = scanner.nextLine(); // Read the user input
-        System.out.print("Paper Review Due Date (dd/mm/yyyy): ");
+        this.displayMessage("Paper Review Due Date (dd/mm/yyyy): ");
         String reviewDueDate = scanner.nextLine(); // Read the user input
         this.displayFooter();
 
@@ -239,13 +249,14 @@ public class UserInterface {
          * The message to confirm the conference creation
          */
         this.displayHeader();
-        System.out.println("Registration Process (3/3)\n\nPlease confirm your conference details.");
-        System.out.println("Conference Name: " + confName);
-        System.out.println("Conference Place:  " + place);
-        System.out.println("Conference Date (dd/mm/yyyy): " + date);
-        System.out.println("Paper Submission Due Date (dd/mm/yyyy): " + submitDueDate);
-        System.out.println("Paper Review Due Date (dd/mm/yyyy): " + reviewDueDate);
-        System.out.println("Topic Areas: " + topic);
+        this.displayMessageLn("Registration Process (3/3)");
+        this.displayMessageLn("Please confirm your conference details.");
+        this.displayMessageLn("Conference Name: " + confName);
+        this.displayMessageLn("Conference Place:  " + place);
+        this.displayMessageLn("Conference Date (dd/mm/yyyy): " + date);
+        this.displayMessageLn("Paper Submission Due Date (dd/mm/yyyy): " + submitDueDate);
+        this.displayMessageLn("Paper Review Due Date (dd/mm/yyyy): " + reviewDueDate);
+        this.displayMessageLn("Topic Areas: " + topic);
     }
 
 
@@ -255,18 +266,18 @@ public class UserInterface {
          * @return the topic areas retrieved
          */
         this.displayHeader();
-        System.out.println("Conference Creation Process (2/3)");
-        System.out.println("Please choose relevant the topic areas by \nentering their number index, separated by comma. ");
-        System.out.println("For example, input: 1,2,3");
+        this.displayMessageLn("Conference Creation Process (2/3)");
+        this.displayMessageLn("Please choose relevant the topic areas by entering their number index, separated by comma. ");
+        this.displayMessageLn("For example, input: 1,2,3");
         // print our all topic areas available
         for (int i = 0; i < topicAreas.size() ; i++){
-            System.out.println((i+1) + " . " + topicAreas.get(i));
+            this.displayMessageLn((i+1) + " . " + topicAreas.get(i));
         }
-        System.out.print("Please enter your topic areas number index: ");
+        this.displayMessage("Please enter your topic areas number index: ");
         String topicsInd = scanner.nextLine(); // Read the user input
-        System.out.println("If your topics are not in the list, please \ntype your topic areas here, separated by comma.");
-        System.out.println("For example, input: Information Technology, Cybersecurity");
-        System.out.print("Please enter your topic areas name: ");
+        this.displayMessageLn("If your topics are not in the list, please type your topic areas here, separated by comma.");
+        this.displayMessageLn("For example, input: Information Technology, Cybersecurity");
+        this.displayMessage("Please enter your topic areas name: ");
         String topicsName = scanner.nextLine(); // Read the user input
         this.displayFooter();
         return new String[] {topicsInd,topicsName};
