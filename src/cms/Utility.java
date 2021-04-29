@@ -150,10 +150,12 @@ public class Utility {
          */
         boolean check = true;
         System.out.println(index);
-        // check if the index invalid
-        for (Integer ind : index) {
-            if ((ind >= listLength) || (ind < 0)) {
-                check = false;
+        if (index != null){
+            // check if the index invalid
+            for (Integer ind : index) {
+                if ((ind >= listLength) || (ind < 0)) {
+                    check = false;
+                }
             }
         }
         return check;

@@ -281,4 +281,17 @@ public class UserInterface {
         return new String[] {topicsInd,topicsName};
     }
 
+
+    public void topicAreasConfirmation(String topic){
+    /**
+     * The message to confirm the topics areas information
+     */
+        this.displayHeader();
+        this.displayMessageLn("The topics that fall into your area of expertise is/are:");
+        this.displayMessageLn("");
+        this.displayMessageLn("");
+        this.displayMessageLn(topic);
+        this.displayMessageLn("");
+        this.displayMessageLn("");
+    }
 }

@@ -146,7 +146,7 @@ public class BoundaryController extends Controller{
         ArrayList<Conference> conf = cms.retrieveConferenceList();
         ArrayList<String> availableConf = new ArrayList<String>();
         for (Conference c:conf){
-            // if the date of conference is not past
+            // if the date of conference is not past date
             if (c.getDate().isAfter(LocalDate.now(ZoneId.of( "Australia/Sydney" )))){
                 availableConf.add(c.getName());
             }
@@ -170,9 +170,34 @@ public class BoundaryController extends Controller{
             if (op.equalsIgnoreCase("Join")){
                 ArrayList<String> confirmOption2   = new ArrayList<>(Arrays.asList("Join as Reviewer","Join as Author","Back"));
                 String op2 = ui.getUserOption(confirmOption2, name, true);
+                // if user join as reviewer
                 if (op2.equalsIgnoreCase("Join as Reviewer")){
+                    // ask for topic areas
+                    ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
+                    ui.topicAreasConfirmation(ut.arrayListToString(topicName,","));
+                    ArrayList<String> confirmOption3   = new ArrayList<>(Arrays.asList("Confirm","Back"));
+                    String op3 = ui.getUserOption(confirmOption3, "", false);
+                    ui.displayFooter();
+                    if (op3.equalsIgnoreCase("Confirm")){
+                        // Set the conference of the user to this conference
+                        User u = cms.searchUser(emailAddress);
+                        NormalUser nu = (NormalUser)u;
+                        User createdu = createUserEntity("Reviewer",u.getEmail(),u.getPassword(),nu.getFirstName(),nu.getLastName(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),c.getName(),topicName,null);
+                        cms.addUser(createdu);
+                        // write to csv file
+                        String[] userData = {"Reviewer",u.getEmail(),u.getPassword(),nu.getFirstName(),nu.getLastName(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),c.getName(),ut.arrayListToString(topicName,","),"null"};
+                        ut.writeToCSV(pathNormalUserCSV, userData,true);
+                        // display message
+                        ui.displayMsgWithSleep("Congratulations!\n  You have joined the Conference "+ c.getName() + " as Reviewer.\n");
+                        // go back to previous page
+                        this.homePageChoices(name, emailAddress);
 
+                    }
+                    else if (op3.equalsIgnoreCase("Back")){
+                        this.joinConferenceOption(name,emailAddress);
+                    }
                 }
+                // if user join as author
                 else if (op2.equalsIgnoreCase("Join as Author")){
                     // Set the conference of the user to this conference
                     User u = cms.searchUser(emailAddress);
@@ -191,24 +216,13 @@ public class BoundaryController extends Controller{
                     // go back to previous page
                     this.joinConferenceOption(name, emailAddress);
                 }
-
-
-
-
             }
             // if user choose to exit
             else if(op.equalsIgnoreCase("Exit")){
                 // return back to main page
                 this.homePageChoices(name, emailAddress);
             }
-
-            // get the conference name, ask which role to join as, create entity for each role
-
         }
-
-
-
-
     }
 
 
