@@ -5,6 +5,7 @@
 
 package cms;
 
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -12,11 +13,11 @@ public class Conference {
     private String name;
     private String place;
     private ArrayList<String> chosenTopicAreas= new ArrayList<String>();
-    private Date date;
-    private Date paperSubmissionDueDate;
-    private Date paperReviewDueDate;
+    private LocalDate date;
+    private LocalDate paperSubmissionDueDate;
+    private LocalDate paperReviewDueDate;
 
-    public Conference (String name, String place, ArrayList<String> topic, Date date, Date submissionDue, Date reviewDue){
+    public Conference (String name, String place, ArrayList<String> topic, LocalDate date, LocalDate submissionDue, LocalDate reviewDue){
     /**
 	 * Constructor for the Conference.
      * @param name is the name of the conference
@@ -61,7 +62,7 @@ public class Conference {
     }
 
 
-    public Date getDate(){
+    public LocalDate getDate(){
     /**
      * Getter for the date held of conference
      * @return 	the date held of conference
@@ -70,7 +71,7 @@ public class Conference {
     }
 
 
-    public Date getPaperSubmissionDue(){
+    public LocalDate getPaperSubmissionDue(){
     /**
      * Getter for the paper submission due date of the conference
      * @return 	the paper submission due date of the conference
@@ -79,7 +80,7 @@ public class Conference {
     }
 
 
-    public Date getPaperReviewDue(){
+    public LocalDate getPaperReviewDue(){
     /**
      * Getter for the paper review due date of the conference
      * @return 	the paper review due date of the conference
@@ -115,7 +116,7 @@ public class Conference {
     }
 
 
-    public void setDate(Date date){
+    public void setDate(LocalDate date){
     /**
      * Setter for the date held of conference
      * @param 	the date held of conference
@@ -124,7 +125,7 @@ public class Conference {
     }
 
 
-    public void setSubmissionDue(Date date){
+    public void setSubmissionDue(LocalDate date){
     /**
      * Setter for the paper submission due date of the conference
      * @param 	the paper submission due date of the conference
@@ -133,7 +134,7 @@ public class Conference {
     }
 
 
-    public void getReviewDue(Date date){
+    public void getReviewDue(LocalDate date){
     /**
      * Setter for the paper review due date of the conference
      * @param 	the paper review due date of the conference

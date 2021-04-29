@@ -3,10 +3,12 @@
  */
 package cms;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +24,7 @@ public class BoundaryController extends Controller{
     // The option shown here are just the functionalities assigned by tutor.
     // The option for not assigned functionality are not shown here
     ArrayList<String> mainPageOp  = new ArrayList<>(Arrays.asList("Register", "Login"));
-    ArrayList<String> homePageOp   = new ArrayList<>(Arrays.asList("Manage Your Conference","Create Conference","Logout"));
+    ArrayList<String> homePageOp   = new ArrayList<>(Arrays.asList("Manage Your Conference","Join Conference","Create Conference","Logout"));
     ArrayList<String> adminOp   = new ArrayList<>(Arrays.asList("Retrieve User Information", "Retrieve Conference Information","Logout"));
     ArrayList<String> authorOp   = new ArrayList<>(Arrays.asList("Submit Paper", "Back"));
     ArrayList<String> chairOp   = new ArrayList<>(Arrays.asList("Final Decision on Paper", "Assign Reviewer to Paper","Back"));
@@ -41,14 +43,14 @@ public class BoundaryController extends Controller{
 
         // System.out.println("option selecteddddddd: "+op);
 
-//        ArrayList<Conference> testC = new ArrayList<>();
+        ArrayList<Conference> testC = new ArrayList<>();
 //        ArrayList<Paper> testP = new ArrayList<>();
 //        ArrayList<User> testU = new ArrayList<>();
-//        testC = cms.retrieveConferenceList();
+        testC = cms.retrieveConferenceList();
 //        testP = cms.retrievePaperList();
 //        testU = cms.retrieveUserList();
 //
-//        System.out.println(testC);
+        System.out.println(testC);
 //        System.out.println(testP);
 //        System.out.println(testU);
         ///////************TEST END */
@@ -124,7 +126,9 @@ public class BoundaryController extends Controller{
         }
         else if (op.equalsIgnoreCase("Create Conference")){
             this.createConferenceOption(name, emailAddress);
-
+        }
+        else if (op.equalsIgnoreCase("Join Conference")){
+            this.joinConferenceOption(name, emailAddress);
         }
         else if (op.equalsIgnoreCase("Logout")){
             // return to main page
@@ -132,6 +136,23 @@ public class BoundaryController extends Controller{
         }
     }
 
+
+    private void joinConferenceOption (String name, String emailAddress){
+    /**
+     * To create the conference
+     * @param the name of the creator
+     * @param the email address of the creator
+     */
+        // List out the conference happen before due date
+        ArrayList<Conference> conf = cms.retrieveConferenceList();
+        for (Conference c:conf){
+            // if the date of conference is not past
+            //if (c.getDate().after(LocalDate.now(ZoneId.of( "Australia/Sydney" ))))
+        }
+
+
+
+    }
 
 
     private void chairChoices(String name, String emailAddress) throws InterruptedException{
@@ -156,9 +177,11 @@ public class BoundaryController extends Controller{
     }
 
     private void createConferenceOption(String name, String emailAddress) throws InterruptedException {
-        /**
-         * To create the conference
-         */
+    /**
+     * To create the conference
+     * @param the name of the creator
+     * @param the email address of the creator
+     */
         // Get the information retrieved
         String [] confInfo = ui.getCreateConference();
         String confName = confInfo[0];
@@ -179,9 +202,9 @@ public class BoundaryController extends Controller{
                 // jump back to home page.
                 this.createConferenceOption(name, emailAddress);
             }
-            Date date = new SimpleDateFormat("dd/mm/yyyy").parse(confInfo[2]);
-            Date submitDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(confInfo[3]);
-            Date reviewDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(confInfo[4]);
+            LocalDate date = ut.stringToDate(confInfo[2]);
+            LocalDate submitDueDate = ut.stringToDate(confInfo[3]);
+            LocalDate reviewDueDate = ut.stringToDate(confInfo[4]);
 
             // check if existing conference
             if (cms.hasConference(confName) == true) {
@@ -230,7 +253,7 @@ public class BoundaryController extends Controller{
                 this.homePageChoices(name, emailAddress);
             }
         }
-        catch (ParseException e) {
+        catch (Exception e) {
             ui.displayMsgWithSleep("Please enter a valid date.");
             // jump back to create conference screen.
             this.createConferenceOption(name, emailAddress);

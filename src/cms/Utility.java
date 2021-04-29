@@ -7,8 +7,9 @@ package cms;
 import com.opencsv.CSVWriter;
 
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets; 
@@ -76,15 +77,26 @@ public class Utility {
     }
 
 
-    public String dateToString(Date date){
+    public String dateToString(LocalDate date){
     /**
      * To convert the date format to string format
      * @param the date
      * @return the string
      */
-        DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
-        String str = dateFormat.format(date);
-        return str;
+        String strDate = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        return strDate;
+    }
+
+
+    public LocalDate stringToDate(String date){
+    /**
+     * To convert the string format to date format
+     * @param the string
+     * @return the local date
+     */
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate localDate = LocalDate.parse(date, dateFormatter);
+        return localDate;
     }
 
 

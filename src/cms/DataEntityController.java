@@ -11,9 +11,9 @@ package cms;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.io.*;
-import java.text.SimpleDateFormat;
 
 
 public class DataEntityController extends Controller {
@@ -67,9 +67,9 @@ public class DataEntityController extends Controller {
             if (resultConference.isEmpty() == false){
                 for (String[] line : resultConference){
                     // Change the data to Date format
-                    Date date = new SimpleDateFormat("dd/mm/yyyy").parse(line[3]);
-                    Date submitDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(line[4]);
-                    Date reviewDueDate = new SimpleDateFormat("dd/mm/yyyy").parse(line[5]);
+                    LocalDate date = ut.stringToDate(line[3]);
+                    LocalDate submitDueDate = ut.stringToDate(line[4]);
+                    LocalDate reviewDueDate = ut.stringToDate(line[5]);
                     // Change the topicAreas to ArrayList
                     ArrayList<String> topic = ut.stringToArrayList(line[2],"/");
                     // Create conference entity and add into the conferenceList

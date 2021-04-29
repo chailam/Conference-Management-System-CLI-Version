@@ -1,6 +1,7 @@
 package cms;
 
 
+import java.time.LocalDate;
 import java.util.*;
 
 public abstract class Controller {
@@ -50,7 +51,7 @@ public abstract class Controller {
                         ((Author)u).setPaper(paper);
                     }
                 }
-                // if normal user
+                // if normal usernormal user
                 else if (role.equalsIgnoreCase("normal")){
                     u = new NormalUser("normal",emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber);
                 }
@@ -63,7 +64,7 @@ public abstract class Controller {
     
 
     
-    protected Conference createConferenceEntity (String name, String place, ArrayList<String> topic, Date date, Date submissionDue, Date reviewDue){
+    protected Conference createConferenceEntity (String name, String place, ArrayList<String> topic, LocalDate date, LocalDate submissionDue, LocalDate reviewDue){
         /**
          * To create the Conference entity
          * @param the user data
