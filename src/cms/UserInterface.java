@@ -220,13 +220,13 @@ public class UserInterface {
         this.displayMessageLn("Mobile number: " + mobileNumber);
     }
 
+
     public String[] getCreateConference() {
         /**
          * To get the required create conference information from the user
          * @return the information retrieved
          */
         this.displayHeader();
-        this.displayMessageLn("Conference Creation Process (1/3)");
         this.displayMessageLn("Please enter the conference details.");
         this.displayMessage("Conference Name: ");
         String confName = scanner.nextLine(); // Read the user input
@@ -244,13 +244,12 @@ public class UserInterface {
     }
 
 
-    public void confirmConferenceCreation(String confName, String place,String date, String submitDueDate, String reviewDueDate, String topic){
+    public void confirmConferenceInfo(String confName, String place, String date, String submitDueDate, String reviewDueDate, String topic){
         /**
-         * The message to confirm the conference creation
+         * The message to confirm the conference information
          */
         this.displayHeader();
-        this.displayMessageLn("Registration Process (3/3)");
-        this.displayMessageLn("Please confirm your conference details.");
+        this.displayMessageLn("Please confirm the conference details.");
         this.displayMessageLn("Conference Name: " + confName);
         this.displayMessageLn("Conference Place:  " + place);
         this.displayMessageLn("Conference Date (dd/mm/yyyy): " + date);
@@ -266,7 +265,6 @@ public class UserInterface {
          * @return the topic areas retrieved
          */
         this.displayHeader();
-        this.displayMessageLn("Conference Creation Process (2/3)");
         this.displayMessageLn("Please choose relevant the topic areas by entering their number index, separated by comma. ");
         this.displayMessageLn("For example, input: 1,2,3");
         // print our all topic areas available
@@ -282,4 +280,5 @@ public class UserInterface {
         this.displayFooter();
         return new String[] {topicsInd,topicsName};
     }
+
 }

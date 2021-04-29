@@ -4,7 +4,6 @@
 package cms;
 
 import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -43,14 +42,14 @@ public class BoundaryController extends Controller{
 
         // System.out.println("option selecteddddddd: "+op);
 
-        ArrayList<Conference> testC = new ArrayList<>();
+//        ArrayList<Conference> testC = new ArrayList<>();
 //        ArrayList<Paper> testP = new ArrayList<>();
 //        ArrayList<User> testU = new ArrayList<>();
-        testC = cms.retrieveConferenceList();
+//        testC = cms.retrieveConferenceList();
 //        testP = cms.retrievePaperList();
 //        testU = cms.retrieveUserList();
 //
-        System.out.println(testC);
+//        System.out.println(testC);
 //        System.out.println(testP);
 //        System.out.println(testU);
         ///////************TEST END */
@@ -137,7 +136,7 @@ public class BoundaryController extends Controller{
     }
 
 
-    private void joinConferenceOption (String name, String emailAddress){
+    private void joinConferenceOption (String name, String emailAddress) throws InterruptedException {
     /**
      * To create the conference
      * @param the name of the creator
@@ -145,12 +144,68 @@ public class BoundaryController extends Controller{
      */
         // List out the conference happen before due date
         ArrayList<Conference> conf = cms.retrieveConferenceList();
+        ArrayList<String> availableConf = new ArrayList<String>();
         for (Conference c:conf){
             // if the date of conference is not past
             if (c.getDate().isAfter(LocalDate.now(ZoneId.of( "Australia/Sydney" )))){
-                //show
+                availableConf.add(c.getName());
             }
         }
+        availableConf.add("Back");
+        // get user option to join which conference
+        String preferConf = ui.getUserOption(availableConf,name, true);
+        if (preferConf.equalsIgnoreCase("Back")){
+            // go back to previous page
+            this.homePageChoices(name, emailAddress);
+        }
+        else{
+            // the conference is selected
+            Conference c = cms.searchConference(preferConf);
+            // show the conference information
+            ui.confirmConferenceInfo(c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperReviewDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
+            ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList("Join","Exit"));
+            String op = ui.getUserOption(confirmOption, "", false);
+            ui.displayFooter();
+            // if user choose to join
+            if (op.equalsIgnoreCase("Join")){
+                ArrayList<String> confirmOption2   = new ArrayList<>(Arrays.asList("Join as Reviewer","Join as Author","Back"));
+                String op2 = ui.getUserOption(confirmOption2, name, true);
+                if (op2.equalsIgnoreCase("Join as Reviewer")){
+
+                }
+                else if (op2.equalsIgnoreCase("Join as Author")){
+                    // Set the conference of the user to this conference
+                    User u = cms.searchUser(emailAddress);
+                    NormalUser nu = (NormalUser)u;
+                    User createdu = createUserEntity("Author",u.getEmail(),u.getPassword(),nu.getFirstName(),nu.getLastName(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),c.getName(),null,null);
+                    cms.addUser(createdu);
+                    // write to csv file
+                    String[] userData = {"Author",u.getEmail(),u.getPassword(),nu.getFirstName(),nu.getLastName(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),c.getName(),"null","null"};
+                    ut.writeToCSV(pathNormalUserCSV, userData,true);
+                    // display message
+                    ui.displayMsgWithSleep("Congratulations!\n  You have joined the Conference "+ c.getName() + " as Author.\n");
+                    // go back to previous page
+                    this.homePageChoices(name, emailAddress);
+                }
+                else if (op2.equalsIgnoreCase("Back")){
+                    // go back to previous page
+                    this.joinConferenceOption(name, emailAddress);
+                }
+
+
+
+
+            }
+            // if user choose to exit
+            else if(op.equalsIgnoreCase("Exit")){
+                // return back to main page
+                this.homePageChoices(name, emailAddress);
+            }
+
+            // get the conference name, ask which role to join as, create entity for each role
+
+        }
+
 
 
 
@@ -217,7 +272,7 @@ public class BoundaryController extends Controller{
 
             // check if existing conference
             if (cms.hasConference(confName) == true) {
-                ui.displayMsgWithSleep("The conference already exists. \nPlease try to input other name.");
+                ui.displayMsgWithSleep("The conference already exists. \n   Please try to input other name.");
                 // jump back to home page.
                 this.homePageChoices(name, emailAddress);
             }
@@ -225,7 +280,7 @@ public class BoundaryController extends Controller{
             ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
 
             // Conference Confirmation
-            ui.confirmConferenceCreation(confName,place, ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate), ut.arrayListToString(topicName,","));
+            ui.confirmConferenceInfo(confName,place, ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate), ut.arrayListToString(topicName,","));
             ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList("Create","Back","Exit"));
             String op = ui.getUserOption(confirmOption, "", false);
             ui.displayFooter();
@@ -237,7 +292,7 @@ public class BoundaryController extends Controller{
                     //Write conference entity to csv file
                     String[] confData = {confName, place, ut.arrayListToString(topicName,"/"), ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate)};
                     ut.writeToCSV(pathConferenceCSV,confData,true);
-                    ui.displayMsgWithSleep("Congratulations!\nYou have created the Conference.\n");
+                    ui.displayMsgWithSleep("Congratulations!\n  You have created the Conference.\n");
                     cms.addConference(c);
                     // Set the conference of the user to this conference
                     User u = cms.searchUser(emailAddress);
