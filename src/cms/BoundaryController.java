@@ -147,7 +147,9 @@ public class BoundaryController extends Controller{
         ArrayList<Conference> conf = cms.retrieveConferenceList();
         for (Conference c:conf){
             // if the date of conference is not past
-            //if (c.getDate().after(LocalDate.now(ZoneId.of( "Australia/Sydney" ))))
+            if (c.getDate().isAfter(LocalDate.now(ZoneId.of( "Australia/Sydney" )))){
+                //show
+            }
         }
 
 
@@ -205,6 +207,13 @@ public class BoundaryController extends Controller{
             LocalDate date = ut.stringToDate(confInfo[2]);
             LocalDate submitDueDate = ut.stringToDate(confInfo[3]);
             LocalDate reviewDueDate = ut.stringToDate(confInfo[4]);
+
+            //check if it is pass date
+            if (date.isBefore(LocalDate.now(ZoneId.of( "Australia/Sydney" ))) ||  submitDueDate.isBefore(LocalDate.now(ZoneId.of( "Australia/Sydney" ))) || reviewDueDate.isBefore(LocalDate.now(ZoneId.of( "Australia/Sydney" )))){
+                ui.displayMsgWithSleep("Please enter a valid date after today.");
+                // jump back to home page.
+                this.createConferenceOption(name, emailAddress);
+            }
 
             // check if existing conference
             if (cms.hasConference(confName) == true) {
