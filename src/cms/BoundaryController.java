@@ -107,13 +107,13 @@ public class BoundaryController extends Controller{
                         ui.displayMsgWithSleep("The role is null!");
                     }
                     if (role.equalsIgnoreCase("Chair")){
-                        chairChoices(name,emailAddress);
+                        chairChoices(name,emailAddress,conf);
                     }
                     else if (role.equalsIgnoreCase("Author")){
-                        authorChoices(name,emailAddress);
+                        authorChoices(name,emailAddress,conf);
                     }
                     else if (role.equalsIgnoreCase("Reviewer")){
-                        reviewerChoices(name,emailAddress);
+                        reviewerChoices(name,emailAddress,conf);
                     }
                 }
             }
@@ -133,6 +133,137 @@ public class BoundaryController extends Controller{
             // return to main page
             this.run();
         }
+    }
+
+
+    private void adminChoices(){
+        /**
+         * The option available for admin and its operation.
+         */
+        String op = ui.getUserOption(adminOp, "Admin",true);
+        if (op.equalsIgnoreCase("Retrieve User Information")){
+            // get the userlist and print out the information
+            ArrayList<User> userList = cms.retrieveUserList();
+            ui.displayHeader();
+            ui.displayMessageLn("---------------------------------------Registered User Information---------------------------------------");
+            System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s","First Name","Last Name","Email","Highest Qualification","Occupation","Employer's Details","Mobile Number","Conference","Role");
+            ui.displayMessageLn("");
+            for (User u: userList){
+                if (!u.getRole().equalsIgnoreCase("admin")){
+                    NormalUser nu = (NormalUser) u;
+                    System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s",nu.getFirstName(),nu.getLastName(),nu.getEmail(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),nu.getConferenceName(),nu.getRole());
+                    ui.displayMessageLn("");
+                }
+            }
+            ui.displayFooter();
+            // if exit is entered, return to admin page
+            if (ui.getExitCommand() == true){
+                this.adminChoices();
+            }
+
+        }
+        else if (op.equalsIgnoreCase("Retrieve Conference Information")){
+            //get the conferenceList and print out the information
+            ArrayList<Conference> confList = cms.retrieveConferenceList();
+            ui.displayHeader();
+            ui.displayMessageLn("---------------------------------------Registered Conference Information---------------------------------------");
+            System.out.format("%20s %20s %15s %15s %15s %40s","Name","Place","Date","Submission Due","Review Due","Topic Areas");
+            ui.displayMessageLn("");
+            for (Conference c: confList){
+                System.out.format("%20s %20s %15s %15s %15s %40s",c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperSubmissionDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
+                ui.displayMessageLn("");
+            }
+            ui.displayFooter();
+            // if exit is entered, return to admin page
+            if (ui.getExitCommand() == true){
+                this.adminChoices();
+            }
+        }
+        else if (op.equalsIgnoreCase("Logout")){
+            // return to main page
+            this.run();
+        }
+    }
+
+
+    private void authorChoices(String name, String emailAddress, String confName) throws InterruptedException{
+        /**
+         * The option available for author and its operation.
+         */
+        String op = ui.getUserOption(authorOp, name,true);
+        if (op.equalsIgnoreCase("Back")){
+            homePageChoices(name, emailAddress);
+        }
+        else if (op.equalsIgnoreCase("Submit Paper")){
+            // show to choose topic areas
+            ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
+            ui.topicAreasConfirmation(ut.arrayListToString(topicName,","));
+            ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList("Confirm","Back"));
+            String op2 = ui.getUserOption(confirmOption, "", false);
+            ui.displayFooter();
+            if (op2.equalsIgnoreCase("Confirm")){
+                String[] info = ui.getPaperSubmission();
+                String title = info[0];
+                String path = info[1];
+                // check if duplicated paper
+                if (cms.hasPaper(title) == true){
+                    ui.displayMsgWithSleep("The Paper Title is duplicated!\n    Please try another title!");
+                    this.authorChoices(name,emailAddress,confName);
+                }
+                // check the path
+
+                // Set the paper, add paper to cms list, write paper to csv file
+                Paper createdp = createPaperEntity(title, name,null,0,null,confName,topicName,"Being Reviewed");
+                cms.addPaper(createdp);
+                // opencsv to modify author paper to include this
+
+
+                // display message
+                ui.displayMsgWithSleep("Congratulations!\n  You have submitted your paper for "+ confName + " as Reviewer.\n    You can view the review of your paper when result released.");
+                // go back to previous page
+                this.homePageChoices(name, emailAddress);
+            }
+            else if (op2.equalsIgnoreCase("Back")){
+                this.authorChoices(name,emailAddress,confName);
+            }
+        }
+    }
+
+
+    private void chairChoices(String name, String emailAddress, String confName) throws InterruptedException{
+        /**
+         * The option available for chair and its operation.
+         */
+        String op = ui.getUserOption(chairOp, name,true);
+        if (op.equalsIgnoreCase("Back")){
+            homePageChoices(name, emailAddress);
+        }
+        else if (op.equalsIgnoreCase("Final Decision on Paper")){
+            //TODO: implement here the final decision on paper, either approve or reject
+            // write to csv file
+        }
+        else if (op.equalsIgnoreCase("Assign Reviewer to Paper")){
+            //TODO: implement here the manually assign reviewer
+            // write to csv file
+
+        }
+    }
+
+
+    private void reviewerChoices(String name,String emailAddress,String confName) throws InterruptedException{
+        /**
+         * The option available for reviewer and its operation.
+         */
+        String op = ui.getUserOption(reviewerOp, name,true);
+        if (op.equalsIgnoreCase("Back")){
+            homePageChoices(name, emailAddress);
+        }
+        else if (op.equalsIgnoreCase("Submit Evaluation of Paper")){
+            //TODO: implement here the submit evaluation
+            // write to csv file
+
+        }
+
     }
 
 
@@ -191,7 +322,6 @@ public class BoundaryController extends Controller{
                         ui.displayMsgWithSleep("Congratulations!\n  You have joined the Conference "+ c.getName() + " as Reviewer.\n");
                         // go back to previous page
                         this.homePageChoices(name, emailAddress);
-
                     }
                     else if (op3.equalsIgnoreCase("Back")){
                         this.joinConferenceOption(name,emailAddress);
@@ -225,27 +355,6 @@ public class BoundaryController extends Controller{
         }
     }
 
-
-    private void chairChoices(String name, String emailAddress) throws InterruptedException{
-        /**
-         * The option available for chair and its operation.
-         */
-        String op = ui.getUserOption(chairOp, name,true);
-        if (op.equalsIgnoreCase("Back")){
-            homePageChoices(name, emailAddress);
-        }
-        else if (op.equalsIgnoreCase("Final Decision on Paper")){
-            //TODO: implement here the final decision on paper, either approve or reject
-            // write to csv file
-        }
-        else if (op.equalsIgnoreCase("Assign Reviewer to Paper")){
-            //TODO: implement here the manually assign reviewer
-            // write to csv file
-
-        }
-
-
-    }
 
     private void createConferenceOption(String name, String emailAddress) throws InterruptedException {
     /**
@@ -375,90 +484,6 @@ public class BoundaryController extends Controller{
             topicName2.addAll(topicName);
         }
         return topicName2;
-    }
-
-
-    private void authorChoices(String name, String emailAddress) throws InterruptedException{
-        /**
-         * The option available for author and its operation.
-         */
-        String op = ui.getUserOption(authorOp, name,true);
-        if (op.equalsIgnoreCase("Back")){
-            homePageChoices(name, emailAddress);
-        }
-        else if (op.equalsIgnoreCase("Submit Paper")){
-            //TODO: implement here the submit paper
-            //create paper object using method in Controller.java
-            // write to csv file
-
-        }
-    }
-
-
-    private void reviewerChoices(String name,String emailAddress) throws InterruptedException{
-        /**
-         * The option available for reviewer and its operation.
-         */
-        String op = ui.getUserOption(reviewerOp, name,true);
-        if (op.equalsIgnoreCase("Back")){
-            homePageChoices(name, emailAddress);
-        }
-        else if (op.equalsIgnoreCase("Submit Evaluation of Paper")){
-            //TODO: implement here the submit evaluation
-            // write to csv file
-
-        }
-
-    }
-
-
-    private void adminChoices(){
-        /**
-         * The option available for admin and its operation.
-         */
-        String op = ui.getUserOption(adminOp, "Admin",true);
-        if (op.equalsIgnoreCase("Retrieve User Information")){
-            // get the userlist and print out the information
-            ArrayList<User> userList = cms.retrieveUserList();
-            ui.displayHeader();
-            ui.displayMessageLn("---------------------------------------Registered User Information---------------------------------------");
-            System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s","First Name","Last Name","Email","Highest Qualification","Occupation","Employer's Details","Mobile Number","Conference","Role");
-            ui.displayMessageLn("");
-            for (User u: userList){
-                if (!u.getRole().equalsIgnoreCase("admin")){
-                    NormalUser nu = (NormalUser) u;
-                    System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s",nu.getFirstName(),nu.getLastName(),nu.getEmail(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),nu.getConferenceName(),nu.getRole());
-                    ui.displayMessageLn("");
-                }
-            }
-            ui.displayFooter();
-            // if exit is entered, return to admin page
-            if (ui.getExitCommand() == true){
-                this.adminChoices();
-            }
-
-        }
-        else if (op.equalsIgnoreCase("Retrieve Conference Information")){
-            //get the conferenceList and print out the information
-            ArrayList<Conference> confList = cms.retrieveConferenceList();
-            ui.displayHeader();
-            ui.displayMessageLn("---------------------------------------Registered Conference Information---------------------------------------");
-            System.out.format("%20s %20s %15s %15s %15s %40s","Name","Place","Date","Submission Due","Review Due","Topic Areas");
-            ui.displayMessageLn("");
-            for (Conference c: confList){
-                System.out.format("%20s %20s %15s %15s %15s %40s",c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperSubmissionDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
-                ui.displayMessageLn("");
-            }
-            ui.displayFooter();
-            // if exit is entered, return to admin page
-            if (ui.getExitCommand() == true){
-                this.adminChoices();
-            }
-        }
-        else if (op.equalsIgnoreCase("Logout")){
-            // return to main page
-            this.run();
-        }
     }
 
 
