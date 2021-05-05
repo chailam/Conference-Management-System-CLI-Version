@@ -189,6 +189,10 @@ public class BoundaryController extends Controller{
     private void authorChoices(String name, String emailAddress, String confName) throws InterruptedException{
         /**
          * The option available for author and its operation.
+         * @param name of the user
+         * @param email address of user
+         * @param the conference name
+         * reference: https://www.codeproject.com/Tips/216238/Regular-Expression-to-Validate-File-Path-and-Exten
          */
         String op = ui.getUserOption(authorOp, name,true);
         if (op.equalsIgnoreCase("Back")){
@@ -211,6 +215,13 @@ public class BoundaryController extends Controller{
                     this.authorChoices(name,emailAddress,confName);
                 }
                 // check the path
+                String regexCheck = "^(?:[\\w]\\:|\\\\)(\\\\[a-zA-Z_\\-\\s0-9\\.]+)+\\.(pdf|doc|docx)$";
+                Pattern filePathPattern = Pattern.compile(regexCheck);
+                Matcher matcher = filePathPattern.matcher(path);
+                if (matcher.matches() == false){
+                    ui.displayMsgWithSleep("The file path is incorrect");
+                    this.authorChoices(name,emailAddress,confName);
+                }
 
                 // Set the paper, add paper to cms list, write paper to csv file
                 Paper createdp = createPaperEntity(title, name,null,0,null,confName,topicName,"Being Reviewed");
@@ -552,6 +563,11 @@ public class BoundaryController extends Controller{
         occupation = occupation.replaceAll("\\s","");
         employerDetail = employerDetail.replaceAll("\\s","");
         mobileNumber = mobileNumber.replaceAll("\\s","");
+        // check validity of email
+        if (this.emailValidator(emailAddress) == false){
+            ui.displayMsgWithSleep("The email address format is wrong");
+            this.run();
+        }
         // check if data input is zero/null
         if ((firstName.length()==0) || (lastName.length()==0)||(emailAddress.length()==0)||(highestQualification.length()==0)||(occupation.length()==0)||(employerDetail.length()==0)||(mobileNumber.length()==0)){
             ui.displayMsgWithSleep("Information could not be empty.!");
@@ -599,12 +615,29 @@ public class BoundaryController extends Controller{
          * which are must at least 8 characters long, must include at least 1 upper case, 1 lower case, 1 number.
          * @param the password to be checked
          * @return true if valid, false otherwise
+         * reference: https://www.geeksforgeeks.org/how-to-validate-a-password-using-regular-expressions-in-java/
          */
         boolean checker = true;
         // regex inorder for uppercase at least one, lower case at least one, number at least one, no white space and more than 8 characters
         String regexCheck = "(?=.*[A-Z])" + "(?=.*[a-z])" +  "(?=.*[0-9])"+ "(?=\\S+$)" + ".{8,}" + "$";
         Pattern passPattern = Pattern.compile(regexCheck);
         Matcher matcher = passPattern.matcher(password);
+        return matcher.matches();
+    }
+
+
+    private boolean emailValidator(String emailAddress){
+        /**
+         * To check whether fulfill the requirement of email,
+         * @param the email to be checked
+         * @return true if valid, false otherwise
+         * reference: https://howtodoinjava.com/java/regex/java-regex-validate-email-address/
+         */
+        boolean checker = true;
+        // regex simple email checking
+        String regexCheck = "^(.+)@(.+)$";
+        Pattern passPattern = Pattern.compile(regexCheck);
+        Matcher matcher = passPattern.matcher(emailAddress);
         return matcher.matches();
     }
 }
