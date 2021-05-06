@@ -160,7 +160,6 @@ public class BoundaryController extends Controller{
             if (ui.getExitCommand() == true){
                 this.adminChoices();
             }
-
         }
         else if (op.equalsIgnoreCase("Retrieve Conference Information")){
             //get the conferenceList and print out the information
@@ -208,6 +207,13 @@ public class BoundaryController extends Controller{
                 String[] info = ui.getPaperSubmission();
                 String title = info[0];
                 String path = info[1];
+                // check the submission date pass the deadline
+                // get the conference paper submission due date
+                LocalDate submitDueDate = cms.searchConference(confName).getPaperSubmissionDue();
+                if (submitDueDate.isBefore(LocalDate.now(ZoneId.of( "Australia/Sydney" )))){
+                    ui.displayMsgWithSleep("The paper submission due date has been passed!");
+                    this.authorChoices(name,emailAddress,confName);
+                }
                 // check if duplicated paper
                 if (cms.hasPaper(title) == true){
                     ui.displayMsgWithSleep("The Paper Title is duplicated!\n    Please try another title!");
@@ -261,6 +267,9 @@ public class BoundaryController extends Controller{
     private void chairChoices(String name, String emailAddress, String confName) throws InterruptedException{
         /**
          * The option available for chair and its operation.
+         * @param name of the user
+         * @param email address of user
+         * @param the conference name
          */
         String op = ui.getUserOption(chairOp, name,true);
         if (op.equalsIgnoreCase("Back")){
@@ -281,6 +290,9 @@ public class BoundaryController extends Controller{
     private void reviewerChoices(String name,String emailAddress,String confName) throws InterruptedException{
         /**
          * The option available for reviewer and its operation.
+         * @param name of the user
+         * @param email address of user
+         * @param the conference name
          */
         String op = ui.getUserOption(reviewerOp, name,true);
         if (op.equalsIgnoreCase("Back")){
@@ -414,7 +426,7 @@ public class BoundaryController extends Controller{
             LocalDate submitDueDate = ut.stringToDate(confInfo[3]);
             LocalDate reviewDueDate = ut.stringToDate(confInfo[4]);
 
-            //check if it is pass date
+            //check if it is passed date
             if (date.isBefore(LocalDate.now(ZoneId.of( "Australia/Sydney" ))) ||  submitDueDate.isBefore(LocalDate.now(ZoneId.of( "Australia/Sydney" ))) || reviewDueDate.isBefore(LocalDate.now(ZoneId.of( "Australia/Sydney" )))){
                 ui.displayMsgWithSleep("Please enter a valid date after today.");
                 // jump back to home page.

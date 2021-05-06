@@ -164,22 +164,22 @@ public class Utility {
 
 
     public void writeToCSV(String filePath, String [] dataToWrite, boolean bol){
-        /**
-         *  The method to write data to csv file
-         * @param the file path of the file to write
-         * @param the data to write to file
-         * @boolean where true is append and false is overwrite
-         */
-            try {
-                FileWriter fileWriter = new FileWriter(filePath, bol);
-                CSVWriter writer = new CSVWriter(fileWriter);
-                writer.writeNext(dataToWrite);
-                writer.close();
-            }
-            catch (Exception e){
-                System.out.println("File Write Error: " + e);
-            }
+    /**
+     *  The method to write data to csv file
+     * @param the file path of the file to write
+     * @param the data to write to file
+     * @boolean where true is append and false is overwrite
+     */
+        try {
+            FileWriter fileWriter = new FileWriter(filePath, bol);
+            CSVWriter writer = new CSVWriter(fileWriter);
+            writer.writeNext(dataToWrite);
+            writer.close();
         }
+        catch (Exception e){
+            System.out.println("File Write Error: " + e);
+        }
+    }
 
 
     public void updateCSVPaper (String filePath, String dataToUpdate, String emailAddress, String role, String confName){
