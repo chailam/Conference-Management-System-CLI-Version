@@ -25,6 +25,7 @@ public class UserInterface {
                         "***********************************************************************************************************"};
 
     private Scanner scanner;
+    private Utility ut = new Utility();
 
 
     public UserInterface(){
@@ -58,12 +59,12 @@ public class UserInterface {
 
 
     public String getUserOption (ArrayList<String> options, String name, boolean bo){
-        /**
-         * To display the option available and then get the user input within option length
-         * @param the option selected
-         * @param the name to be greet
-         * @param true to show header and footer; false otherwise
-         */
+    /**
+     * To display the option available and then get the user input within option length
+     * @param the option selected
+     * @param the name to be greet
+     * @param true to show header and footer; false otherwise
+     */
         if (bo == true){
             this.displayHeader();
             if (!name.equals("")){
@@ -75,10 +76,6 @@ public class UserInterface {
         // Print out all options
         for( int i = 0; i < options.size(); i++){
             this.displayMessageLn((i+1) + ". " + options.get(i));
-        }
-        if (bo == true){
-            // Print the footer
-            this.displayFooter();
         }
         int choice = 0; 
 		while (choice < 1 || choice > options.size()) {//loop until a valid option has been obtained
@@ -98,13 +95,15 @@ public class UserInterface {
                 this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
 			}
 		}
+		// Print the footer
+        this.displayFooter();
 		return options.get(choice-1);//return the option value selected	
     }
 
 
     public void displayFooter (){
     /**
-     * To print the conststent footer of the system
+     * To print the consistent footer of the system
      */
         this.displayMessageLn("");
         this.displayMessageLn("");
@@ -121,30 +120,12 @@ public class UserInterface {
         System.out.print("    " + msg);
     }
 
+
     public void displayMessageLn(String msg){
         /**
          * To print the message with new line
          */
         System.out.println("    " + msg);
-    }
-
-
-    public String[] getAuthentication(){
-    /**
-     * To get the email address and password of the user
-     * @return the emailAdress and Password retrieved
-     */
-        this.displayHeader();
-        this.displayGreeting("Guest");
-
-        this.displayMessageLn("Please enter your user credentials.");
-        this.displayMessage("Email Address: ");
-        String emailAddress = scanner.nextLine(); // Read the user input
-        this.displayMessage("Password: ");
-        String password = scanner.nextLine(); // Read the user input
-        this.displayFooter();
-
-        return new String[] {emailAddress, password};
     }
 
 
@@ -160,9 +141,47 @@ public class UserInterface {
     }
 
 
+
+    public void adminDisplayUserInfo (ArrayList<User> userList){
+        /**
+         * Admin ui to print out the User Info
+         * @param the userlist to be printed
+         */
+        this.displayHeader();
+        this.displayMessageLn("---------------------------------------Registered User Information---------------------------------------");
+        System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s","First Name","Last Name","Email","Highest Qualification","Occupation","Employer's Details","Mobile Number","Conference","Role");
+        this.displayMessageLn("");
+        for (User u: userList){
+            if (!u.getRole().equalsIgnoreCase("admin")){
+                NormalUser nu = (NormalUser) u;
+                System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s",nu.getFirstName(),nu.getLastName(),nu.getEmail(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),nu.getConferenceName(),nu.getRole());
+                this.displayMessageLn("");
+            }
+        }
+        this.displayFooter();
+    }
+
+
+    public void adminDisplayConfInfo (ArrayList<Conference> confList){
+        /**
+         * Admin ui to print out the Conference Info
+         * @param the conferenceList to be printed
+         */
+        this.displayHeader();
+        this.displayMessageLn("---------------------------------------Registered Conference Information---------------------------------------");
+        System.out.format("%20s %20s %15s %15s %15s %40s","Name","Place","Date","Submission Due","Review Due","Topic Areas");
+        this.displayMessageLn("");
+        for (Conference c: confList){
+            System.out.format("%20s %20s %15s %15s %15s %40s",c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperSubmissionDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
+            this.displayMessageLn("");
+        }
+        this.displayFooter();
+    }
+
+
     public boolean getExitCommand(){
     /**
-     * The method to detect exit command 
+     * The method to detect exit command
      * @return true if exit entered
      */
         String input = "";
@@ -171,6 +190,24 @@ public class UserInterface {
             input = scanner.nextLine();
         }
         return true;
+    }
+
+
+    public String[] getAuthentication(){
+    /**
+     * To get the email address and password of the user
+     * @return the emailAddress and Password retrieved
+     */
+        this.displayHeader();
+        this.displayGreeting("Guest");
+
+        this.displayMessageLn("Please enter your user credentials.");
+        this.displayMessage("Email Address: ");
+        String emailAddress = scanner.nextLine(); // Read the user input
+        this.displayMessage("Password: ");
+        String password = scanner.nextLine(); // Read the user input
+        this.displayFooter();
+        return new String[] {emailAddress, password};
     }
 
 
@@ -199,14 +236,14 @@ public class UserInterface {
         this.displayMessage("Mobile number: ");
         String mobileNumber = scanner.nextLine(); // Read the user input
         this.displayFooter();
-
         return new String[] {firstName, lastName, emailAddress, password, highestQualification, occupation, employerDetail, mobileNumber};
     }
     
 
-    public void confirmRegistration(String firstName, String lastName, String emailAddress, String highestQualification, String occupation, String employerDetail, String mobileNumber){
+    public void registerConfirmation(String firstName, String lastName, String emailAddress, String highestQualification, String occupation, String employerDetail, String mobileNumber){
     /**
      * The message to confirm the registration
+     * @param the info required for registration
      */
         this.displayHeader();
         this.displayMessageLn("Registration Process (2/2)");
@@ -222,10 +259,10 @@ public class UserInterface {
 
 
     public String[] getCreateConference() {
-        /**
-         * To get the required create conference information from the user
-         * @return the information retrieved
-         */
+    /**
+     * To get the required create conference information from the user
+     * @return the information retrieved
+     */
         this.displayHeader();
         this.displayMessageLn("Please enter the conference details.");
         this.displayMessage("Conference Name: ");
@@ -239,15 +276,15 @@ public class UserInterface {
         this.displayMessage("Paper Review Due Date (dd/mm/yyyy): ");
         String reviewDueDate = scanner.nextLine(); // Read the user input
         this.displayFooter();
-
         return new String[]{confName,place, date, submitDueDate, reviewDueDate};
     }
 
 
-    public void confirmConferenceInfo(String confName, String place, String date, String submitDueDate, String reviewDueDate, String topic){
-        /**
-         * The message to confirm the conference information
-         */
+    public void createConfConfirmation(String confName, String place, String date, String submitDueDate, String reviewDueDate, String topic){
+    /**
+     * The message to confirm the conference information
+     * @param the info required for conference
+     */
         this.displayHeader();
         this.displayMessageLn("Please confirm the conference details.");
         this.displayMessageLn("Conference Name: " + confName);
@@ -285,6 +322,7 @@ public class UserInterface {
     public void topicAreasConfirmation(String topic){
     /**
      * The message to confirm the topics areas information
+     * @param the topic areas
      */
         this.displayHeader();
         this.displayMessageLn("The topics that fall into your area of expertise is/are:");

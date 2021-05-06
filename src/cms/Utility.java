@@ -5,10 +5,10 @@
 package cms;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 
 import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -20,49 +20,49 @@ import java.io.*;
 public class Utility {
 
     public String hashSHA256(String text) throws NoSuchAlgorithmException{
-        /**
-         * This method is used to hashed the text, mainly the password, using SHA256. 
-         * @param the text to be hashed
-         * @return the hashed text
-         */
-            // Use the SHA256
-            MessageDigest md = MessageDigest.getInstance("SHA-256"); 
-            byte[] hashedByte = md.digest(text.getBytes(StandardCharsets.UTF_8));
-            BigInteger theNumber = new BigInteger(1, hashedByte); 
-            StringBuilder hashedText = new StringBuilder(theNumber.toString(16));
-            // Pad with leading zeros
-            while (hashedText.length() < 32){ 
-                hashedText.insert(0, '0'); 
-            } 
-            return hashedText.toString(); 
+    /**
+     * This method is used to hashed the text, mainly the password, using SHA256.
+     * @param the text to be hashed
+     * @return the hashed text
+     */
+        // Use the SHA256
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hashedByte = md.digest(text.getBytes(StandardCharsets.UTF_8));
+        BigInteger theNumber = new BigInteger(1, hashedByte);
+        StringBuilder hashedText = new StringBuilder(theNumber.toString(16));
+        // Pad with leading zeros
+        while (hashedText.length() < 32){
+            hashedText.insert(0, '0');
         }
+        return hashedText.toString();
+    }
 
 
     public ArrayList<String> stringToArrayList (String longString, String delimit){
-        /**
-         * To change the split the list using delimit specify and then convert to ArrayList
-         * @param the string to be splitted into array list
-         * @param the delimit to be used to split the string
-         * @return the arraylist or null if list is empty
-         */
-            String tmp [];
-            ArrayList<String> theArrayList = new ArrayList<String>();
-            tmp = longString.split(delimit);
-            for (String s : tmp){
-                theArrayList.add(s);
-            }
-            if (theArrayList.size() > 0){
-                return theArrayList;
-            }
-            else{
-                return null;
-            }
+    /**
+     * To convert the split the list using delimit specify and then convert to ArrayList
+     * @param the string to be split into array list
+     * @param the delimit to be used to split the string
+     * @return the arraylist or null if list is empty
+     */
+        String tmp [];
+        ArrayList<String> theArrayList = new ArrayList<String>();
+        tmp = longString.split(delimit);
+        for (String s : tmp){
+            theArrayList.add(s);
         }
+        if (theArrayList.size() > 0){
+            return theArrayList;
+        }
+        else{
+            return null;
+        }
+    }
 
 
     public String arrayListToString (ArrayList<String> list, String delimit){
     /**
-     * To change the combine arraylist with delimit to string
+     * To convert the combine arraylist with delimit to string
      * @param the arraylist to be combined into string
      * @param the delimit to be used to combine the string
      * @return the string or null
@@ -120,7 +120,8 @@ public class Utility {
         return elements;
     }
 
-    public ArrayList<Integer> convertUserIndToSysInd(ArrayList<String> index){
+
+    public ArrayList<Integer> convertUserIdxToSysIdx(ArrayList<String> index){
         /**
          * Convert the user input index, which starting from 1,
          * to programmer index, which starting from 0
@@ -163,7 +164,7 @@ public class Utility {
     }
 
 
-    public void writeToCSV(String filePath, String [] dataToWrite, boolean bol){
+    public void writeCSV(String filePath, String [] dataToWrite, boolean bol){
     /**
      *  The method to write data to csv file
      * @param the file path of the file to write
@@ -182,15 +183,35 @@ public class Utility {
     }
 
 
+    public List<String[]> readCSV(String filePath){
+    /**
+     * To read the data from csv file (as database) and put the data to the arraylist structure
+     * @param the file path of the csv file to be read
+     * @return the data read
+     */
+        List<String[]> csvData = new ArrayList<>();
+        try {
+            FileReader fileReader = new FileReader(filePath);
+            CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
+            csvData = csvReader.readAll();
+        }
+        catch (Exception e){
+            System.out.println("File Read Error: " + e);
+        }
+        return csvData;
+    }
+
+
+
     public void updateCSVPaper (String filePath, String dataToUpdate, String emailAddress, String role, String confName){
-        /**
-         *  The method to update data in csv file
-         * @param the file path of the file to update
-         * @param the data to update to file
-         * @param the matching string
-         * @param the matching string
-         * @boolean where true is append and false is overwrite
-         */
+    /**
+     *  The method to update data in csv file at specific col and row
+     * @param the file path of the file to update
+     * @param the data to update to file
+     * @param the matching string
+     * @param the matching string
+     * @boolean where true is append and false is overwrite
+     */
         try {
             // read the data
             File theFile = new File(filePath);

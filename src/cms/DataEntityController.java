@@ -8,9 +8,6 @@
 
 package cms;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-
 import java.time.LocalDate;
 import java.util.*;
 import java.io.*;
@@ -18,34 +15,15 @@ import java.io.*;
 
 public class DataEntityController extends Controller {
 
-    private List<String[]> processCSV (String filePath){
-        /**
-         * To read the data from csv file (as database) and put the data to the arraylist structure
-         * @param the file path of the csv file to be read
-         */
-            String currentLine;
-            List<String[]> csvData = new ArrayList<>();
-            try {
-                FileReader fileReader = new FileReader(filePath);
-                CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
-                csvData = csvReader.readAll();
-            }
-            catch (Exception e){
-                System.out.println("File Read Error: " + e);
-            }
-            return csvData;
-        }
-    
-
     
     public void initializeConferenceManagementSystem(){
         /**
          * It initialized the ConferenceManagementSystem, to read all data from csv file, 
          * which act as database, and create entity for each of them.
          */
-        List<String[]> resultUser = processCSV (pathNormalUserCSV);
-        List<String[]> resultConference = processCSV (pathConferenceCSV);
-        List<String[]> resultPaper = processCSV (pathPaperCSV);
+        List<String[]> resultUser = ut.readCSV(pathNormalUserCSV);
+        List<String[]> resultConference = ut.readCSV(pathConferenceCSV);
+        List<String[]> resultPaper = ut.readCSV(pathPaperCSV);
 
         String delimit = ",";
         String [] tmp;
