@@ -178,12 +178,11 @@ public class Utility {
             }
             catch (Exception e){
                 System.out.println("File Write Error: " + e);
-                System.exit(0);
             }
         }
 
 
-    public void updateCSV (String filePath, String dataToUpdate, String emailAddress, String str){
+    public void updateCSVPaper (String filePath, String dataToUpdate, String emailAddress, String role, String confName){
         /**
          *  The method to update data in csv file
          * @param the file path of the file to update
@@ -193,25 +192,28 @@ public class Utility {
          * @boolean where true is append and false is overwrite
          */
         try {
+            // read the data
             File theFile = new File(filePath);
             CSVReader csvReader = new CSVReader(new FileReader(theFile));
             List<String[]> csvData = csvReader.readAll();
 
-            // get row (i) and column (j) to be replaced
+            // get data to be replaced  at row (i) and column
             for (int i = 0; i < csvData.size() ; i++){
                 String[] string = csvData.get(i);
-                for (int j = 0; j < string.length ; j++){
-                    System.out.println(csvData.get(i)[j]);
-                    //if(strArray[j].equalsIgnoreCase("Update_date")){ //String to be replaced
-                        //csvData.get(i)[j] = "Updated_date"; //Target replacement
-                    //}
+                //col index 0 is role, col index 1 is email and col index 9 is conference name
+                if(string[0].equalsIgnoreCase(role) && string[1].equalsIgnoreCase(emailAddress) && string[9].equals(confName)){
+                    string[11] = dataToUpdate;
                 }
             }
             csvReader.close();
+            // Write to the CSV file
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(filePath));
+            csvWriter.writeAll(csvData);
+            csvWriter.flush();
+            csvWriter.close();
         }
         catch (Exception e){
             System.out.println("File Write Error: " + e);
-            System.exit(0);
         }
     }
 }

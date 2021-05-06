@@ -305,10 +305,10 @@ public class UserInterface {
         this.displayMessageLn("Please enter the tilte of your paper and the path of your paper to upload and submit your paper");
         this.displayMessageLn("[File format: PDF , Word only]");
         this.displayMessageLn("Example path: c:\\my_folder\\my_folder\\file.pdf");
-        this.displayMessage("");
-        this.displayMessageLn("Title: ");
+        this.displayMessageLn("");
+        this.displayMessage("Title: ");
         String title = scanner.nextLine(); // Read the user input
-        this.displayMessageLn("Path: ");
+        this.displayMessage("Path: ");
         String path = scanner.nextLine(); // Read the user input
         this.displayMessage("");
         return new String[] {title,path};

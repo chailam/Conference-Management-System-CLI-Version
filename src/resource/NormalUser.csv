@@ -1,9 +1,8 @@
-﻿role,emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference,topicAreas,paper
+role,emailAddress,hashedPassword,firstName,lastName,highestQualification,occupation,employerDetail,mobileNumber,conference,topicAreas,paper
 admin,admin@cms.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,null,null,null,null,null,null,null,null,null
 normal,chair1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Harry,Potter,Master ,Lecturer,Monash University,4123456789,null,null,null
 normal,author1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Ron,Weasley,Bachelor,Student,Melbourne University,4234567890,null,null,null
 normal,reviewer1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Hermione,Granger,PhD,Researcher,Harvard University,987654321,null,Artificial Intelligence/ Image Processing/Data Mining & Information Retrieval,null
-Normal,asd,688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6,asd,asd,asd,asd,asd,asd,null,null,null
 Chair,chair1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Harry,Potter,Master ,Lecturer,Monash University,4123456789,asd,null,null
-Author,author1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Ron,Weasley,Bachelor,Student,Melbourne University,4234567890,con1,,
+Author,author1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Ron,Weasley,Bachelor,Student,Melbourne University,4234567890,con1,null,dddd
 Reviewer,reviewer1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Hermione,Granger,PhD,Researcher,Harvard University,987654321,con1,"Artificial Intelligence,Human Computer Interaction,",null

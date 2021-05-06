@@ -192,7 +192,6 @@ public class BoundaryController extends Controller{
          * @param name of the user
          * @param email address of user
          * @param the conference name
-         * reference: https://www.codeproject.com/Tips/216238/Regular-Expression-to-Validate-File-Path-and-Exten
          */
         String op = ui.getUserOption(authorOp, name,true);
         if (op.equalsIgnoreCase("Back")){
@@ -215,27 +214,24 @@ public class BoundaryController extends Controller{
                     this.authorChoices(name,emailAddress,confName);
                 }
                 // check the path
-                String regexCheck = "^(?:[\\w]\\:|\\\\)(\\\\[a-zA-Z_\\-\\s0-9\\.]+)+\\.(pdf|doc|docx)$";
-                Pattern filePathPattern = Pattern.compile(regexCheck);
-                Matcher matcher = filePathPattern.matcher(path);
-                if (matcher.matches() == false){
+                if (pathValidator(path) == false){
                     ui.displayMsgWithSleep("The file path is incorrect");
                     this.authorChoices(name,emailAddress,confName);
                 }
-
-                // Set the paper, add paper to cms list, write paper to csv file
-                Paper createdp = createPaperEntity(title, name,null,0,null,confName,topicName,"Being Reviewed");
+                // Set the paper, add paper to cms list
+                Paper createdp = createPaperEntity(title, emailAddress,null,0,null,confName,topicName,"Being Reviewed");
                 cms.addPaper(createdp);
-                // opencsv to modify author paper to include this
-                //TODO!!!
+                //write paper to csv file
+                String[] paperData = {title, emailAddress, "null","0","null",confName,ut.arrayListToString(topicName,"/"), "Being Reviewed"};
+                ut.writeToCSV(pathPaperCSV,paperData,true);
 
                 // Update the user information
                 User u = cms.searchSpecificUser(emailAddress,"Author",confName);
                 if (u != null){
                     Author au = (Author) u;
+                    ArrayList<String> papers = new ArrayList<String>();
                     // if paper is empty
-                    if (au.retrievePaper().isEmpty()){
-                        ArrayList<String> papers = new ArrayList<String>();
+                    if (au.retrievePaper().size() == 1 && au.retrievePaper().get(0).equals("null")){
                         papers.add(createdp.getTitle());
                         au.setPaper(papers);
                     }
@@ -243,6 +239,9 @@ public class BoundaryController extends Controller{
                     else{
                         au.addPaper(createdp.getTitle());
                     }
+                    papers = au.retrievePaper();
+                    // use opencsv to modify csv file for author to include this paper
+                    ut.updateCSVPaper(pathNormalUserCSV, ut.arrayListToString(papers,"/"), emailAddress, "author", confName);
                 }
                 else{
                     System.out.println("Why can't find that user?!!!");
@@ -655,6 +654,22 @@ public class BoundaryController extends Controller{
         String regexCheck = "^(.+)@(.+)$";
         Pattern passPattern = Pattern.compile(regexCheck);
         Matcher matcher = passPattern.matcher(emailAddress);
+        return matcher.matches();
+    }
+
+
+    private boolean pathValidator(String path){
+        /**
+         * To check whether fulfill the requirement of path,
+         * @param the path to be checked
+         * @return true if valid, false otherwise
+         * reference: reference: https://www.codeproject.com/Tips/216238/Regular-Expression-to-Validate-File-Path-and-Exten
+         */
+        boolean checker = true;
+        // regex simple email checking
+        String regexCheck = "^(?:[\\w]\\:|\\\\)(\\\\[a-zA-Z_\\-\\s0-9\\.]+)+\\.(pdf|doc|docx)$";
+        Pattern pathPattern = Pattern.compile(regexCheck);
+        Matcher matcher = pathPattern.matcher(path);
         return matcher.matches();
     }
 }

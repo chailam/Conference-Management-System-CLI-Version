@@ -1,6 +1,7 @@
 package cms;
 
 import cms.*;
+import jdk.jshell.execution.Util;
 
 
 public class Application {
@@ -11,10 +12,10 @@ public class Application {
         deC.initializeConferenceManagementSystem();
         BoundaryController cmsC = new BoundaryController();
         cmsC.run();
-//
-//        Utility ut = new Utility();
-//        ut.updateCSV("src/resource/NormalUser.csv",null,null,null);
 
+//        Utility ut = new Utility();
+//        String [] aaa = {"hi","ha","null",null,""};
+//        ut.writeToCSV("src/resource/Paper.csv",aaa,true);
 
     }
 }
