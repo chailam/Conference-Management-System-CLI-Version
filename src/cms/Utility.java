@@ -4,6 +4,7 @@
 
 package cms;
 
+import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 
 import java.security.NoSuchAlgorithmException;
@@ -180,4 +181,37 @@ public class Utility {
                 System.exit(0);
             }
         }
+
+
+    public void updateCSV (String filePath, String dataToUpdate, String emailAddress, String str){
+        /**
+         *  The method to update data in csv file
+         * @param the file path of the file to update
+         * @param the data to update to file
+         * @param the matching string
+         * @param the matching string
+         * @boolean where true is append and false is overwrite
+         */
+        try {
+            File theFile = new File(filePath);
+            CSVReader csvReader = new CSVReader(new FileReader(theFile));
+            List<String[]> csvData = csvReader.readAll();
+
+            // get row (i) and column (j) to be replaced
+            for (int i = 0; i < csvData.size() ; i++){
+                String[] string = csvData.get(i);
+                for (int j = 0; j < string.length ; j++){
+                    System.out.println(csvData.get(i)[j]);
+                    //if(strArray[j].equalsIgnoreCase("Update_date")){ //String to be replaced
+                        //csvData.get(i)[j] = "Updated_date"; //Target replacement
+                    //}
+                }
+            }
+            csvReader.close();
+        }
+        catch (Exception e){
+            System.out.println("File Write Error: " + e);
+            System.exit(0);
+        }
+    }
 }

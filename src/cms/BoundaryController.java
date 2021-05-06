@@ -227,8 +227,26 @@ public class BoundaryController extends Controller{
                 Paper createdp = createPaperEntity(title, name,null,0,null,confName,topicName,"Being Reviewed");
                 cms.addPaper(createdp);
                 // opencsv to modify author paper to include this
+                //TODO!!!
 
-
+                // Update the user information
+                User u = cms.searchSpecificUser(emailAddress,"Author",confName);
+                if (u != null){
+                    Author au = (Author) u;
+                    // if paper is empty
+                    if (au.retrievePaper().isEmpty()){
+                        ArrayList<String> papers = new ArrayList<String>();
+                        papers.add(createdp.getTitle());
+                        au.setPaper(papers);
+                    }
+                    // if author submitted another paper already
+                    else{
+                        au.addPaper(createdp.getTitle());
+                    }
+                }
+                else{
+                    System.out.println("Why can't find that user?!!!");
+                }
                 // display message
                 ui.displayMsgWithSleep("Congratulations!\n  You have submitted your paper for "+ confName + " as Reviewer.\n    You can view the review of your paper when result released.");
                 // go back to previous page
@@ -516,8 +534,7 @@ public class BoundaryController extends Controller{
             // Get the user with that email address
             u = cms.searchUser(emailAddress);
 
-            // if the user exists, validate password
-            if (u != null){
+            if (cms.hasUser(emailAddress)){
                 String hashedPassword = ut.hashSHA256(password);
                 if (hashedPassword.equalsIgnoreCase(u.getPassword())){
                     // set choice to be true as user is authenticated

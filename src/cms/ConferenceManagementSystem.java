@@ -87,6 +87,27 @@ public class ConferenceManagementSystem {
     }
 
 
+    public User searchSpecificUser(String emailAddress, String role, String conference) {
+        /**
+         * To return specific user where emailAddress, role, and conference matching
+         * @param email address of the user
+         * @param role of the user in the conference
+         * @param conference of the user participate
+         * @return user who matched the information provided
+         */
+        for (User u : userList) {
+            if (!u.getRole().equalsIgnoreCase("admin")) {
+                NormalUser nu = (NormalUser) u;
+                // if matching email address, role and conference, retrieve the index
+                if (nu.getEmail().equals(emailAddress) && nu.getRole().equalsIgnoreCase(role) && nu.getConferenceName().equals(conference)) {
+                    return nu;
+                }
+            }
+        }
+        return null;
+    }
+
+
     public User searchUser(String emailAddress) {
         /**
          * To return user where emailAddress (unique) matching
@@ -196,4 +217,26 @@ public class ConferenceManagementSystem {
         }
         return role;
     }
+
+
+//    public boolean removeUserFromList(String emailAddress, String role, String conference) {
+//        /**
+//         * To remove the user from the list
+//         * @param the email address of the user
+//         * @param role the role of the user
+//         * @param conference user participate
+//         * @return true if successfully remove; false otherwise
+//         */
+//        for (User u : userList) {
+//            if (!u.getRole().equalsIgnoreCase("admin")) {
+//                NormalUser nu = (NormalUser) u;
+//                // if matching email address, role and conference, retrieve the index
+//                if (nu.getEmail().equals(emailAddress) && nu.getRole().equalsIgnoreCase(role) && nu.getConferenceName().equals(conference)) {
+//                    userList.remove(nu);
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
 }
