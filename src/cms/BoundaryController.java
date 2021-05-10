@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class MainController extends Controller{
+public class BoundaryController extends Controller{
     // The user interface invoked
     private UserInterface ui = new UserInterface();
 
@@ -30,7 +30,7 @@ public class MainController extends Controller{
     ArrayList<String> reviewerOp   = new ArrayList<>(Arrays.asList("Submit Evaluation of Paper","Back"));
 
 
-    public MainController(){
+    public BoundaryController(){
         /**
          * The constructor of the controller.
          * It called function to initialize the ConferenceManagementSystem.
@@ -71,7 +71,7 @@ public class MainController extends Controller{
             }
             // if login
             else if (op.equalsIgnoreCase("Login")){
-                User u = authentication();
+                User u = this.authentication();
                 if (u.getRole().equalsIgnoreCase("Admin")){
                     adminChoices();
                 }
@@ -289,7 +289,63 @@ public class MainController extends Controller{
             //TODO: implement here the manually assign reviewer
             // write to csv file
 
+
+
         }
+    }
+
+
+    private void assignReviewer(String name, String emailAddress, String confName) throws InterruptedException {
+        ArrayList<String> availablePaper = new ArrayList<String>();
+        // get a list of paper in that conference
+        for (Paper p : cms.retrievePaperList()) {
+            // if the paper is from this conference
+            if (p.getConferenceName().equals(confName)) {
+                availablePaper.add(p.getTitle());
+            }
+        }
+        availablePaper.add("Back");
+        // get user option to select which paper or back
+        String preferPaper = ui.getUserOption(availablePaper, name, true);
+        // if user choose to go back
+        if (preferPaper.equalsIgnoreCase("Back")) {
+            // go back to previous page
+            this.chairChoices(name, emailAddress,confName);
+        } else {
+            // if user choose the paper
+            // get the list of reviewer from that conference
+            ArrayList<String[]> availableReviewer = new ArrayList<String[]>();
+            for (User u:cms.retrieveUserList()){
+                if (u.getRole().equalsIgnoreCase("reviewer")){
+                    NormalUser nu = (NormalUser) u;
+                    // if user is reviewer and participated in this conference, get the email address
+                    if (nu.getConferenceName().equals(confName)){
+                        String[] suitReviewer = {nu.getEmail(),nu.getFirstName(),nu.getLastName()};
+                        availableReviewer.add(suitReviewer);
+                    }
+                }
+            }
+            // get user option to choose reviewer
+            String reviewerList = ui.getReviewer(availableReviewer);
+            // delimit the information
+            ArrayList<String> reviewerInd = ut.stringToArrayList(reviewerList, ",");
+            // convert user input index to programmer index
+            ArrayList<Integer> topicInt = ut.convertIndexBound(reviewerInd,availableReviewer.size());
+            // if is empty
+            if (topicInt == null){
+                ui.displayMsgWithSleep("Please enter a valid reviewer number.");
+                this.assignReviewer(name, emailAddress,confName);
+            }
+            //use index of topic to retrieve index
+
+
+
+
+        }
+
+
+
+
     }
 
 
@@ -312,7 +368,6 @@ public class MainController extends Controller{
             // write to csv file
 
         }
-
     }
 
 
@@ -442,7 +497,6 @@ public class MainController extends Controller{
             }
             // if new conference
             ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
-
             // Conference Confirmation
             ui.createConfConfirmation(confName,place, ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate), ut.arrayListToString(topicName,","));
             // get user option to "create", "back" or "exit"
@@ -500,31 +554,22 @@ public class MainController extends Controller{
          */
         // Get topic option
         String[] topicTmp = ui.getTopicAreas(avaiableTopics);
+        // truncate white space and non visible character
+        topicTmp[1] = topicTmp[1].replaceAll("\\s","");
+
         // delimit the information
         ArrayList<String> topicInd = ut.stringToArrayList(topicTmp[0], ",");
         ArrayList<String> topicName = ut.stringToArrayList(topicTmp[1], ",");
-        // if is empty
-        if (topicInd == null){
-            ui.displayMsgWithSleep("Please enter a valid topic number.");
-            this.topicAreasProcess(name, emailAddress);
-        }
         // convert user input index to programmer index
-        ArrayList<Integer> topicInt = ut.convertUserIdxToSysIdx(topicInd);
+        ArrayList<Integer> topicInt = ut.convertIndexBound(topicInd,avaiableTopics.size());
         // if is empty
         if (topicInt == null){
             ui.displayMsgWithSleep("Please enter a valid topic number.");
-            this.topicAreasProcess(name, emailAddress);
-        }
-        // check index bound
-        Boolean result = ut.indexCheck(topicInt,avaiableTopics.size());
-        // if topic incorrect, try again
-        if ((topicInt == null) || (result == false)){
-            ui.displayMsgWithSleep("Please enter a valid topic number.");
-            this.topicAreasProcess(name, emailAddress);
+            this.createConferenceOption(name, emailAddress);
         }
         //use index of topic to retrieve index
         ArrayList<String> topicName2 = ut.indexToElement(topicInt,avaiableTopics);
-        if (topicName.size() > 0) {
+        if (topicName.get(0) != "") {
             topicName2.addAll(topicName);
         }
         return topicName2;
@@ -642,6 +687,7 @@ public class MainController extends Controller{
             }
         }
     }
+
 
 
     private boolean passwordValidator(String password){

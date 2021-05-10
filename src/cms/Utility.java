@@ -121,18 +121,24 @@ public class Utility {
     }
 
 
-    public ArrayList<Integer> convertUserIdxToSysIdx(ArrayList<String> index){
+    public ArrayList<Integer> convertIndexBound(ArrayList<String> index, int listLength){
         /**
          * Convert the user input index, which starting from 1,
-         * to programmer index, which starting from 0
+         * to programmer index, which starting from 0, and check the index bound
          * @param the index list inputted by user in list of string
-         * @return the index of programmer in list of integer
+         * @return the index of programmer in list of integer; null if incorrect
          */
+        if (index == null){
+            return null;
+        }
         ArrayList<Integer> list = new ArrayList<>();
         for (String ind : index) {
             try {
                 int number = Integer.parseInt(ind);
                 number = number - 1; // since the input is entered by user, starting is 1
+                if ((number >= listLength) || (number < 0)){
+                    return null;
+                }
                 list.add(number);
             }
             catch (NumberFormatException | NullPointerException e){
@@ -140,27 +146,6 @@ public class Utility {
             }
         }
         return list;
-    }
-
-
-    public boolean indexCheck(ArrayList<Integer> index, int listLength){
-        /**
-         * Check the bound and type of index inputted by user.
-         * @param the index list inputted by user
-         * @param the length of the list
-         * @return the list of input starting from 0
-         */
-        boolean check = true;
-        System.out.println(index);
-        if (index != null){
-            // check if the index invalid
-            for (Integer ind : index) {
-                if ((ind >= listLength) || (ind < 0)) {
-                    check = false;
-                }
-            }
-        }
-        return check;
     }
 
 

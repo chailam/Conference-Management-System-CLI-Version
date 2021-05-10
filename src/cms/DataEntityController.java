@@ -10,17 +10,16 @@ package cms;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.io.*;
 
 
 public class DataEntityController extends Controller {
 
     
     public void initializeConferenceManagementSystem(){
-        /**
-         * It initialized the ConferenceManagementSystem, to read all data from csv file, 
-         * which act as database, and create entity for each of them.
-         */
+    /**
+     * It initialized the ConferenceManagementSystem, to read all data from csv file,
+     * which act as database, and create entity for each of them.
+     */
         List<String[]> resultUser = ut.readCSV(pathNormalUserCSV);
         List<String[]> resultConference = ut.readCSV(pathConferenceCSV);
         List<String[]> resultPaper = ut.readCSV(pathPaperCSV);
