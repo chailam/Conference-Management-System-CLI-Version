@@ -87,7 +87,7 @@ public class ConferenceManagementSystem {
     }
 
 
-    public User searchSpecificUser(String emailAddress, String role, String conference) {
+    public NormalUser searchSpecificUser(String emailAddress, String role, String conference) {
         /**
          * To return specific user where emailAddress, role, and conference matching
          * @param email address of the user

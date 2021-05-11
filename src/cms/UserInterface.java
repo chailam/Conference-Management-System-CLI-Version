@@ -343,9 +343,11 @@ public class UserInterface {
         this.displayHeader();
         this.displayMessageLn("Please select 1 - 4 reviewers fro this paper:  ");
         this.displayMessageLn("For example, input: 1,2,3");
+        this.displayMessageLn("");
+        this.displayMessageLn("");
         // print our all reviewers available
         for (int i = 0; i < availableReviewer.size() ; i++){
-            this.displayMessageLn((i+1) + " . " + availableReviewer.get(i)[1] +  "  " + availableReviewer.get(i)[2] + "(" + availableReviewer.get(i)[0] + ")");
+            this.displayMessageLn((i+1) + " . " + availableReviewer.get(i)[1] +  "  " + availableReviewer.get(i)[2] + " (" + availableReviewer.get(i)[0] + ") ");
         }
         this.displayMessage("Please enter your reviewer number index: ");
         String reviewerInd = scanner.nextLine(); // Read the user input

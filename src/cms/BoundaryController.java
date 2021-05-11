@@ -270,7 +270,7 @@ public class BoundaryController extends Controller{
             ut.writeCSV(pathPaperCSV,paperData,true);
 
             // Update the user information
-            User u = cms.searchSpecificUser(emailAddress,"Author",confName);
+            NormalUser u = cms.searchSpecificUser(emailAddress,"Author",confName);
             if (u != null){
                 Author au = (Author) u;
                 ArrayList<String> papers = new ArrayList<String>();
@@ -326,14 +326,20 @@ public class BoundaryController extends Controller{
             this.chairChoices(name, emailAddress,confName);
         } else {
             // if user choose the paper
+            // check the number of reviewer of that paper, if larger than 4 then go back
+            int reviewerNo = cms.searchPaper(preferPaper).getNoOfReviewer();
+            if (reviewerNo >= 4){
+                ui.displayMsgWithSleep("The number of reviewers for this paper has reached maximum of 4.");
+                this.assignReviewer(name, emailAddress,confName);
+            }
             // get the list of reviewer from that conference
             ArrayList<String[]> availableReviewer = new ArrayList<String[]>();
             for (User u:cms.retrieveUserList()){
                 if (u.getRole().equalsIgnoreCase("reviewer")){
-                    NormalUser nu = (NormalUser) u;
+                    Reviewer ru = (Reviewer) u;
                     // if user is reviewer and participated in this conference, get the email address
-                    if (nu.getConferenceName().equals(confName)){
-                        String[] suitReviewer = {nu.getEmail(),nu.getFirstName(),nu.getLastName()};
+                    if (ru.getConferenceName().equals(confName) && !ru.retrieveAssignedPaper().contains(preferPaper)){
+                        String[] suitReviewer = {ru.getEmail(),ru.getFirstName(),ru.getLastName()};
                         availableReviewer.add(suitReviewer);
                     }
                 }
@@ -350,8 +356,8 @@ public class BoundaryController extends Controller{
                 this.assignReviewer(name, emailAddress,confName);
             }
             // check number of reviewer assigned
-            if (reviewerInt.size() < 1 || reviewerInt.size() > 4){
-                ui.displayMsgWithSleep("Please enter a valid number of reviewer.");
+            if (reviewerInt.size()+reviewerNo < 1 || reviewerInt.size()+reviewerNo > 4){
+                ui.displayMsgWithSleep("Please current number of reviewers for this paper exceed 4.");
                 this.assignReviewer(name, emailAddress,confName);
             }
             // get a list of selected reviewer
@@ -361,21 +367,33 @@ public class BoundaryController extends Controller{
                 selectedReviewer.add(reviewer);
             }
             // modify the number of reviewers in paper csv
-            ut.updatePaperCsv(pathPaperCSV,Integer.toString(selectedReviewer.size()),3,preferPaper);
+            ut.updatePaperCsv(pathPaperCSV,Integer.toString(selectedReviewer.size()+reviewerNo),3,preferPaper);
             // modify the number of reviewer in paperList
-            cms.searchPaper(preferPaper).setNoOfReviewer(selectedReviewer.size());
-
-            // add the paper title to each of the reviewer in user csc
+            cms.searchPaper(preferPaper).setNoOfReviewer(selectedReviewer.size()+reviewerNo);
             // modify the paper assigned in userlist
-            //TODO: for each reviewer, modify!!!
-            for (String[] r : selectedReviewer){
-                // get the original paper
-                //ut.updateUserCsv(pathUserCSV,,11, emailAddress, "reviewer", confName);
-
+            for (String[] r : selectedReviewer) {
+                //r[0] is email address, r[1] is firstname, r[2] is last name
+                NormalUser nu = cms.searchSpecificUser(r[0], "reviewer", confName);
+                if (nu != null) {
+                    Reviewer ru2 = (Reviewer) nu;
+                    ArrayList<String> papers = new ArrayList<String>();
+                    // if the reviewer has no assigned paper
+                    if (ru2.retrieveAssignedPaper().get(0) == "") {
+                        papers.add(preferPaper);
+                        ru2.setAssignedPaper(papers);
+                    }
+                    // if reviewer has existing assigned paper
+                    else {
+                        ru2.addAssignedPaper(preferPaper);
+                    }
+                    papers = ru2.retrieveAssignedPaper();
+                    // use opencsv to modify csv file for reviewer to include this paper
+                    ut.updateUserCsv(pathUserCSV, ut.arrayListToString(papers, "/"), 11, r[0], "reviewer", confName);
+                }
+                else {
+                    System.out.println("searchSpecificUser is null?! ");
+                }
             }
-
-            //ut.updateUserCsv(pathUserCSV,,11, emailAddress, "reviewer", confName);
-
             // display confirmation message
             ui.reviewerConfirmation(selectedReviewer,preferPaper);
             // return back to home
