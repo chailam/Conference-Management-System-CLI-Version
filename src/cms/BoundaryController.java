@@ -182,7 +182,7 @@ public class BoundaryController extends Controller{
     }
 
 
-    private void authorChoices(String name, String emailAddress, String confName) throws InterruptedException{
+    private void authorChoices(String name, String emailAddress, String confName) throws InterruptedException {
         /**
          * The option available for author and its operation.
          * @param name of the user
@@ -190,78 +190,15 @@ public class BoundaryController extends Controller{
          * @param the conference name
          */
         // get the user option to "submit paper" or "go back"
-        String op = ui.getUserOption(authorOp, name,true);
+        String op = ui.getUserOption(authorOp, name, true);
         // if user choose to go back
-        if (op.equalsIgnoreCase("Back")){
+        if (op.equalsIgnoreCase("Back")) {
             homePageChoices(name, emailAddress);
         }
         // if user choose to submit paper
-        else if (op.equalsIgnoreCase("Submit Paper")){
-            // show to choose topic areas
-            ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
-            ui.topicAreasConfirmation(ut.arrayListToString(topicName,","));
-            // get the user option to confirm topic area or go back
-            ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList("Confirm","Back"));
-            String op2 = ui.getUserOption(confirmOption, "", false);
-            // if user choose to confirm
-            if (op2.equalsIgnoreCase("Confirm")){
-                String[] info = ui.getPaperSubmission();
-                String title = info[0];
-                String path = info[1];
-                // check the submission date pass the deadline
-                // get the conference paper submission due date
-                LocalDate submitDueDate = cms.searchConference(confName).getPaperSubmissionDue();
-                if (submitDueDate.isBefore(LocalDate.now(ZoneId.of( "Australia/Sydney" )))){
-                    ui.displayMsgWithSleep("The paper submission due date has been passed!");
-                    this.authorChoices(name,emailAddress,confName);
-                }
-                // check if duplicated paper
-                if (cms.hasPaper(title) == true){
-                    ui.displayMsgWithSleep("The Paper Title is duplicated!\n    Please try another title!");
-                    this.authorChoices(name,emailAddress,confName);
-                }
-                // check the path
-                if (pathValidator(path) == false){
-                    ui.displayMsgWithSleep("The file path is incorrect");
-                    this.authorChoices(name,emailAddress,confName);
-                }
-                // Set the paper, add paper to cms list
-                Paper createdp = createPaperEntity(title, emailAddress,null,0,null,confName,topicName,"Being Reviewed");
-                cms.addPaper(createdp);
-                //write paper to csv file
-                String[] paperData = {title, emailAddress, null,"0",null,confName,ut.arrayListToString(topicName,"/"), "Being Reviewed"};
-                ut.writeCSV(pathPaperCSV,paperData,true);
+        else if (op.equalsIgnoreCase("Submit Paper")) {
+            this.submitPaper(name, emailAddress, confName);
 
-                // Update the user information
-                User u = cms.searchSpecificUser(emailAddress,"Author",confName);
-                if (u != null){
-                    Author au = (Author) u;
-                    ArrayList<String> papers = new ArrayList<String>();
-                    // if paper is empty
-                    if (au.retrievePaper().get(0) == ""){
-                        papers.add(createdp.getTitle());
-                        au.setPaper(papers);
-                    }
-                    // if author submitted another paper already
-                    else{
-                        au.addPaper(createdp.getTitle());
-                    }
-                    papers = au.retrievePaper();
-                    // use opencsv to modify csv file for author to include this paper
-                    ut.updateCSVPaper(pathNormalUserCSV, ut.arrayListToString(papers,"/"), emailAddress, "author", confName);
-                }
-                else{
-                    System.out.println("Why can't find that user?!!!");
-                }
-                // display message
-                ui.displayMsgWithSleep("Congratulations!\n  You have submitted your paper for "+ confName + " as Reviewer.\n    You can view the review of your paper when result released.");
-                // go back to previous page
-                this.homePageChoices(name, emailAddress);
-            }
-            // if user choose to go back
-            else if (op2.equalsIgnoreCase("Back")){
-                this.authorChoices(name,emailAddress,confName);
-            }
         }
     }
 
@@ -286,16 +223,92 @@ public class BoundaryController extends Controller{
         }
         // if user choose to Assign Reviewer to Paper
         else if (op.equalsIgnoreCase("Assign Reviewer to Paper")){
-            //TODO: implement here the manually assign reviewer
-            // write to csv file
+            this.assignReviewer(name,emailAddress,confName);
+        }
+    }
 
+    private void submitPaper (String name, String emailAddress, String confName) throws InterruptedException {
+        /**
+         * To submit the paper
+         * @param name of the author
+         * @param email address of author
+         * @param conference name of the author joined
+         */
+        // show to choose topic areas
+        ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
+        ui.topicAreasConfirmation(ut.arrayListToString(topicName,","));
+        // get the user option to confirm topic area or go back
+        ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList("Confirm","Back"));
+        String op2 = ui.getUserOption(confirmOption, "", false);
+        // if user choose to confirm
+        if (op2.equalsIgnoreCase("Confirm")){
+            String[] info = ui.getPaperSubmission();
+            String title = info[0];
+            String path = info[1];
+            // check the submission date pass the deadline
+            // get the conference paper submission due date
+            LocalDate submitDueDate = cms.searchConference(confName).getPaperSubmissionDue();
+            if (submitDueDate.isBefore(LocalDate.now(ZoneId.of( "Australia/Sydney" )))){
+                ui.displayMsgWithSleep("The paper submission due date has been passed!");
+                this.authorChoices(name,emailAddress,confName);
+            }
+            // check if duplicated paper
+            if (cms.hasPaper(title) == true){
+                ui.displayMsgWithSleep("The Paper Title is duplicated!\n    Please try another title!");
+                this.authorChoices(name,emailAddress,confName);
+            }
+            // check the path
+            if (pathValidator(path) == false){
+                ui.displayMsgWithSleep("The file path is incorrect");
+                this.authorChoices(name,emailAddress,confName);
+            }
+            // Set the paper, add paper to cms list
+            Paper createdp = createPaperEntity(title, emailAddress,null,0,null,confName,topicName,"Being Reviewed");
+            cms.addPaper(createdp);
+            //write paper to csv file
+            String[] paperData = {title, emailAddress, null,"0",null,confName,ut.arrayListToString(topicName,"/"), "Being Reviewed"};
+            ut.writeCSV(pathPaperCSV,paperData,true);
 
-
+            // Update the user information
+            User u = cms.searchSpecificUser(emailAddress,"Author",confName);
+            if (u != null){
+                Author au = (Author) u;
+                ArrayList<String> papers = new ArrayList<String>();
+                // if paper is empty
+                if (au.retrievePaper().get(0) == ""){
+                    papers.add(createdp.getTitle());
+                    au.setPaper(papers);
+                }
+                // if author submitted another paper already
+                else{
+                    au.addPaper(createdp.getTitle());
+                }
+                papers = au.retrievePaper();
+                // use opencsv to modify csv file for author to include this paper
+                ut.updateUserCsv(pathUserCSV, ut.arrayListToString(papers,"/"),11, emailAddress, "author", confName);
+            }
+            else{
+                System.out.println("Why can't find that user?!!!");
+            }
+            // display message
+            ui.displayMsgWithSleep("Congratulations!\n  You have submitted your paper for "+ confName + " as Reviewer.\n    You can view the review of your paper when result released.");
+            // go back to previous page
+            this.homePageChoices(name, emailAddress);
+        }
+        // if user choose to go back
+        else if (op2.equalsIgnoreCase("Back")){
+            this.authorChoices(name,emailAddress,confName);
         }
     }
 
 
     private void assignReviewer(String name, String emailAddress, String confName) throws InterruptedException {
+    /**
+     * Assign the reviewer for paper.
+     * @param name of the chair
+     * @param emailaddress of chair
+     * @param the conference name
+     */
         ArrayList<String> availablePaper = new ArrayList<String>();
         // get a list of paper in that conference
         for (Paper p : cms.retrievePaperList()) {
@@ -330,22 +343,44 @@ public class BoundaryController extends Controller{
             // delimit the information
             ArrayList<String> reviewerInd = ut.stringToArrayList(reviewerList, ",");
             // convert user input index to programmer index
-            ArrayList<Integer> topicInt = ut.convertIndexBound(reviewerInd,availableReviewer.size());
+            ArrayList<Integer> reviewerInt = ut.convertIndexBound(reviewerInd,availableReviewer.size());
             // if is empty
-            if (topicInt == null){
+            if (reviewerInt == null){
                 ui.displayMsgWithSleep("Please enter a valid reviewer number.");
                 this.assignReviewer(name, emailAddress,confName);
             }
-            //use index of topic to retrieve index
+            // check number of reviewer assigned
+            if (reviewerInt.size() < 1 || reviewerInt.size() > 4){
+                ui.displayMsgWithSleep("Please enter a valid number of reviewer.");
+                this.assignReviewer(name, emailAddress,confName);
+            }
+            // get a list of selected reviewer
+            ArrayList<String[]> selectedReviewer = new ArrayList<String[]>();
+            for (int idx:reviewerInt){
+                String[] reviewer = availableReviewer.get(idx);
+                selectedReviewer.add(reviewer);
+            }
+            // modify the number of reviewers in paper csv
+            ut.updatePaperCsv(pathPaperCSV,Integer.toString(selectedReviewer.size()),3,preferPaper);
+            // modify the number of reviewer in paperList
+            cms.searchPaper(preferPaper).setNoOfReviewer(selectedReviewer.size());
 
+            // add the paper title to each of the reviewer in user csc
+            // modify the paper assigned in userlist
+            //TODO: for each reviewer, modify!!!
+            for (String[] r : selectedReviewer){
+                // get the original paper
+                //ut.updateUserCsv(pathUserCSV,,11, emailAddress, "reviewer", confName);
 
+            }
 
+            //ut.updateUserCsv(pathUserCSV,,11, emailAddress, "reviewer", confName);
 
+            // display confirmation message
+            ui.reviewerConfirmation(selectedReviewer,preferPaper);
+            // return back to home
+            this.chairChoices(name, emailAddress,confName);
         }
-
-
-
-
     }
 
 
@@ -519,7 +554,7 @@ public class BoundaryController extends Controller{
                     User createdu = createUserEntity("Chair",u.getEmail(),u.getPassword(),nu.getFirstName(),nu.getLastName(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),confName,null,null);
                     cms.addUser(createdu);
                     String[] userData = {"Chair",u.getEmail(),u.getPassword(),nu.getFirstName(),nu.getLastName(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),confName,null,null};
-                    ut.writeCSV(pathNormalUserCSV,userData,true);
+                    ut.writeCSV(pathUserCSV,userData,true);
                 }
                 else{
                     ui.displayMsgWithSleep("Conference is null?!!!");
@@ -670,7 +705,7 @@ public class BoundaryController extends Controller{
                 cms.addUser(u);
                 //add new user to csv file
                 String[] regisData = {"Normal", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, null, null, null};
-                ut.writeCSV(pathNormalUserCSV, regisData,true);
+                ut.writeCSV(pathUserCSV, regisData,true);
                 // redirect to main page
                 ui.displayMsgWithSleep("You have successfully registered!\n Enjoy your conferences!\n   Please login again!");
                 this.run();

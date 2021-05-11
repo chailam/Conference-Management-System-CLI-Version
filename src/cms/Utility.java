@@ -188,14 +188,14 @@ public class Utility {
 
 
 
-    public void updateCSVPaper (String filePath, String dataToUpdate, String emailAddress, String role, String confName){
+    public void updateUserCsv(String filePath, String dataToUpdate, int dataIndex, String emailAddress, String role, String confName){
     /**
-     *  The method to update data in csv file at specific col and row
+     *  The method to update user data in csv file at specific col and row
      * @param the file path of the file to update
      * @param the data to update to file
+     * @param the index of the data to be modified
      * @param the matching string
      * @param the matching string
-     * @boolean where true is append and false is overwrite
      */
         try {
             // read the data
@@ -208,7 +208,7 @@ public class Utility {
                 String[] string = csvData.get(i);
                 //col index 0 is role, col index 1 is email and col index 9 is conference name
                 if(string[0].equalsIgnoreCase(role) && string[1].equalsIgnoreCase(emailAddress) && string[9].equals(confName)){
-                    string[11] = dataToUpdate;
+                    string[dataIndex] = dataToUpdate;
                 }
             }
             csvReader.close();
@@ -219,7 +219,42 @@ public class Utility {
             csvWriter.close();
         }
         catch (Exception e){
-            System.out.println("File Write Error: " + e);
+            System.out.println("User File Write Error: " + e);
+        }
+    }
+
+
+    public void updatePaperCsv(String filePath, String dataToUpdate, int dataIndex, String title){
+        /**
+         *  The method to update user data in csv file at specific col and row
+         * @param the file path of the file to update
+         * @param the data to update to file
+         * @param the index of the data to be modified
+         * @param the title of the paper
+         */
+        try {
+            // read the data
+            File theFile = new File(filePath);
+            CSVReader csvReader = new CSVReader(new FileReader(theFile));
+            List<String[]> csvData = csvReader.readAll();
+
+            // get data to be replaced  at row (i) and column
+            for (int i = 0; i < csvData.size() ; i++){
+                String[] string = csvData.get(i);
+                //col index 0 is role, col index 1 is email and col index 9 is conference name
+                if(string[0].equalsIgnoreCase(title)){
+                    string[dataIndex] = dataToUpdate;
+                }
+            }
+            csvReader.close();
+            // Write to the CSV file
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(filePath));
+            csvWriter.writeAll(csvData);
+            csvWriter.flush();
+            csvWriter.close();
+        }
+        catch (Exception e){
+            System.out.println("Paper File Write Error: " + e);
         }
     }
 }

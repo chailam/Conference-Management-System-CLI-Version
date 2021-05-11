@@ -320,6 +320,20 @@ public class UserInterface {
     }
 
 
+    public void topicAreasConfirmation(String topic){
+    /**
+     * The message to confirm the topics areas information
+     * @param the topic areas
+     */
+        this.displayHeader();
+        this.displayMessageLn("The topics that fall into your area of expertise is/are:");
+        this.displayMessageLn("");
+        this.displayMessageLn("");
+        this.displayMessageLn(topic);
+        this.displayMessageLn("");
+        this.displayMessageLn("");
+    }
+
     public String getReviewer(ArrayList<String[]> availableReviewer){
         /**
          * To get the reviewer choices from the chair
@@ -340,19 +354,21 @@ public class UserInterface {
     }
 
 
-    public void topicAreasConfirmation(String topic){
-    /**
-     * The message to confirm the topics areas information
-     * @param the topic areas
-     */
+    public void reviewerConfirmation(ArrayList<String[]> reviewers, String pTitle) throws InterruptedException {
+        /**
+         * The message to confirm the reviewer assign
+         * @param the reviewer
+         */
         this.displayHeader();
-        this.displayMessageLn("The topics that fall into your area of expertise is/are:");
+        this.displayMessageLn("The reviewer(s) assigned to Paper " + pTitle + " is/are: ");
         this.displayMessageLn("");
+        for (String[] r:reviewers){
+            this.displayMessageLn(r[1] + " " + r[2] + " (" + r[0] + " )");
+        }
         this.displayMessageLn("");
-        this.displayMessageLn(topic);
-        this.displayMessageLn("");
-        this.displayMessageLn("");
+        TimeUnit.SECONDS.sleep(2);
     }
+
 
 
     public String[] getPaperSubmission(){
@@ -361,7 +377,7 @@ public class UserInterface {
          * @return the information retrieved
          */
         this.displayHeader();
-        this.displayMessageLn("Please enter the tilte of your paper and the path of your paper to upload and submit your paper");
+        this.displayMessageLn("Please enter the title of your paper and the path of your paper to upload and submit your paper");
         this.displayMessageLn("[File format: PDF , Word only]");
         this.displayMessageLn("Example path: c:\\my_folder\\my_folder\\file.pdf");
         this.displayMessageLn("");

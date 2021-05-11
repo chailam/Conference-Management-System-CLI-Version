@@ -12,8 +12,8 @@ public abstract class Controller {
     //Instantiate utility class
     protected Utility ut = new Utility();
 
-    // Define the path to NormalUser.csv, Conference.csv, and Paper.csv
-    protected String pathNormalUserCSV = "src/resource/NormalUser.csv";
+    // Define the path to User.csv, Conference.csv, and Paper.csv
+    protected String pathUserCSV = "src/resource/User.csv";
     protected String pathConferenceCSV = "src/resource/Conference.csv";
     protected String pathPaperCSV = "src/resource/Paper.csv";
 
@@ -92,7 +92,7 @@ public abstract class Controller {
                 // Add user to the list
                 cms.addUser(createdU);
                 // write to csv file
-                ut.writeCSV(pathNormalUserCSV, userData, true);
+                ut.writeCSV(pathUserCSV, userData, true);
             }
             else{
                 System.out.println("User is null in setupNormalUserEntity?!");

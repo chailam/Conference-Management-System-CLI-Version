@@ -1,6 +1,6 @@
 /**
  * This controller class is used to control the ConferenceManagementSystem. When the program start,
- * it reads the data from NormalUser.csv, Conference.csv and Paper.csv, which acts as our Database.
+ * it reads the data from User.csv, Conference.csv and Paper.csv, which acts as our Database.
  * Then based on the data read, it creates the entity and adds those entities to the userList, paperList, and conferenceList,
  * which located in the ConferenceManagementSystem cms. Since cms is a static variable of Controller parent class, DataEntityController
  * and CoundaryController can share the same cms (data).
@@ -20,7 +20,7 @@ public class DataEntityController extends Controller {
      * It initialized the ConferenceManagementSystem, to read all data from csv file,
      * which act as database, and create entity for each of them.
      */
-        List<String[]> resultUser = ut.readCSV(pathNormalUserCSV);
+        List<String[]> resultUser = ut.readCSV(pathUserCSV);
         List<String[]> resultConference = ut.readCSV(pathConferenceCSV);
         List<String[]> resultPaper = ut.readCSV(pathPaperCSV);
 
