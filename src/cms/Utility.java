@@ -16,6 +16,8 @@ import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets; 
 import java.math.BigInteger;
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utility {
 
@@ -46,6 +48,9 @@ public class Utility {
      * @return the arraylist or null if list is empty
      */
         String tmp [];
+        if (longString.equals("")){
+            return null;
+        }
         ArrayList<String> theArrayList = new ArrayList<String>();
         tmp = longString.split(delimit);
         for (String s : tmp){
@@ -53,8 +58,7 @@ public class Utility {
         }
         if (theArrayList.size() > 0){
             return theArrayList;
-        }
-        else{
+        } else{
             return null;
         }
     }
@@ -140,8 +144,7 @@ public class Utility {
                     return null;
                 }
                 list.add(number);
-            }
-            catch (NumberFormatException | NullPointerException e){
+            } catch (NumberFormatException | NullPointerException e){
                 return null;
             }
         }
@@ -161,8 +164,7 @@ public class Utility {
             CSVWriter writer = new CSVWriter(fileWriter);
             writer.writeNext(dataToWrite);
             writer.close();
-        }
-        catch (Exception e){
+        } catch (Exception e){
             System.out.println("File Write Error: " + e);
         }
     }
@@ -179,8 +181,7 @@ public class Utility {
             FileReader fileReader = new FileReader(filePath);
             CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
             csvData = csvReader.readAll();
-        }
-        catch (Exception e){
+        } catch (Exception e){
             System.out.println("File Read Error: " + e);
         }
         return csvData;
@@ -188,73 +189,63 @@ public class Utility {
 
 
 
-    public void updateUserCsv(String filePath, String dataToUpdate, int dataIndex, String emailAddress, String role, String confName){
-    /**
-     *  The method to update user data in csv file at specific col and row
-     * @param the file path of the file to update
-     * @param the data to update to file
-     * @param the index of the data to be modified
-     * @param the matching string
-     * @param the matching string
-     */
-        try {
-            // read the data
-            File theFile = new File(filePath);
-            CSVReader csvReader = new CSVReader(new FileReader(theFile));
-            List<String[]> csvData = csvReader.readAll();
+    public boolean pathValidator(String path){
+        /**
+         * To check whether fulfill the requirement of path,
+         * @param the path to be checked
+         * @return true if valid, false otherwise
+         * reference: reference: https://www.codeproject.com/Tips/216238/Regular-Expression-to-Validate-File-Path-and-Exten
+         */
+        boolean checker = true;
+        // regex simple email checking
+        String regexCheck = "^(?:[\\w]\\:|\\\\)(\\\\[a-zA-Z_\\-\\s0-9\\.]+)+\\.(pdf|doc|docx)$";
+        Pattern pathPattern = Pattern.compile(regexCheck);
+        Matcher matcher = pathPattern.matcher(path);
+        return matcher.matches();
+    }
 
-            // get data to be replaced  at row (i) and column
-            for (int i = 0; i < csvData.size() ; i++){
-                String[] string = csvData.get(i);
-                //col index 0 is role, col index 1 is email and col index 9 is conference name
-                if(string[0].equalsIgnoreCase(role) && string[1].equalsIgnoreCase(emailAddress) && string[9].equals(confName)){
-                    string[dataIndex] = dataToUpdate;
-                }
-            }
-            csvReader.close();
-            // Write to the CSV file
-            CSVWriter csvWriter = new CSVWriter(new FileWriter(filePath));
-            csvWriter.writeAll(csvData);
-            csvWriter.flush();
-            csvWriter.close();
-        }
-        catch (Exception e){
-            System.out.println("User File Write Error: " + e);
-        }
+    public boolean passwordValidator(String password){
+        /**
+         * To check whether fulfill the requirement of password,
+         * which are must at least 8 characters long, must include at least 1 upper case, 1 lower case, 1 number.
+         * @param the password to be checked
+         * @return true if valid, false otherwise
+         * reference: https://www.geeksforgeeks.org/how-to-validate-a-password-using-regular-expressions-in-java/
+         */
+        boolean checker = true;
+        // regex inorder for uppercase at least one, lower case at least one, number at least one, no white space and more than 8 characters
+        String regexCheck = "(?=.*[A-Z])" + "(?=.*[a-z])" +  "(?=.*[0-9])"+ "(?=\\S+$)" + ".{8,}" + "$";
+        Pattern passPattern = Pattern.compile(regexCheck);
+        Matcher matcher = passPattern.matcher(password);
+        return matcher.matches();
+    }
+
+    public boolean emailValidator(String emailAddress){
+        /**
+         * To check whether fulfill the requirement of email,
+         * @param the email to be checked
+         * @return true if valid, false otherwise
+         * reference: https://howtodoinjava.com/java/regex/java-regex-validate-email-address/
+         */
+        boolean checker = true;
+        // regex simple email checking
+        String regexCheck = "^(.+)@(.+)$";
+        Pattern passPattern = Pattern.compile(regexCheck);
+        Matcher matcher = passPattern.matcher(emailAddress);
+        return matcher.matches();
     }
 
 
-    public void updatePaperCsv(String filePath, String dataToUpdate, int dataIndex, String title){
+    public String[] trimWhiteSpace (String[] data){
         /**
-         *  The method to update user data in csv file at specific col and row
-         * @param the file path of the file to update
-         * @param the data to update to file
-         * @param the index of the data to be modified
-         * @param the title of the paper
+         * To trim any white space and non visible character
+         * @param string to be validate
+         * @return valifated string
          */
-        try {
-            // read the data
-            File theFile = new File(filePath);
-            CSVReader csvReader = new CSVReader(new FileReader(theFile));
-            List<String[]> csvData = csvReader.readAll();
-
-            // get data to be replaced  at row (i) and column
-            for (int i = 0; i < csvData.size() ; i++){
-                String[] string = csvData.get(i);
-                //col index 0 is role, col index 1 is email and col index 9 is conference name
-                if(string[0].equalsIgnoreCase(title)){
-                    string[dataIndex] = dataToUpdate;
-                }
-            }
-            csvReader.close();
-            // Write to the CSV file
-            CSVWriter csvWriter = new CSVWriter(new FileWriter(filePath));
-            csvWriter.writeAll(csvData);
-            csvWriter.flush();
-            csvWriter.close();
+        // truncate white space and non visible character
+        for (int i = 0; i < data.length; i++){
+            data[i] = data[i].trim();
         }
-        catch (Exception e){
-            System.out.println("Paper File Write Error: " + e);
-        }
+        return data;
     }
 }
