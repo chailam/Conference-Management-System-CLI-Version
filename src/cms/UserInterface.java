@@ -417,6 +417,9 @@ public class UserInterface {
         this.displayMessageLn("The evaluation for paper " + pTitle + " is: ");
         this.displayMessageLn("");
         this.displayMessageLn("Evaluation: ");
+        this.displayMessageLn("");
         this.displayMessageLn(evaluation);
+        this.displayMessageLn("");
+        this.displayMessageLn("");
     }
 }
