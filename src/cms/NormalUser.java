@@ -3,9 +3,11 @@
  * 
 **/
 
-package cms.entity;
+package cms;
 
 import java.util.*;
+import cms.User;
+import cms.Conference;
 
 public class NormalUser extends User {
 
@@ -194,7 +196,7 @@ public class NormalUser extends User {
     }
 
             
-    public void setConferenceName(String conferenceName){
+    public void setConference(String conferenceName){
     /**
      * Setter for conference
      * @param the conference of the user 
@@ -209,10 +211,10 @@ public class NormalUser extends User {
      * @param 	the notification to be added to the list
      **/
         this.notification.add(notification);
-    }
+    }  
 
 
-    //This toString method is for developer debugging purpose!
+    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
     @Override
     public String toString(){
         return String.format("emailAddress: " + getEmail() + ", password: " + getPassword() + ", firstName: " + getFirstName() + ", conferenceName: " + getConferenceName());

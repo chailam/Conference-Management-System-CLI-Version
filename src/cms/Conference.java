@@ -3,7 +3,7 @@
  * 
 **/
 
-package cms.entity;
+package cms;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -53,6 +53,15 @@ public class Conference {
     }
 
 
+    public ArrayList<String> retrieveChosenTopicAreas(){
+    /**
+     * Getter for the selected topic area of the conference
+     * @return 	the selected topic area of the conference
+     **/
+        return this.chosenTopicAreas;
+    }
+
+
     public LocalDate getDate(){
     /**
      * Getter for the date held of conference
@@ -80,15 +89,6 @@ public class Conference {
     }
 
 
-    public ArrayList<String> retrieveChosenTopicAreas(){
-        /**
-         * Getter for the selected topic area of the conference
-         * @return 	the selected topic area of the conference
-         **/
-        return this.chosenTopicAreas;
-    }
-
-
     public void setName(String name){
     /**
      * Setter for name of the conference
@@ -104,6 +104,15 @@ public class Conference {
      * @param 	the place of the conference held
      **/
         this.place = place;
+    }
+
+
+    public void addChosenTopicAreas(String topic){
+    /**
+     * Add topic into the chosen topic areas
+     * @param 	the topic area to be added
+     **/
+        this.chosenTopicAreas.add(topic);
     }
 
 
@@ -125,7 +134,7 @@ public class Conference {
     }
 
 
-    public void setReviewDue(LocalDate date){
+    public void getReviewDue(LocalDate date){
     /**
      * Setter for the paper review due date of the conference
      * @param 	the paper review due date of the conference
@@ -133,17 +142,7 @@ public class Conference {
        this.paperReviewDueDate = date;
     }
 
-
-    public void addChosenTopicAreas(String topic){
-        /**
-         * Add topic into the chosen topic areas
-         * @param 	the topic area to be added
-         **/
-        this.chosenTopicAreas.add(topic);
-    }
-
-
-    //This toString method is for developer debugging purpose!
+    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
     @Override
     public String toString(){
         return String.format("name: " + getName() + ", topic: " + retrieveChosenTopicAreas() + ", submit due: " + getPaperSubmissionDue() + ", review due: " + getPaperReviewDue());

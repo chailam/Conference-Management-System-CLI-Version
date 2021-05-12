@@ -3,9 +3,10 @@
  * 
 **/
 
-package cms.entity;
+package cms;
 
 import java.util.*;
+import cms.Conference;
 
 
 public class Paper {
@@ -13,13 +14,28 @@ public class Paper {
     private String author;
     private String content;
     private int noOfReviewer;
-    private ArrayList<String> evaluations = new ArrayList<String>();
+    private ArrayList<String> evaluation = new ArrayList<String>();
     private String conferenceName;
-    private ArrayList<String> chosenTopicAreas = new ArrayList<String>();
+    private ArrayList<String> chosenTopicAreas= new ArrayList<String>();
     private String currentProgressStatus;
 
+    public Paper(String title, String author, String conferenceName, ArrayList<String> topic){
+    /**
+	 * Constructor for the Paper.
+     * @param name is the name of the paper
+     * @param author is the author of the paper in full name
+     * @param conference is the conference where the paper submitted
+     * @param topic is the topic areas of the paper
+     **/
+        this.title = title;
+        this.author = author;
+        this.conferenceName = conferenceName;
+        this.chosenTopicAreas = topic;
+        this.currentProgressStatus = "Being Reviewed";
+    }
 
-    public Paper(String title, String author, String content, int noOfReviewer, ArrayList<String> evaluations, String conferenceName, ArrayList<String> topic, String progress){
+
+    public Paper(String title, String author, String content, int noOfReviewer, ArrayList<String> evaluation, String conferenceName, ArrayList<String> topic, String progress){
         /**
          * Constructor for the Paper.
          * @param name is the name of the paper
@@ -35,7 +51,7 @@ public class Paper {
             this.author = author;
             this.content = content;
             this.noOfReviewer = noOfReviewer;
-            this.evaluations = evaluations;
+            this.evaluation = evaluation;
             this.conferenceName = conferenceName;
             this.chosenTopicAreas = topic;
             this.currentProgressStatus = progress;
@@ -96,12 +112,12 @@ public class Paper {
     }
 
 
-    public ArrayList<String> retrieveEvaluations(){
+    public ArrayList<String> retrieveEvaluation(){
     /**
      * Retrieve the evaluation
      * @return 	the evaluation
      **/
-        return this.evaluations;
+        return this.evaluation;
     }
 
 
@@ -168,12 +184,12 @@ public class Paper {
     }
 
 
-    public void setEvaluations(ArrayList<String> evaluations){
+    public void setEvaluation(ArrayList<String> evaluations){
         /**
          * Setter for the evaluation of paper
          * @param 	the evaluation list
          **/
-        this.evaluations = evaluations;
+        this.evaluation = evaluations;
     }
 
 
@@ -191,15 +207,15 @@ public class Paper {
      * Retrieve the evaluation
      * @param 	the evaluation
      **/
-        this.evaluations.add(eva);
+        this.evaluation.add(eva);
     }
     
 
 
 
-    //This toString method is for developer debugging purpose!
+    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
     @Override
     public String toString(){
-        return String.format("title: " + getTitle() + ", author: " + getAuthor() + ", content : " + getContent() + ", no of reviewer: " + getNoOfReviewer() + ", evaluation: " + retrieveEvaluations() + ", topic: " + retrieveTopicAreas() + ", conference: " + getConferenceName() + ", progress: " + getProgressStatus());
+        return String.format("title: " + getTitle() + ", author: " + getAuthor() + ", content : " + getContent() + ", no of reviewer: " + getNoOfReviewer() + ", evaluation: " + retrieveEvaluation() + ", topic: " + retrieveTopicAreas() + ", conference: " + getConferenceName() + ", progress: " + getProgressStatus());
     }
 }

@@ -3,8 +3,12 @@
  * 
 **/
 
-package cms.entity;
+package cms;
 
+import cms.NormalUser;
+import cms.Conference;
+import cms.Paper;
+import java.util.*;
 
 public class Chair extends NormalUser {
 

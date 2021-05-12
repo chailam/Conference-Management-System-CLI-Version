@@ -3,8 +3,9 @@
  * 
 **/
 
-package cms.entity;
+package cms;
 
+import cms.Paper;
 import java.util.*;
 
 public class Reviewer extends NormalUser{
@@ -71,9 +72,9 @@ public class Reviewer extends NormalUser{
      **/
         this.assignedPaper = papers;
     }
+    
 
-
-    //This toString method is for developer debugging purpose!
+    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
     @Override
     public String toString(){
         return String.format("emailAddress: " + getEmail() + ", password: " + getPassword() + ", firstName: " + getFirstName() + ", conferenceName: " + getConferenceName() + ", paperlist: " + retrieveAssignedPaper() + ", topic: " + retrieveTopicAreas());
