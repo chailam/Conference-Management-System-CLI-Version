@@ -1,8 +1,8 @@
+/**
+ * The java file which includes tha main function to start the program
+ */
+
 package cms;
-
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Application {
 
