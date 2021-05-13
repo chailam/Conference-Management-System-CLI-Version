@@ -253,17 +253,10 @@ public class BoundaryController extends Controller{
      * @param email address of reviewer
      * @param conference name of the paper evaluation
      */
-        //TODO: implement here the final decision on paper, either approve or reject
-        // get the paper of that conf with status reviewed
-        // list out the evaluation
-        // get chair to set approve or reject
-        // update the paper status in csv to app / rej
-        // update the paper cms to app/rej
-
         // get a list of paper in that conference where status is reviewed
         ArrayList<String> reviewedPaper = cms.getPaperWithSpecificStatus(confName,"Reviewed");
         // if no paper all reviewed
-        if (reviewedPaper == null){
+        if (reviewedPaper.size() == 0){
             ui.displayMsgWithSleep("All papers are still under reviewing.");
             this.chairChoices(name,emailAddress,confName);
         }
@@ -282,7 +275,7 @@ public class BoundaryController extends Controller{
                 // get the evaluation of the paper
                 Paper p = cms.searchPaper(op);
                 ArrayList<String> evaluations = p.retrieveEvaluation();
-                ui.confirmEvaluation(op,ut.arrayListToString(evaluations,";\n"));
+                ui.confirmEvaluation(op,ut.arrayListToString(evaluations,";\n\t"));
                 // get user option to reject or accept
                 ArrayList<String> finalDecision   = new ArrayList<>(Arrays.asList("Accept","Reject","Back"));
                 String op2 = ui.getUserOption(finalDecision,"",false);
@@ -292,20 +285,20 @@ public class BoundaryController extends Controller{
                 }
                 else if (op2.equalsIgnoreCase("Accept")){
                     // set the status of the paper to Accept
-                    p.setProgressStatus("Accept");
+                    p.setProgressStatus("Accepted");
                     // write to csv file
-                    ut.updatePaperCsv(pathPaperCSV,"Accept",7,p.getTitle());
+                    ut.updatePaperCsv(pathPaperCSV,"Accepted",7,p.getTitle());
                     // display message
-                    ui.displayMsgWithSleep("You have successfully Accept the paper.");
+                    ui.displayMsgWithSleep("You have successfully Accepted the paper.");
                     this.chairChoices(name,emailAddress,confName);
                 }
                 else if (op2.equalsIgnoreCase("Reject")){
                     // set the status of the paper to Reject
-                    p.setProgressStatus("Reject");
+                    p.setProgressStatus("Rejected");
                     // write to csv file
-                    ut.updatePaperCsv(pathPaperCSV,"Reject",7,p.getTitle());
+                    ut.updatePaperCsv(pathPaperCSV,"Rejected",7,p.getTitle());
                     // display message
-                    ui.displayMsgWithSleep("You have successfully Reject the paper.");
+                    ui.displayMsgWithSleep("You have successfully Rejected the paper.");
                     this.chairChoices(name,emailAddress,confName);
                 }
             }
