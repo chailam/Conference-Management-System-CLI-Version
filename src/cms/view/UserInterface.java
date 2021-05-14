@@ -3,8 +3,10 @@
  */
 
 
-package cms;
+package cms.view;
 
+import cms.Utility;
+import cms.entity.*;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 import java.util.concurrent.TimeUnit;

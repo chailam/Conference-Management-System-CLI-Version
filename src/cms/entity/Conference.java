@@ -3,7 +3,7 @@
  * 
 **/
 
-package cms;
+package cms.entity;
 
 import java.time.LocalDate;
 import java.util.*;

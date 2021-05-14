@@ -3,11 +3,9 @@
  * 
 **/
 
-package cms;
+package cms.entity;
 
 import java.util.*;
-import cms.User;
-import cms.Conference;
 
 public class NormalUser extends User {
 

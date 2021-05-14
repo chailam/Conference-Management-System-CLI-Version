@@ -1,9 +1,0 @@
-1. figure out write to csv (write three functions for it)!!!open csv!!!
-4. test case???? not now??? too busy
-5. distribute task
-
-
-- 
-
-
-- remember error handling

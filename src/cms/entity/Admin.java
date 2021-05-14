@@ -3,7 +3,7 @@
  * 
 **/
 
-package cms;
+package cms.entity;
 
 
 public class Admin extends User{

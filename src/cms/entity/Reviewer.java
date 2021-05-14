@@ -3,9 +3,8 @@
  * 
 **/
 
-package cms;
+package cms.entity;
 
-import cms.Paper;
 import java.util.*;
 
 public class Reviewer extends NormalUser{

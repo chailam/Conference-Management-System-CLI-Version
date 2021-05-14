@@ -1,4 +1,5 @@
-# FIT5136 Team 30
+# FIT5136 Team 30 
+## Assignment: Conference Management System (CMS)
 ### Team member:
 1. Chai Lam Loi (28136179)
 2. Shaozu Miao (30757878)
@@ -8,7 +9,7 @@
 
 
 Instruction to run:
-**Precondition: The working directory of your system should be set to .../team-30-repo, so that the reading and writing to csv file not crashing.**
+1. Run the "Application.java" file.
 
-- list the admin name and password, list the username and password
-- put some image
+**Precondition: The working directory of your system should be set to .../team-30-repo, so that the reading and writing to csv file are not crashing.**
+

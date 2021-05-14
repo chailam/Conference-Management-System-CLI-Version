@@ -2,10 +2,8 @@
  * The class consist of list of Paper, User and Conference.
  */
 
+package cms.entity;
 
-package cms;
-
-import cms.*;
 import java.util.*;
 
 
