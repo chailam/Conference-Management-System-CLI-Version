@@ -155,25 +155,6 @@ public class UserController {
         return papers;
     }
 
-    public ArrayList<String> getUserFromConference (String role, String confName){
-        /**
-         * To get a list of user of that role from confName
-         * @param the specific role
-         * @param the conference name
-         * @return an list of user (email)  with that role from confName
-         */
-        ArrayList<String> userFromConference = new ArrayList<String>();
-        for (User u:cms.retrieveUserList()){
-            if (u.getRole().equalsIgnoreCase(role) && !u.getRole().equalsIgnoreCase("admin")){
-                NormalUser nu = (NormalUser) u;
-                // if user is that role and participated in this conference, get the email address
-                if (nu.getConferenceName().equals(confName)){
-                    userFromConference.add(nu.getEmail());
-                }
-            }
-        }
-        return userFromConference;
-    }
 
     public void updateUserCsv(String filePath, String dataToUpdate, int dataIndex, String emailAddress, String role, String confName){
         /**
@@ -216,9 +197,9 @@ public class UserController {
          * @param the registration information to be checked
          * @return true if data valid; false otherwise
          */
-        //checking password requirement
-        if (ut.passwordValidator(password) == false) {
-            ui.displayMsgWithSleep("Password must at least 8 characters long,\n\tmust include at least 1 upper case,\n\t lower case, 1 number.\n\tPlease try again.");
+        // check if data input is zero/null
+        if ((firstName.length() == 0) || (lastName.length() == 0) || (emailAddress.length() == 0) || (highestQualification.length() == 0) || (occupation.length() == 0) || (employerDetail.length() == 0) || (mobileNumber.length() == 0)) {
+            ui.displayMsgWithSleep("Information could not be empty.");
             return false;
         }
         // check validity of email
@@ -226,9 +207,9 @@ public class UserController {
             ui.displayMsgWithSleep("The email address format is wrong.");
             return false;
         }
-        // check if data input is zero/null
-        if ((firstName.length() == 0) || (lastName.length() == 0) || (emailAddress.length() == 0) || (highestQualification.length() == 0) || (occupation.length() == 0) || (employerDetail.length() == 0) || (mobileNumber.length() == 0)) {
-            ui.displayMsgWithSleep("Information could not be empty.");
+        //checking password requirement
+        if (ut.passwordValidator(password) == false) {
+            ui.displayMsgWithSleep("Password must at least 8 characters long, must include at least 1 upper case,\n\t lower case, 1 number. Please try again.");
             return false;
         }
         // if user exists
@@ -252,7 +233,7 @@ public class UserController {
         if (cms.hasUser(emailAddress)){
             User u = cms.searchUser(emailAddress);
             // if the hashed password match, authentication become true
-            if (hashedPassword.equals(u.getPassword())){
+            if (hashedPassword.equalsIgnoreCase(u.getPassword())){
                 flag = true;
             } else {
                 // password incorrect

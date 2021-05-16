@@ -2,12 +2,15 @@ role,emailAddress,hashedPassword,firstName,lastName,highestQualification,occupat
 admin,admin@cms.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,,,,,,,,,
 normal,chair1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Harry,Potter,Master ,Lecturer,Monash University,4123456789,,,
 normal,author1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Ron,Weasley,Bachelor,Student,Melbourne University,4234567890,,,
-normal,reviewer1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Hermione,Granger,PhD,Researcher,Harvard University,987654321,,Artificial Intelligence/ Image Processing/Data Mining & Information Retrieval,
+normal,reviewer1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Hermione,Granger,PhD,Researcher,Harvard University,987654321,,,
+normal,reviewer3@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Three,PhD,Researcher,RMIT University,634345432,,,
 normal,reviewer2@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Two,PhD,Researcher,RMIT University,634345432,,,
-Chair,chair1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Harry,Potter,Master ,Lecturer,Monash University,4123456789,con1,,
-Author,author1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Ron,Weasley,Bachelor,Student,Melbourne University,4234567890,con1,,author1paper1/author1paper2
-Reviewer,reviewer1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Hermione,Granger,PhD,Researcher,Harvard University,987654321,con1,"Artificial Intelligence,Human Computer Interaction,",author1paper1/author1paper2
-Reviewer,reviewer2@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Two,PhD,Researcher,RMIT University,634345432,con1,"Artificial Intelligence,Human Computer Interaction,",author1paper1/author1paper2
-Reviewer,reviewer3@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Three,PhD,Researcher,RMIT University,634345432,con1,"Artificial Intelligence,Human Computer Interaction,",author1paper1/author1paper2
-Reviewer,reviewer4@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Four,PhD,Researcher,RMIT University,634345432,con1,"Artificial Intelligence,Human Computer Interaction,",author1paper1
-Reviewer,reviewer5@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Five,PhD,Researcher,RMIT University,634345432,con1,"Artificial Intelligence,Human Computer Interaction,",author1paper2
+normal,reviewer4@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Four,PhD,Researcher,RMIT University,634345432,,,
+normal,reviewer5@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Five,PhD,Researcher,RMIT University,634345432,,,
+Chair,chair1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Harry,Potter,Master ,Lecturer,Monash University,4123456789,con2,,
+Reviewer,reviewer1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Hermione,Granger,PhD,Researcher,Harvard University,987654321,con2,Artificial Intelligence/Human Computer Interaction,aqws
+Author,author1@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Ron,Weasley,Bachelor,Student,Melbourne University,4234567890,con2,,aqws
+Reviewer,reviewer2@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Two,PhD,Researcher,RMIT University,634345432,con2,Artificial Intelligence/Human Computer Interaction,aqws
+Reviewer,reviewer4@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Four,PhD,Researcher,RMIT University,634345432,con2,Artificial Intelligence/Human Computer Interaction,aqws
+Reviewer,reviewer5@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Five,PhD,Researcher,RMIT University,634345432,con2,Artificial Intelligence/Human Computer Interaction,aqws
+Reviewer,reviewer3@mail.com,8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92,Reviewer,Five,PhD,Researcher,RMIT University,634345432,con2,Artificial Intelligence/Human Computer Interaction,

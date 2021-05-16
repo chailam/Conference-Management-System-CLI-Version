@@ -51,16 +51,16 @@ public class MainController {
         // /////////TESTTTTTTTTTTTTTTTT///
         // String op = ui.getUserOption(adminOp);
         // System.out.println("option selecteddddddd: "+op);
-//        ArrayList<Conference> testC = new ArrayList<>();
-//        ArrayList<Paper> testP = new ArrayList<>();
-//        ArrayList<User> testU = new ArrayList<>();
-//        testC = cms.retrieveConferenceList();
-//        testP = cms.retrievePaperList();
-//        testU = cms.retrieveUserList();
-//
-//        System.out.println(testC);
-//        System.out.println(testP);
-//        System.out.println(testU);
+        ArrayList<Conference> testC = new ArrayList<>();
+        ArrayList<Paper> testP = new ArrayList<>();
+        ArrayList<User> testU = new ArrayList<>();
+        testC = cms.retrieveConferenceList();
+        testP = cms.retrievePaperList();
+        testU = cms.retrieveUserList();
+
+        System.out.println(testC);
+        System.out.println(testP);
+        System.out.println(testU);
         ///////************TEST END */
 
     }
@@ -115,7 +115,7 @@ public class MainController {
                 String conf = ui.getUserOption(userConf, name,true);
                 if (conf.equalsIgnoreCase("Back")){
                     // if user choose to go back
-                    userConf.clear();
+                    userConf.remove("Back");
                     this.homePageChoices(name, emailAddress);
                 } else {
                     // if user choose the conference
@@ -126,13 +126,16 @@ public class MainController {
                     }
                     if (role.equalsIgnoreCase("Chair")){
                         // if user is chair in that conference, direct to chair option
-                        chairChoices(name,emailAddress,conf);
+                        userConf.remove("Back");
+                        this.chairChoices(name,emailAddress,conf);
                     } else if (role.equalsIgnoreCase("Author")){
                         // if user is author in that conference, direct to author option
-                        authorChoices(name,emailAddress,conf);
+                        userConf.remove("Back");
+                        this.authorChoices(name,emailAddress,conf);
                     } else if (role.equalsIgnoreCase("Reviewer")){
                         // if user is reviewer in that conference, direct to reviewer option
-                        reviewerChoices(name,emailAddress,conf);
+                        userConf.remove("Back");
+                        this.reviewerChoices(name,emailAddress,conf);
                     }
                 }
             } else {
@@ -260,13 +263,14 @@ public class MainController {
         }
         // get a list of assigned paper
         Reviewer ru = (Reviewer) cms.searchSpecificUser(emailAddress,"reviewer",confName);
-        ArrayList<String> assignedPapers = ru.retrieveAssignedPaper();
+        ArrayList<String> assignedPapers =  ru.retrieveAssignedPaper();
         // get the user option to choose which paper
         assignedPapers.add("Back");
         // get user option to select which paper or back
         String chosenPaper = ui.getUserOption(assignedPapers, name, true);
         if (chosenPaper.equalsIgnoreCase("Back")) {
             // if user choose to go back
+            assignedPapers.remove("Back");
             this.reviewerChoices(name, emailAddress,confName);
         } else {
             // if user choose an paper
@@ -276,7 +280,7 @@ public class MainController {
             // check if the evaluation is empty
             if (evaluation == ""){
                 ui.displayMsgWithSleep("The evaluation is empty.");
-                assignedPapers.clear();
+                assignedPapers.remove("Back");
                 this.submitEvaluation(name,emailAddress,confName);
             }
             // get confirmation for the evaluation
@@ -290,10 +294,11 @@ public class MainController {
                 pController.updatePaperEvaluation(chosenPaper,evaluation);
                 // display successful message and redirect
                 ui.displayMsgWithSleep("You have successfully uploaded the evaluation.");
-                this.reviewerChoices(name, emailAddress,confName);
+                assignedPapers.remove("Back");
+                this.homePageChoices(name, emailAddress);
             } else if (op.equalsIgnoreCase("Back")){
                 // if user choose to go back
-                assignedPapers.clear();
+                assignedPapers.remove("Back");
                 this.submitEvaluation(name, emailAddress,confName);
             }
         }
@@ -310,12 +315,15 @@ public class MainController {
          */
         // show to choose topic areas
         ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
+        if (topicName == null){
+            this.authorChoices(name,emailAddress,confName);
+        }
         // get confirmation for the topic
         ui.topicAreasConfirmation(ut.arrayListToString(topicName,","));
         // get the user option to proceed with topic area or go back
         String opt = ui.getUserOption(proceedOp, "", false);
         // if user choose to confirm
-        if (opt.equalsIgnoreCase("Confirm")){
+        if (opt.equalsIgnoreCase("Proceed")){
             // get the info required for paper submission
             String[] paperInfo = ui.getPaperSubmission();
             // truncate white space and non visible character
@@ -353,6 +361,7 @@ public class MainController {
         }
     }
 
+
     private void finalDecisionPaper (String name, String emailAddress, String confName) throws InterruptedException {
         /**
          * To Accept or Reject the paper
@@ -373,6 +382,7 @@ public class MainController {
             String opt = ui.getUserOption(reviewedPaper, name, true);
             if (opt.equalsIgnoreCase("Back")) {
                 // if user choose back
+                reviewedPaper.remove("Back");
                 this.chairChoices(name, emailAddress,confName);
             } else {
                 // if user choose a paper
@@ -385,20 +395,22 @@ public class MainController {
                 String opt2 = ui.getUserOption(finalDecision, "", false);
                 if (opt2.equalsIgnoreCase("Back")) {
                     // if user choose to go back
-                    reviewedPaper.clear();
+                    reviewedPaper.remove("Back");
                     this.finalDecisionPaper(name, emailAddress,confName);
                 } else if (opt2.equalsIgnoreCase("Accept")) {
                     // set the status of the paper to Accept
                     pController.updatePaperProgressStatus(p.getTitle(),"Accept");
                     // display message
                     ui.displayMsgWithSleep("You have successfully Accepted the paper.");
-                    this.chairChoices(name, emailAddress,confName);
+                    reviewedPaper.remove("Back");
+                    this.homePageChoices(name, emailAddress);
                 } else if (opt2.equalsIgnoreCase("Reject")) {
                     // set the status of the paper to Reject
                     pController.updatePaperProgressStatus(p.getTitle(),"Rejected");
                     // display message
+                    reviewedPaper.remove("Back");
                     ui.displayMsgWithSleep("You have successfully Rejected the paper.");
-                    this.chairChoices(name, emailAddress,confName);
+                    this.homePageChoices(name, emailAddress);
                 }
             }
         }
@@ -429,6 +441,9 @@ public class MainController {
             LocalDate reviewDueDate = ut.stringToDate(confInfo[4]);
             // get the topic area
             ArrayList<String> topicName = topicAreasProcess (name, emailAddress);
+            if (topicName == null){
+                this.homePageChoices(name,emailAddress);
+            }
             // show the conference confirmation message
             ui.createConfConfirmation(confName,place, ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate), ut.arrayListToString(topicName,","));
             // get user option to "Submit", "back" or "exit"
@@ -481,6 +496,7 @@ public class MainController {
         String chosenPaper = ui.getUserOption(availablePaper, name, true);
         if (chosenPaper.equalsIgnoreCase("Back")) {
             // if user choose to go back
+            availablePaper.remove("Back");
             this.chairChoices(name, emailAddress,confName);
         } else {
             // if user choose the paper
@@ -488,17 +504,20 @@ public class MainController {
             int reviewerNo = cms.searchPaper(chosenPaper).getNoOfReviewer();
             if (reviewerNo >= 4){
                 ui.displayMsgWithSleep("The number of reviewers for this paper has reached maximum of 4.");
-                availablePaper.clear();
+                availablePaper.remove("Back");
                 this.assignReviewer(name, emailAddress,confName);
             }
             // get the list of reviewer from that conference
-            ArrayList<String> confReviewer = uController.getUserFromConference("reviewer",confName);
             ArrayList<String[]> availableReviewer = new ArrayList<String[]>();
-            // if the reviewer has not been assigned to this paper
-            for (String reviewer:confReviewer){
-                Reviewer r = (Reviewer)cms.searchUser(reviewer);
-                if (!r.retrieveAssignedPaper().contains(chosenPaper)){
-                    availableReviewer.add(new String[]{r.getEmail(),r.getFirstName(),r.getLastName()});
+            for (User u:cms.retrieveUserList()){
+                if (u.getRole().equalsIgnoreCase("reviewer")){
+                    Reviewer ru = (Reviewer) u;
+                    // if user is reviewer and participated in this conference and has not been assigned this paper,
+                    // get the email address
+                    if (ru.getConferenceName().equals(confName) && !ru.retrieveAssignedPaper().contains(chosenPaper)){
+                        String[] suitReviewer = {ru.getEmail(),ru.getFirstName(),ru.getLastName()};
+                        availableReviewer.add(suitReviewer);
+                    }
                 }
             }
             // get user option to choose reviewer
@@ -510,13 +529,13 @@ public class MainController {
             // if is empty
             if (reviewerInt == null){
                 ui.displayMsgWithSleep("Please enter a valid reviewer number.");
-                availablePaper.clear();
+                availablePaper.remove("Back");
                 this.assignReviewer(name, emailAddress,confName);
             }
             // check number of reviewer assigned
             if (reviewerInt.size()+reviewerNo < 1 || reviewerInt.size()+reviewerNo > 4){
                 ui.displayMsgWithSleep("Please current number of reviewers for this paper exceed 4.");
-                availablePaper.clear();
+                availablePaper.remove("Back");
                 this.assignReviewer(name, emailAddress,confName);
             }
             // get a list of selected reviewer
@@ -540,6 +559,7 @@ public class MainController {
             }
             // display confirmation message & back to chair page
             ui.reviewerConfirmation(selectedReviewer,chosenPaper);
+            availablePaper.remove("Back");
             this.chairChoices(name, emailAddress,confName);
         }
     }
@@ -565,6 +585,7 @@ public class MainController {
         String chosenConf = ui.getUserOption(availableConf, name, true);
         if (chosenConf.equalsIgnoreCase("Back")) {
             // if user choose to go back
+            availableConf.remove("Back");
             this.homePageChoices(name, emailAddress);
         } else {
             // if the conference is selected, retrieve the conference object
@@ -580,12 +601,16 @@ public class MainController {
                 String chosenRole = ui.getUserOption(roleOption, name, true);
                 if (chosenRole.equalsIgnoreCase("Back")) {
                     // if user choose to go back
-                    availableConf.clear();
+                    availableConf.remove("Back");
                     this.joinConference(name, emailAddress);
                 } else if (chosenRole.equalsIgnoreCase("Join as Reviewer")) {
                     // if user join as reviewer
                     // get the topic areas
                     ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
+                    if (topicName == null){
+                        availableConf.remove("Back");
+                        this.joinConference(name,emailAddress);
+                    }
                     // confirm the topic area
                     ui.topicAreasConfirmation(ut.arrayListToString(topicName, ","));
                     String opt2 = ui.getUserOption(proceedOp, "", false);
@@ -600,13 +625,15 @@ public class MainController {
                             uController.appendUserCSV("Reviewer", nu.getEmail(), nu.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), c.getName(), ut.arrayListToString(topicName, "/"), null);
                             // display successful message & go to home page
                             ui.displayMsgWithSleep("Congratulations!\n\tYou have joined the Conference as Reviewer.");
+                            availableConf.remove("Back");
                             this.homePageChoices(name, emailAddress);
                         }
                     } else if (opt2.equalsIgnoreCase("Back")) {
-                        availableConf.clear();
+                        availableConf.remove("Back");
                         this.joinConference(name, emailAddress);
                     } else if (opt.equalsIgnoreCase("Exit")) {
                         // if user choose to exit
+                        availableConf.remove("Back");
                         this.homePageChoices(name, emailAddress);
                     }
                 } else if (chosenRole.equalsIgnoreCase("Join as Author")) {
@@ -620,15 +647,17 @@ public class MainController {
                         uController.appendUserCSV("Author", nu.getEmail(), nu.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), c.getName(), null, null);
                         // display successful message & go to home page
                         ui.displayMsgWithSleep("Congratulations!\n\tYou have joined the Conference as Author.");
+                        availableConf.remove("Back");
                         this.homePageChoices(name, emailAddress);
                     }
                 }
             } else if (opt.equalsIgnoreCase("Exit")) {
                 // if user choose to exit
+                availableConf.remove("Back");
                 this.homePageChoices(name, emailAddress);
             } else if (opt.equalsIgnoreCase("Back")) {
                 // if user choose to go back
-                availableConf.clear();
+                availableConf.remove("Back");
                 this.joinConference(name, emailAddress);
             }
         }
@@ -653,7 +682,7 @@ public class MainController {
         // if is empty
         if (topicInt == null){
             ui.displayMsgWithSleep("Please enter a valid topic number.");
-            this.createConference(name, emailAddress);
+            return null;
         }
         //use index of topic to retrieve index
         ArrayList<String> topicName2 = ut.indexToElement(topicInt,avaiableTopics);
