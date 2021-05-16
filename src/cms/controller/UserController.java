@@ -124,7 +124,9 @@ public class UserController {
             if (u.getRole().equalsIgnoreCase("reviewer")){
                 // if the user is reviewer
                 Reviewer ru = (Reviewer) u;
-                if (ru.retrieveAssignedPaper().get(0) == "") {
+                System.out.println(ru.retrieveAssignedPaper());
+                System.out.println(ru.retrieveAssignedPaper().size());
+                if (ru.retrieveAssignedPaper().size() == 0) {
                     // if assigned paper is empty, set the assigned paper
                     papers.add(paperTitle);
                     ru.setAssignedPaper(papers);
@@ -137,7 +139,7 @@ public class UserController {
             } else if (u.getRole().equalsIgnoreCase("author")){
                 // if the user is author
                 Author au = (Author) u;
-                if (au.retrievePaper().get(0) == ""){
+                if (au.retrievePaper().size() == 0){
                     // if paper is empty, set the paper
                     papers.add (paperTitle);
                     au.setPaper(papers);

@@ -95,10 +95,6 @@ public class ConferenceController {
             return false;
         }
         // check date validity
-        if ((date.length() != 10) || (submitDueDate.length() != 10) || (reviewDueDate.length() != 10)) {
-            ui.displayMsgWithSleep("Please enter a valid date.");
-            return false;
-        }
         try {
             LocalDate theDate = ut.stringToDate(date);
             LocalDate theSubmitDueDate = ut.stringToDate(submitDueDate);
@@ -116,6 +112,7 @@ public class ConferenceController {
             }
         } catch (Exception e) {
             ui.displayMsgWithSleep("Please enter a valid date.");
+            System.out.println("Exception: checkCreateConfInfo - " + e);
             return false;
         }
         return true;
