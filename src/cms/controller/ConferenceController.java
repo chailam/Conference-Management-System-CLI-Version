@@ -1,3 +1,6 @@
+/**
+ * Worker controller for the Conference related function.
+ */
 package cms.controller;
 
 import cms.Utility;

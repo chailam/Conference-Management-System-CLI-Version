@@ -5,9 +5,6 @@
 
 package cms.entity;
 
-import cms.NormalUser;
-import cms.Conference;
-import cms.Paper;
 
 public class Chair extends NormalUser {
 

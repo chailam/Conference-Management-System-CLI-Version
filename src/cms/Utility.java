@@ -186,40 +186,6 @@ public class Utility {
 
 
 
-    public void updateUserCsv(String filePath, String dataToUpdate, int dataIndex, String emailAddress, String role, String confName){
-    /**
-     *  The method to update user data in csv file at specific col and row
-     * @param the file path of the file to update
-     * @param the data to update to file
-     * @param the index of the data to be modified
-     * @param the matching string
-     * @param the matching string
-     */
-        try {
-            // read the data
-            File theFile = new File(filePath);
-            CSVReader csvReader = new CSVReader(new FileReader(theFile));
-            List<String[]> csvData = csvReader.readAll();
-
-            // get data to be replaced  at row (i) and column
-            for (int i = 0; i < csvData.size() ; i++){
-                String[] string = csvData.get(i);
-                //col index 0 is role, col index 1 is email and col index 9 is conference name
-                if(string[0].equalsIgnoreCase(role) && string[1].equalsIgnoreCase(emailAddress) && string[9].equals(confName)){
-                    string[dataIndex] = dataToUpdate;
-                }
-            }
-            csvReader.close();
-            // Write to the CSV file
-            CSVWriter csvWriter = new CSVWriter(new FileWriter(filePath));
-            csvWriter.writeAll(csvData);
-            csvWriter.flush();
-            csvWriter.close();
-        } catch (Exception e){
-            System.out.println("User File Write Error: " + e);
-        }
-    }
-
     public boolean pathValidator(String path){
         /**
          * To check whether fulfill the requirement of path,
@@ -268,6 +234,11 @@ public class Utility {
 
 
     public String[] truncateWhiteSpace (String[] data){
+        /**
+         * To remove any white space and non visible character
+         * @param string to be validate
+         * @return valifated string
+         */
         // truncate white space and non visible character
         for (int i = 0; i < data.length; i++){
             data[i] = data[i].replaceAll("\\s","");

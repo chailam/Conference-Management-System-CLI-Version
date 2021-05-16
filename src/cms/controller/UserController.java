@@ -1,12 +1,19 @@
+/**
+ * Worker controller for the User related function.
+ */
 package cms.controller;
 
 import cms.Utility;
 import cms.entity.*;
 import cms.view.UserInterface;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UserController {
@@ -101,6 +108,108 @@ public class UserController {
     }
 
 
+    public ArrayList<String> retrieveUpdatedUserPaperInfo(String emailAddress, String role, String confName, String paperTitle){
+        /**
+         * To update the user information in cms userlist to include the paper submitted/assigned for review
+         * @param email address of the author/reviewer
+         * @param role of the user (author/reviewer)
+         * @param conference name of the user joined
+         * @param title of paper
+         * @return a list of papers submitted/assigned for review
+         */
+        // find that specific user with unique email address, role, and conference name
+        NormalUser u = cms.searchSpecificUser(emailAddress, role, confName);
+        ArrayList<String> papers = new ArrayList<String>();
+        if (u != null){
+            if (u.getRole().equalsIgnoreCase("reviewer")){
+                // if the user is reviewer
+                Reviewer ru = (Reviewer) u;
+                if (ru.retrieveAssignedPaper().get(0) == "") {
+                    // if assigned paper is empty, set the assigned paper
+                    papers.add(paperTitle);
+                    ru.setAssignedPaper(papers);
+                } else {
+                    // if reviewer has existing assigned paper, add paper
+                    ru.addAssignedPaper(paperTitle);
+                }
+                papers = ru.retrieveAssignedPaper();
+                return papers;
+            } else if (u.getRole().equalsIgnoreCase("author")){
+                // if the user is author
+                Author au = (Author) u;
+                if (au.retrievePaper().get(0) == ""){
+                    // if paper is empty, set the paper
+                    papers.add (paperTitle);
+                    au.setPaper(papers);
+
+                } else {
+                    // if author submitted another paper already, add the paper
+                    au.addPaper(paperTitle);
+                }
+                papers = au.retrievePaper();
+                return papers;
+            }
+        } else {
+            System.out.println("Error: User is null in updateUserPaperInfo.");
+        }
+        return papers;
+    }
+
+    public ArrayList<String> getUserFromConference (String role, String confName){
+        /**
+         * To get a list of user of that role from confName
+         * @param the specific role
+         * @param the conference name
+         * @return an list of user (email)  with that role from confName
+         */
+        ArrayList<String> userFromConference = new ArrayList<String>();
+        for (User u:cms.retrieveUserList()){
+            if (u.getRole().equalsIgnoreCase(role) && !u.getRole().equalsIgnoreCase("admin")){
+                NormalUser nu = (NormalUser) u;
+                // if user is that role and participated in this conference, get the email address
+                if (nu.getConferenceName().equals(confName)){
+                    userFromConference.add(nu.getEmail());
+                }
+            }
+        }
+        return userFromConference;
+    }
+
+    public void updateUserCsv(String filePath, String dataToUpdate, int dataIndex, String emailAddress, String role, String confName){
+        /**
+         *  The method to update user data in csv file at specific col and row
+         * @param the file path of the file to update
+         * @param the data to update to file
+         * @param the index of the data to be modified
+         * @param the matching string
+         * @param the matching string
+         */
+        try {
+            // read the data
+            File theFile = new File(filePath);
+            CSVReader csvReader = new CSVReader(new FileReader(theFile));
+            List<String[]> csvData = csvReader.readAll();
+
+            // get data to be replaced  at row (i) and column
+            for (int i = 0; i < csvData.size() ; i++){
+                String[] string = csvData.get(i);
+                //col index 0 is role, col index 1 is email and col index 9 is conference name
+                if(string[0].equalsIgnoreCase(role) && string[1].equalsIgnoreCase(emailAddress) && string[9].equals(confName)){
+                    string[dataIndex] = dataToUpdate;
+                }
+            }
+            csvReader.close();
+            // Write to the CSV file
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(filePath));
+            csvWriter.writeAll(csvData);
+            csvWriter.flush();
+            csvWriter.close();
+        } catch (Exception e){
+            System.out.println("User File Write Error: " + e);
+        }
+    }
+
+
     public boolean checkRegistrationInfo (String firstName, String lastName, String emailAddress, String password, String highestQualification, String occupation, String employerDetail, String mobileNumber) throws InterruptedException {
         /**
          *  Check the user registration information
@@ -157,8 +266,6 @@ public class UserController {
         }
         return flag;
     }
-
-
 }
 
 
