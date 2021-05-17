@@ -48,6 +48,9 @@ public class Utility {
      * @return the arraylist or null if list is empty
      */
         String tmp [];
+        if (longString.equals("")){
+            return null;
+        }
         ArrayList<String> theArrayList = new ArrayList<String>();
         tmp = longString.split(delimit);
         for (String s : tmp){
@@ -242,6 +245,20 @@ public class Utility {
         // truncate white space and non visible character
         for (int i = 0; i < data.length; i++){
             data[i] = data[i].replaceAll("\\s","");
+        }
+        return data;
+    }
+
+
+    public String[] trimWhiteSpace (String[] data){
+        /**
+         * To remove any white space and non visible character
+         * @param string to be validate
+         * @return valifated string
+         */
+        // truncate white space and non visible character
+        for (int i = 0; i < data.length; i++){
+            data[i] = data[i].trim();
         }
         return data;
     }

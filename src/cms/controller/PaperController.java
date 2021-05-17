@@ -158,7 +158,7 @@ public class PaperController {
         Paper p = cms.searchPaper(pTitle);
         ArrayList<String> evaluations = new ArrayList<String>();
         // if the paper has no evaluation before
-        if (p.retrieveEvaluation().get(0) == "") {
+        if (p.retrieveEvaluation()== null) {
             evaluations.add(evaluation);
             p.setEvaluation(evaluations);
         } else {

@@ -109,7 +109,7 @@ public class MainController {
             // List all the conference available for that user.
             ArrayList<String> userConf = cms.getUserConference(emailAddress);
             userConf.add("Back");
-            if (!(userConf.get(0) == "")){
+            if (!(userConf.get(0).equalsIgnoreCase("Back"))){
                 // if user has conference
                 // get user chosen conference to be managed
                 String conf = ui.getUserOption(userConf, name,true);
@@ -326,8 +326,8 @@ public class MainController {
         if (opt.equalsIgnoreCase("Proceed")){
             // get the info required for paper submission
             String[] paperInfo = ui.getPaperSubmission();
-            // truncate white space and non visible character
-            paperInfo = ut.truncateWhiteSpace(paperInfo);
+            // truncate leading white space
+            paperInfo = ut.trimWhiteSpace(paperInfo);
             // check the info validity
             boolean flag = pController.checkPaperSubmitInfo(paperInfo[0],paperInfo[1],confName);
             if (flag == false){
@@ -426,15 +426,17 @@ public class MainController {
         // Get the conference information retrieved
         String [] confInfo = ui.getCreateConference();
         // truncate white space and non visible character
-        confInfo = ut.truncateWhiteSpace(confInfo);
+        String confName = confInfo[0].trim();
+        String place = confInfo[1].trim();
+        String sDate = confInfo[2].replaceAll("\\s","");
+        String submitDue = confInfo[3].replaceAll("\\s","");
+        String reviewDue = confInfo[4].replaceAll("\\s","");
         // check the validity of data
-        boolean flag = cController.checkCreateConfInfo(confInfo[0],confInfo[1],confInfo[2],confInfo[3],confInfo[4]);
+        boolean flag = cController.checkCreateConfInfo(confName,place,sDate,submitDue,reviewDue);
         if (flag == false) {
             // if data is not valid, redirect to home page
             this.homePageChoices(name,emailAddress);
         } else {
-            String confName = confInfo[0];
-            String place = confInfo[1];
             // if data is valid
             LocalDate date = ut.stringToDate(confInfo[2]);
             LocalDate submitDueDate = ut.stringToDate(confInfo[3]);
@@ -519,6 +521,12 @@ public class MainController {
                         availableReviewer.add(suitReviewer);
                     }
                 }
+            }
+            // check if the reviewers number for that conference is 0, return message
+            if (availableReviewer.size() == 0){
+                ui.displayMsgWithSleep("No reviewers joined this conference.");
+                availablePaper.remove("Back");
+                this.chairChoices(name, emailAddress,confName);
             }
             // get user option to choose reviewer
             String reviewerList = ui.getReviewer(availableReviewer);
@@ -686,7 +694,7 @@ public class MainController {
         }
         //use index of topic to retrieve index
         ArrayList<String> topicName2 = ut.indexToElement(topicInt,avaiableTopics);
-        if (topicName.get(0) != "") {
+        if (topicName != null) {
             topicName2.addAll(topicName);
         }
         return topicName2;
@@ -723,7 +731,7 @@ public class MainController {
          */
         String [] info = ui.getRegistration();
         // truncate white space and non visible character
-        info = ut.truncateWhiteSpace(info);
+        info = ut.trimWhiteSpace(info);
         // check the validity of information
         // if information not valid, register again; else ask user to confirm information
         boolean flag = uController.checkRegistrationInfo(info[0],info[1],info[2],info[3],info[4],info[5],info[6],info[7]);

@@ -267,6 +267,9 @@ public class UserInterface {
      */
         this.displayHeader();
         this.displayMessageLn("Please enter the conference details.");
+        this.displayMessageLn("Note: day and month must be two digits.");
+        this.displayMessageLn("For example: 1/1/2021 must be 01/01/2021.");
+        this.displayMessageLn("");
         this.displayMessage("Conference Name: ");
         String confName = scanner.nextLine(); // Read the user input
         this.displayMessage("Conference Place: ");
@@ -277,6 +280,8 @@ public class UserInterface {
         String submitDueDate = scanner.nextLine(); // Read the user input
         this.displayMessage("Paper Review Due Date (dd/mm/yyyy): ");
         String reviewDueDate = scanner.nextLine(); // Read the user input
+        this.displayMessageLn("");
+        this.displayMessageLn("");
         this.displayFooter();
         return new String[]{confName,place, date, submitDueDate, reviewDueDate};
     }
