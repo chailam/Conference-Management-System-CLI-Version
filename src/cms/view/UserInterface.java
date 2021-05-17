@@ -430,4 +430,21 @@ public class UserInterface {
         this.displayMessageLn("");
         this.displayMessageLn("");
     }
+
+
+    public void confirmFinalDecision(String pTitle, String evaluation){
+        /**
+         * To get the evaluation submitted by reviewer
+         * @param the title of paper
+         * @return the evaluation entered
+         */
+        this.displayHeader();
+        this.displayMessageLn("The evaluation for paper " + pTitle + " is: ");
+        this.displayMessageLn("");
+        this.displayMessageLn("Evaluation: ");
+        this.displayMessageLn("");
+        this.displayMessageLn(evaluation);
+        this.displayMessageLn("");
+        this.displayMessageLn("");
+    }
 }

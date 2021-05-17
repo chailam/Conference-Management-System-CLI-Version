@@ -130,8 +130,6 @@ public class UserController {
             if (u.getRole().equalsIgnoreCase(ROLE_REVIEWER)){
                 // if the user is reviewer
                 Reviewer ru = (Reviewer) u;
-                System.out.println(ru.retrieveAssignedPaper());
-                System.out.println(ru.retrieveAssignedPaper().size());
                 if (ru.retrieveAssignedPaper().size() == 0) {
                     // if assigned paper is empty, set the assigned paper
                     papers.add(paperTitle);
