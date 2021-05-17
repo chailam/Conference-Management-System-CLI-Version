@@ -17,10 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserController {
-    ConferenceManagementSystem cms;
-    UserInterface ui;
-    String pathUserCSV;
-    Utility ut = new Utility();
+    // static variable for role
+    public static final String ROLE_ADMIN = "Admin";
+    public static final String ROLE_CHAIR = "Chair";
+    public static final String ROLE_AUTHOR = "Author";
+    public static final String ROLE_REVIEWER = "Reviewer";
+    public static final String ROLE_NORMAL = "Normal";
+    protected ConferenceManagementSystem cms;
+    protected UserInterface ui;
+    protected String pathUserCSV;
+    private Utility ut = new Utility();
 
     public UserController(ConferenceManagementSystem cms, UserInterface ui, String pathUserCSV) {
         this.cms = cms;
@@ -30,22 +36,22 @@ public class UserController {
     }
 
 
-    public void createUserEntity(String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, ArrayList<String> topicAreas, ArrayList<String> paper) {
+    protected void addUserEntity(String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, ArrayList<String> topicAreas, ArrayList<String> paper) {
         /**
          * Create User object and add to the cms user list
          * @param the user information required
          */
         User u = null;
         try {
-            if (role.equalsIgnoreCase("admin")) {
+            if (role.equalsIgnoreCase(ROLE_ADMIN)) {
                 // if is admin
-                u = new Admin("admin", emailAddress, hashedPassword);
-            } else if (role.equalsIgnoreCase("chair")) {
+                u = new Admin(ROLE_ADMIN, emailAddress, hashedPassword);
+            } else if (role.equalsIgnoreCase(ROLE_CHAIR)) {
                 // if is chair
-                u = new Chair("chair", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
-            } else if (role.equalsIgnoreCase("reviewer")) {
+                u = new Chair(ROLE_CHAIR, emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
+            } else if (role.equalsIgnoreCase(ROLE_REVIEWER)) {
                 // if is reviewer
-                u = new Reviewer("reviewer", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
+                u = new Reviewer(ROLE_REVIEWER, emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
                 if (topicAreas != null) {
                     // if user has topic
                     ((Reviewer) u).setTopicArea(topicAreas);
@@ -54,15 +60,15 @@ public class UserController {
                     // if user has paper
                     ((Reviewer) u).setAssignedPaper(paper);
                 }
-            } else if (role.equalsIgnoreCase("author")) {
+            } else if (role.equalsIgnoreCase(ROLE_AUTHOR)) {
                 // if is author
-                u = new Author("author", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
+                u = new Author(ROLE_AUTHOR, emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
                 if (paper != null) {
                     ((Author) u).setPaper(paper);
                 }
-            } else if (role.equalsIgnoreCase("normal")) {
+            } else if (role.equalsIgnoreCase(ROLE_NORMAL)) {
                 // if is normal user
-                u = new NormalUser("normal", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber);
+                u = new NormalUser(ROLE_NORMAL, emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber);
             }
             if ( u != null){
                 cms.addUser(u);
@@ -75,7 +81,7 @@ public class UserController {
     }
 
 
-    public void importAllUserCSV() {
+    private void importAllUserCSV() {
         /**
          * Import all the user data from csv file
          */
@@ -88,7 +94,7 @@ public class UserController {
                     ArrayList<String> topic = ut.stringToArrayList(line[10], "/");
                     ArrayList<String> paper = ut.stringToArrayList(line[11], "/");
                     // Create user entity and add into the userList
-                    createUserEntity(line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7], line[8], line[9], topic, paper);
+                    addUserEntity(line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7], line[8], line[9], topic, paper);
                 }
             }
         } catch (Exception e) {
@@ -97,7 +103,7 @@ public class UserController {
     }
 
 
-    public void appendUserCSV (String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, String topics, String papers){
+    protected void appendUserCSV (String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, String topics, String papers){
         /**
          * Append the user data to the csv file
          * @param the data to be appended
@@ -108,7 +114,7 @@ public class UserController {
     }
 
 
-    public ArrayList<String> retrieveUpdatedUserPaperInfo(String emailAddress, String role, String confName, String paperTitle){
+    protected ArrayList<String> retrieveUpdatedUserPaperInfo(String emailAddress, String role, String confName, String paperTitle){
         /**
          * To update the user information in cms userlist to include the paper submitted/assigned for review
          * @param email address of the author/reviewer
@@ -118,14 +124,12 @@ public class UserController {
          * @return a list of papers submitted/assigned for review
          */
         // find that specific user with unique email address, role, and conference name
-        NormalUser u = cms.searchSpecificUser(emailAddress, role, confName);
+        User u = cms.searchSpecificUser(emailAddress, role, confName);
         ArrayList<String> papers = new ArrayList<String>();
         if (u != null){
-            if (u.getRole().equalsIgnoreCase("reviewer")){
+            if (u.getRole().equalsIgnoreCase(ROLE_REVIEWER)){
                 // if the user is reviewer
                 Reviewer ru = (Reviewer) u;
-                System.out.println(ru.retrieveAssignedPaper());
-                System.out.println(ru.retrieveAssignedPaper().size());
                 if (ru.retrieveAssignedPaper().size() == 0) {
                     // if assigned paper is empty, set the assigned paper
                     papers.add(paperTitle);
@@ -136,7 +140,7 @@ public class UserController {
                 }
                 papers = ru.retrieveAssignedPaper();
                 return papers;
-            } else if (u.getRole().equalsIgnoreCase("author")){
+            } else if (u.getRole().equalsIgnoreCase(ROLE_AUTHOR)){
                 // if the user is author
                 Author au = (Author) u;
                 if (au.retrievePaper().size() == 0){
@@ -158,7 +162,7 @@ public class UserController {
     }
 
 
-    public void updateUserCsv(String filePath, String dataToUpdate, int dataIndex, String emailAddress, String role, String confName){
+    protected void updateUserCsv(String filePath, String dataToUpdate, int dataIndex, String emailAddress, String role, String confName){
         /**
          *  The method to update user data in csv file at specific col and row
          * @param the file path of the file to update
@@ -193,7 +197,7 @@ public class UserController {
     }
 
 
-    public boolean checkRegistrationInfo (String firstName, String lastName, String emailAddress, String password, String highestQualification, String occupation, String employerDetail, String mobileNumber) throws InterruptedException {
+    protected boolean checkRegistrationInfo (String firstName, String lastName, String emailAddress, String password, String highestQualification, String occupation, String employerDetail, String mobileNumber) throws InterruptedException {
         /**
          *  Check the user registration information
          * @param the registration information to be checked
@@ -223,7 +227,7 @@ public class UserController {
     }
 
 
-    public boolean checkAuthInfo(String emailAddress, String password) throws NoSuchAlgorithmException, InterruptedException {
+    protected boolean checkAuthInfo(String emailAddress, String password) throws NoSuchAlgorithmException, InterruptedException {
         /**
          *  Check the user authentication information
          * @param the authentication information to be checked

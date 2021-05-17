@@ -46,7 +46,7 @@ public class Author extends NormalUser {
     }
 
 
-    public  void setPaper(ArrayList<String> papers){
+    public void setPaper(ArrayList<String> papers){
         /**
          * Set the paper list
          * @return a list of paper name
@@ -55,7 +55,7 @@ public class Author extends NormalUser {
     }
 
 
-    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
+    //This toString method is for developer debugging purpose!
     @Override
     public String toString(){
         return String.format("emailAddress: " + getEmail() + ", password: " + getPassword() + ", firstName: " + getFirstName() + ", conferenceName: " + getConferenceName() + ", paperlist: " + retrievePaper());

@@ -14,7 +14,7 @@ import java.util.*;
 
 
 public class UserInterface {
-    String [] header = {"                                                                                                          ",
+    public String [] header = {"                                                                                                          ",
                         "                                                                                                          ",
                         "**********************************************************************************************************",
                         "                                                                                                          ",
@@ -22,7 +22,7 @@ public class UserInterface {
                         "                                                                                                          ",
                         "**********************************************************************************************************"};
 
-    String [] footer = {"***********************************************************************************************************",
+    public String [] footer = {"***********************************************************************************************************",
                         "                                                              powered by Monash Conference Centre (MCC)   ",
                         "***********************************************************************************************************"};
 
@@ -57,49 +57,6 @@ public class UserInterface {
         this.displayMessageLn("Hi "+ name );
         this.displayMessageLn("");
         this.displayMessageLn("");
-    }
-
-
-    public String getUserOption (ArrayList<String> options, String name, boolean bo){
-    /**
-     * To display the option available and then get the user input within option length
-     * @param the option selected
-     * @param the name to be greet
-     * @param true to show header and footer; false otherwise
-     */
-        if (bo == true){
-            this.displayHeader();
-            if (!name.equals("")){
-                this.displayGreeting(name);
-            }
-        }
-        this.displayMessageLn("Please enter your options:");
-
-        // Print out all options
-        for( int i = 0; i < options.size(); i++){
-            this.displayMessageLn((i+1) + ". " + options.get(i));
-        }
-        int choice = 0; 
-		while (choice < 1 || choice > options.size()) {//loop until a valid option has been obtained
-            if ( choice > options.size()){
-                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
-            }
-            this.displayMessage("Enter option (1 - "+ options.size() +"): ");
-			try{
-				choice = Integer.parseInt(scanner.nextLine());
-                // verify boundary value
-                if (choice <= 0){
-                    this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
-                }
-                
-			}catch (InputMismatchException | NumberFormatException e) { //catching the non integer inputs
-                choice = 0;
-                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
-			}
-		}
-		// Print the footer
-        this.displayFooter();
-		return options.get(choice-1);//return the option value selected	
     }
 
 
@@ -143,6 +100,62 @@ public class UserInterface {
     }
 
 
+    public String getUserOption (ArrayList<String> options, String name, boolean bo){
+        /**
+         * To display the option available and then get the user input within option length
+         * @param the option selected
+         * @param the name to be greet
+         * @param true to show header and footer; false otherwise
+         */
+        if (bo == true){
+            this.displayHeader();
+            if (!name.equals("")){
+                this.displayGreeting(name);
+            }
+        }
+        this.displayMessageLn("Please enter your options:");
+
+        // Print out all options
+        for( int i = 0; i < options.size(); i++){
+            this.displayMessageLn((i+1) + ". " + options.get(i));
+        }
+        int choice = 0;
+        while (choice < 1 || choice > options.size()) {//loop until a valid option has been obtained
+            if ( choice > options.size()){
+                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
+            }
+            this.displayMessage("Enter option (1 - "+ options.size() +"): ");
+            try{
+                choice = Integer.parseInt(scanner.nextLine());
+                // verify boundary value
+                if (choice <= 0){
+                    this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
+                }
+
+            }catch (InputMismatchException | NumberFormatException e) { //catching the non integer inputs
+                choice = 0;
+                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
+            }
+        }
+        // Print the footer
+        this.displayFooter();
+        return options.get(choice-1);//return the option value selected
+    }
+
+
+    public boolean getExitCommand(){
+        /**
+         * The method to detect exit command
+         * @return true if exit entered
+         */
+        String input = "";
+        while (!input.equals("exit")){
+            this.displayMessageLn("Enter \"exit\" to return to previous page: ");
+            input = scanner.nextLine();
+        }
+        return true;
+    }
+
 
     public void adminDisplayUserInfo (ArrayList<User> userList){
         /**
@@ -151,12 +164,12 @@ public class UserInterface {
          */
         this.displayHeader();
         this.displayMessageLn("---------------------------------------Registered User Information---------------------------------------");
-        System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s","First Name","Last Name","Email","Highest Qualification","Occupation","Employer's Details","Mobile Number","Conference","Role");
+        System.out.format("%10s %10s %20s %25s %25s %35s %15s %30s %10s","First Name","Last Name","Email","Highest Qualification","Occupation","Employer's Details","Mobile Number","Conference","Role");
         this.displayMessageLn("");
         for (User u: userList){
             if (!u.getRole().equalsIgnoreCase("admin")){
                 NormalUser nu = (NormalUser) u;
-                System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s",nu.getFirstName(),nu.getLastName(),nu.getEmail(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),nu.getConferenceName(),nu.getRole());
+                System.out.format("%10s %10s %20s %25s %25s %35s %15s %30s %10s",nu.getFirstName(),nu.getLastName(),nu.getEmail(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),nu.getConferenceName(),nu.getRole());
                 this.displayMessageLn("");
             }
         }
@@ -171,27 +184,13 @@ public class UserInterface {
          */
         this.displayHeader();
         this.displayMessageLn("---------------------------------------Registered Conference Information---------------------------------------");
-        System.out.format("%20s %20s %15s %15s %15s %40s","Name","Place","Date","Submission Due","Review Due","Topic Areas");
+        System.out.format("%50s %20s %15s %15s %15s %40s","Name","Place","Date","Submission Due","Review Due","Topic Areas");
         this.displayMessageLn("");
         for (Conference c: confList){
-            System.out.format("%20s %20s %15s %15s %15s %40s",c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperSubmissionDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
+            System.out.format("%50s %20s %15s %15s %15s %40s",c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperSubmissionDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
             this.displayMessageLn("");
         }
         this.displayFooter();
-    }
-
-
-    public boolean getExitCommand(){
-    /**
-     * The method to detect exit command
-     * @return true if exit entered
-     */
-        String input = "";
-        while (!input.equals("exit")){
-            this.displayMessageLn("Enter \"exit\" to return to previous page: ");
-            input = scanner.nextLine();
-        }
-        return true;
     }
 
 
@@ -267,17 +266,21 @@ public class UserInterface {
      */
         this.displayHeader();
         this.displayMessageLn("Please enter the conference details.");
-        this.displayMessageLn("Note: day and month must be two digits.");
-        this.displayMessageLn("For example: 1/1/2021 must be 01/01/2021.");
         this.displayMessageLn("");
         this.displayMessage("Conference Name: ");
         String confName = scanner.nextLine(); // Read the user input
         this.displayMessage("Conference Place: ");
         String place = scanner.nextLine(); // Read the user input
+        this.displayMessageLn("Note: day and month must be two digits.");
+        this.displayMessageLn("For example: 1/1/2021 must be 01/01/2021.");
         this.displayMessage("Conference Date (dd/mm/yyyy): ");
         String date = scanner.nextLine(); // Read the user input
+        this.displayMessageLn("Note: day and month must be two digits.");
+        this.displayMessageLn("For example: 1/1/2021 must be 01/01/2021.");
         this.displayMessage("Paper Submission Due Date (dd/mm/yyyy): ");
         String submitDueDate = scanner.nextLine(); // Read the user input
+        this.displayMessageLn("Note: day and month must be two digits.");
+        this.displayMessageLn("For example: 1/1/2021 must be 01/01/2021.");
         this.displayMessage("Paper Review Due Date (dd/mm/yyyy): ");
         String reviewDueDate = scanner.nextLine(); // Read the user input
         this.displayMessageLn("");
@@ -303,7 +306,7 @@ public class UserInterface {
     }
 
 
-    public String[] getTopicAreas(ArrayList<String> topicAreas){
+    public String getTopicAreas(ArrayList<String> topicAreas){
         /**
          * To get the topic areas from the user
          * @param the available topic
@@ -311,19 +314,15 @@ public class UserInterface {
          */
         this.displayHeader();
         this.displayMessageLn("Please choose relevant the topic areas by entering their number index, separated by comma. ");
-        this.displayMessageLn("For example, input: 1,2,3");
         // print our all topic areas available
         for (int i = 0; i < topicAreas.size() ; i++){
             this.displayMessageLn((i+1) + " . " + topicAreas.get(i));
         }
+        this.displayMessageLn("For example, input: 1,2,3");
         this.displayMessage("Please enter your topic areas number index: ");
         String topicsInd = scanner.nextLine(); // Read the user input
-        this.displayMessageLn("If your topics are not in the list, please type your topic areas here, separated by comma.");
-        this.displayMessageLn("For example, input: Information Technology, Cybersecurity");
-        this.displayMessage("Please enter your topic areas name: ");
-        String topicsName = scanner.nextLine(); // Read the user input
         this.displayFooter();
-        return new String[] {topicsInd,topicsName};
+        return topicsInd;
     }
 
 
@@ -385,12 +384,14 @@ public class UserInterface {
      * @return the information retrieved
      */
         this.displayHeader();
-        this.displayMessageLn("Please enter the title of your paper and the path of your paper to upload and submit your paper");
-        this.displayMessageLn("[File format: PDF , Word only]");
+        this.displayMessageLn("Please enter the title of your paper.");
         this.displayMessageLn("Example path: c:\\my_folder\\my_folder\\file.pdf");
         this.displayMessageLn("");
         this.displayMessage("Title: ");
         String title = scanner.nextLine(); // Read the user input
+        this.displayMessageLn("");
+        this.displayMessageLn("Please enter the path of your paper to upload and submit your paper");
+        this.displayMessageLn("[File format: PDF , Word only]");
         this.displayMessage("Path: ");
         String path = scanner.nextLine(); // Read the user input
         this.displayMessage("");
@@ -420,6 +421,23 @@ public class UserInterface {
      * @param the title of paper
      * @return the evaluation entered
      */
+        this.displayHeader();
+        this.displayMessageLn("The evaluation for paper " + pTitle + " is: ");
+        this.displayMessageLn("");
+        this.displayMessageLn("Evaluation: ");
+        this.displayMessageLn("");
+        this.displayMessageLn(evaluation);
+        this.displayMessageLn("");
+        this.displayMessageLn("");
+    }
+
+
+    public void confirmFinalDecision(String pTitle, String evaluation){
+        /**
+         * To get the evaluation submitted by reviewer
+         * @param the title of paper
+         * @return the evaluation entered
+         */
         this.displayHeader();
         this.displayMessageLn("The evaluation for paper " + pTitle + " is: ");
         this.displayMessageLn("");
