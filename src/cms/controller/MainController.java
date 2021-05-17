@@ -73,6 +73,31 @@ public class MainController {
     private PaperController pController = new PaperController(cms,ui,pathPaperCSV);
     private ConferenceController cController = new ConferenceController(cms,ui,pathConferenceCSV);
     private UserController uController = new UserController(cms,ui,pathUserCSV);
+<<<<<<< HEAD
+=======
+
+    public MainController(){
+        /**
+         * The constructor of the controller.
+         * It called function to initialize the ConferenceManagementSystem.
+         */
+        // TODO: delete this testing code
+        // /////////TESTTTTTTTTTTTTTTTT///
+        // String op = ui.getUserOption(adminOp);
+        // System.out.println("option selecteddddddd: "+op);
+//        ArrayList<Conference> testC = new ArrayList<>();
+//        ArrayList<Paper> testP = new ArrayList<>();
+//        ArrayList<User> testU = new ArrayList<>();
+//        testC = cms.retrieveConferenceList();
+//        testP = cms.retrievePaperList();
+//        testU = cms.retrieveUserList();
+//
+//        System.out.println(testC);
+//        System.out.println(testP);
+//        System.out.println(testU);
+        ///////************TEST END */
+    }
+>>>>>>> 452f134c756608ed927ac38a006057943fa67cb7
 
     public void run(){
         /**
