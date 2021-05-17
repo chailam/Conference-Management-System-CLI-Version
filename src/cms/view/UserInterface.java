@@ -164,12 +164,12 @@ public class UserInterface {
          */
         this.displayHeader();
         this.displayMessageLn("---------------------------------------Registered User Information---------------------------------------");
-        System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s","First Name","Last Name","Email","Highest Qualification","Occupation","Employer's Details","Mobile Number","Conference","Role");
+        System.out.format("%10s %10s %20s %25s %25s %35s %15s %30s %10s","First Name","Last Name","Email","Highest Qualification","Occupation","Employer's Details","Mobile Number","Conference","Role");
         this.displayMessageLn("");
         for (User u: userList){
             if (!u.getRole().equalsIgnoreCase("admin")){
                 NormalUser nu = (NormalUser) u;
-                System.out.format("%10s %10s %20s %25s %25s %25s %15s %20s %10s",nu.getFirstName(),nu.getLastName(),nu.getEmail(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),nu.getConferenceName(),nu.getRole());
+                System.out.format("%10s %10s %20s %25s %25s %35s %15s %30s %10s",nu.getFirstName(),nu.getLastName(),nu.getEmail(),nu.getHighestQualification(),nu.getOccupation(),nu.getEmployerDetail(),nu.getMobileNumber(),nu.getConferenceName(),nu.getRole());
                 this.displayMessageLn("");
             }
         }
@@ -184,10 +184,10 @@ public class UserInterface {
          */
         this.displayHeader();
         this.displayMessageLn("---------------------------------------Registered Conference Information---------------------------------------");
-        System.out.format("%20s %20s %15s %15s %15s %40s","Name","Place","Date","Submission Due","Review Due","Topic Areas");
+        System.out.format("%50s %20s %15s %15s %15s %40s","Name","Place","Date","Submission Due","Review Due","Topic Areas");
         this.displayMessageLn("");
         for (Conference c: confList){
-            System.out.format("%20s %20s %15s %15s %15s %40s",c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperSubmissionDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
+            System.out.format("%50s %20s %15s %15s %15s %40s",c.getName(),c.getPlace(),ut.dateToString(c.getDate()),ut.dateToString(c.getPaperSubmissionDue()),ut.dateToString(c.getPaperSubmissionDue()),ut.arrayListToString(c.retrieveChosenTopicAreas(),","));
             this.displayMessageLn("");
         }
         this.displayFooter();
