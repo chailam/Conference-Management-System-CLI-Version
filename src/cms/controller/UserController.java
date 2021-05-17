@@ -17,6 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserController {
+    // static variable for role
+    public static final String ROLE_ADMIN = "Admin";
+    public static final String ROLE_CHAIR = "Chair";
+    public static final String ROLE_AUTHOR = "Author";
+    public static final String ROLE_REVIEWER = "Reviewer";
+    public static final String ROLE_NORMAL = "Normal";
     protected ConferenceManagementSystem cms;
     protected UserInterface ui;
     protected String pathUserCSV;
@@ -37,15 +43,15 @@ public class UserController {
          */
         User u = null;
         try {
-            if (role.equalsIgnoreCase("admin")) {
+            if (role.equalsIgnoreCase(ROLE_ADMIN)) {
                 // if is admin
-                u = new Admin("admin", emailAddress, hashedPassword);
-            } else if (role.equalsIgnoreCase("chair")) {
+                u = new Admin(ROLE_ADMIN, emailAddress, hashedPassword);
+            } else if (role.equalsIgnoreCase(ROLE_CHAIR)) {
                 // if is chair
-                u = new Chair("chair", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
-            } else if (role.equalsIgnoreCase("reviewer")) {
+                u = new Chair(ROLE_CHAIR, emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
+            } else if (role.equalsIgnoreCase(ROLE_REVIEWER)) {
                 // if is reviewer
-                u = new Reviewer("reviewer", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
+                u = new Reviewer(ROLE_REVIEWER, emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
                 if (topicAreas != null) {
                     // if user has topic
                     ((Reviewer) u).setTopicArea(topicAreas);
@@ -54,15 +60,15 @@ public class UserController {
                     // if user has paper
                     ((Reviewer) u).setAssignedPaper(paper);
                 }
-            } else if (role.equalsIgnoreCase("author")) {
+            } else if (role.equalsIgnoreCase(ROLE_AUTHOR)) {
                 // if is author
-                u = new Author("author", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
+                u = new Author(ROLE_AUTHOR, emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber, conference);
                 if (paper != null) {
                     ((Author) u).setPaper(paper);
                 }
-            } else if (role.equalsIgnoreCase("normal")) {
+            } else if (role.equalsIgnoreCase(ROLE_NORMAL)) {
                 // if is normal user
-                u = new NormalUser("normal", emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber);
+                u = new NormalUser(ROLE_NORMAL, emailAddress, hashedPassword, firstName, lastName, highestQualification, occupation, employerDetail, mobileNumber);
             }
             if ( u != null){
                 cms.addUser(u);
@@ -121,7 +127,7 @@ public class UserController {
         User u = cms.searchSpecificUser(emailAddress, role, confName);
         ArrayList<String> papers = new ArrayList<String>();
         if (u != null){
-            if (u.getRole().equalsIgnoreCase("reviewer")){
+            if (u.getRole().equalsIgnoreCase(ROLE_REVIEWER)){
                 // if the user is reviewer
                 Reviewer ru = (Reviewer) u;
                 System.out.println(ru.retrieveAssignedPaper());
@@ -136,7 +142,7 @@ public class UserController {
                 }
                 papers = ru.retrieveAssignedPaper();
                 return papers;
-            } else if (u.getRole().equalsIgnoreCase("author")){
+            } else if (u.getRole().equalsIgnoreCase(ROLE_AUTHOR)){
                 // if the user is author
                 Author au = (Author) u;
                 if (au.retrievePaper().size() == 0){
