@@ -322,7 +322,7 @@ public class MainController {
             if (op.equalsIgnoreCase(OPTION_CONFIRM)){
                 // if user choose to confirm
                 // get the paper and update the evaluation
-                pController.updatePaperEvaluation(chosenPaper,evaluation);
+                pController.updatePaperEvaluation(chosenPaper, confName, evaluation);
                 // display successful message and redirect
                 ui.displayMsgWithSleep("You have successfully uploaded the evaluation.");
                 assignedPapers.remove(OPTION_BACK);
@@ -418,8 +418,8 @@ public class MainController {
             } else {
                 // if user choose a paper
                 // get the evaluation of the paper
-                Paper p = cms.searchPaper(opt);
-                ArrayList<String> evaluations = p.retrieveEvaluation();
+                Paper p = cms.searchPaper(opt,confName);
+                ArrayList<String> evaluations = p.retrieveEvaluations();
                 ui.confirmEvaluation(opt, ut.arrayListToString(evaluations, ";\n\t"));
                 // get user option to reject or accept
                 ArrayList<String> finalDecision = new ArrayList<>(Arrays.asList(STATUS_ACCEPTED, STATUS_REJECTED, OPTION_BACK));
@@ -430,14 +430,14 @@ public class MainController {
                     this.finalDecisionPaper(name, emailAddress,confName);
                 } else if (opt2.equalsIgnoreCase(STATUS_ACCEPTED)) {
                     // set the status of the paper to Accept
-                    pController.updatePaperProgressStatus(p.getTitle(),STATUS_ACCEPTED);
+                    pController.updatePaperProgressStatus(p.getTitle(),STATUS_ACCEPTED,confName);
                     // display message
                     ui.displayMsgWithSleep("You have successfully Accepted the paper.");
                     reviewedPaper.remove(OPTION_BACK);
                     this.homePageChoices(name, emailAddress);
                 } else if (opt2.equalsIgnoreCase(STATUS_REJECTED)) {
                     // set the status of the paper to Reject
-                    pController.updatePaperProgressStatus(p.getTitle(),STATUS_REJECTED);
+                    pController.updatePaperProgressStatus(p.getTitle(),STATUS_REJECTED,confName);
                     // display message
                     reviewedPaper.remove(OPTION_BACK);
                     ui.displayMsgWithSleep("You have successfully Rejected the paper.");
@@ -534,7 +534,7 @@ public class MainController {
         } else {
             // if user choose the paper
             // check the number of reviewer of that paper, if larger than 4 then show message
-            int reviewerNo = cms.searchPaper(chosenPaper).getNoOfReviewer();
+            int reviewerNo = cms.searchPaper(chosenPaper,confName).getNoOfReviewer();
             if (reviewerNo >= 4){
                 ui.displayMsgWithSleep("The number of reviewers for this paper has reached maximum of 4.");
                 availablePaper.remove(OPTION_BACK);
@@ -584,7 +584,7 @@ public class MainController {
                 selectedReviewer.add(reviewer);
             }
             // modify the number of reviewers in paper csv & paperlist cms
-            pController.updatePaperNoOfReviewer(chosenPaper,selectedReviewer.size()+reviewerNo);
+            pController.updatePaperNoOfReviewer(chosenPaper, confName, selectedReviewer.size()+reviewerNo);
             // modify the paper assigned in user csv & userlist cms for each reviewer user
             for (String[] r : selectedReviewer) {
                 //r[0] is email address, r[1] is firstname, r[2] is last name

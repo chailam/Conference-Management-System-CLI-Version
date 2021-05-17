@@ -13,13 +13,13 @@ public class Paper {
     private String author;
     private String content;
     private int noOfReviewer;
-    private ArrayList<String> evaluation = new ArrayList<String>();
+    private ArrayList<String> evaluations = new ArrayList<String>();
     private String conferenceName;
     private ArrayList<String> chosenTopicAreas = new ArrayList<String>();
     private String currentProgressStatus;
 
 
-    public Paper(String title, String author, String content, int noOfReviewer, ArrayList<String> evaluation, String conferenceName, ArrayList<String> topic, String progress){
+    public Paper(String title, String author, String content, int noOfReviewer, ArrayList<String> evaluations, String conferenceName, ArrayList<String> topic, String progress){
         /**
          * Constructor for the Paper.
          * @param name is the name of the paper
@@ -35,7 +35,7 @@ public class Paper {
             this.author = author;
             this.content = content;
             this.noOfReviewer = noOfReviewer;
-            this.evaluation = evaluation;
+            this.evaluations = evaluations;
             this.conferenceName = conferenceName;
             this.chosenTopicAreas = topic;
             this.currentProgressStatus = progress;
@@ -96,12 +96,12 @@ public class Paper {
     }
 
 
-    public ArrayList<String> retrieveEvaluation(){
+    public ArrayList<String> retrieveEvaluations(){
     /**
      * Retrieve the evaluation
      * @return 	the evaluation
      **/
-        return this.evaluation;
+        return this.evaluations;
     }
 
 
@@ -168,12 +168,12 @@ public class Paper {
     }
 
 
-    public void setEvaluation(ArrayList<String> evaluations){
+    public void setEvaluations(ArrayList<String> evaluations){
         /**
          * Setter for the evaluation of paper
          * @param 	the evaluation list
          **/
-        this.evaluation = evaluations;
+        this.evaluations = evaluations;
     }
 
 
@@ -191,7 +191,7 @@ public class Paper {
      * Retrieve the evaluation
      * @param 	the evaluation
      **/
-        this.evaluation.add(eva);
+        this.evaluations.add(eva);
     }
     
 
@@ -200,6 +200,6 @@ public class Paper {
     //This toString method is for developer debugging purpose!
     @Override
     public String toString(){
-        return String.format("title: " + getTitle() + ", author: " + getAuthor() + ", content : " + getContent() + ", no of reviewer: " + getNoOfReviewer() + ", evaluation: " + retrieveEvaluation() + ", topic: " + retrieveTopicAreas() + ", conference: " + getConferenceName() + ", progress: " + getProgressStatus());
+        return String.format("title: " + getTitle() + ", author: " + getAuthor() + ", content : " + getContent() + ", no of reviewer: " + getNoOfReviewer() + ", evaluation: " + retrieveEvaluations() + ", topic: " + retrieveTopicAreas() + ", conference: " + getConferenceName() + ", progress: " + getProgressStatus());
     }
 }

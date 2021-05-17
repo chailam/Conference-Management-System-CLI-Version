@@ -55,14 +55,14 @@ public class ConferenceManagementSystem {
     }
 
 
-    public boolean hasPaper(String pTitle) {
+    public boolean hasPaperInConference(String pTitle, String conferenceName) {
         /**
-         * To check whether the paper is in the paperList
+         * To check whether the paper of specific conference is in the paperList
          * @param paper title to be checked
          * @return true if exists, false otherwise
          */
         for (Paper p : paperList) {
-            if (p.getTitle().equals(pTitle)) {
+            if (p.getTitle().equals(pTitle) && p.getConferenceName().equals(conferenceName)) {
                 return true;
             }
         }
@@ -100,14 +100,14 @@ public class ConferenceManagementSystem {
     }
 
 
-    public Paper searchPaper(String title) {
+    public Paper searchPaper(String title, String conferenceName) {
         /**
          * To return user where title of the paper (unique) matching
          * @param title of the paper
          * @return paper which matched the title
          */
         for (Paper p : paperList) {
-            if (p.getTitle().equals(title)) {
+            if (p.getTitle().equals(title) && p.getConferenceName().equals(conferenceName)) {
                 return p;
             }
         }

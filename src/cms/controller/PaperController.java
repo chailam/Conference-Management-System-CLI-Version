@@ -106,7 +106,7 @@ public class PaperController {
             return false;
         }
         // check if duplicated paper
-        if (cms.hasPaper(title) == true){
+        if (cms.hasPaperInConference(title,confName) == true){
             ui.displayMsgWithSleep("The Paper Title is duplicated.\n    Please try another title.");
             return false;
         }
@@ -119,35 +119,35 @@ public class PaperController {
     }
 
 
-    protected void updatePaperProgressStatus(String pTitle, String progress){
+    protected void updatePaperProgressStatus(String pTitle, String progress, String conferenceName){
         /**
          * To update the progress status in cms paperlist and csv file
          * @param title of the paper to be updated
          * @param progress of the paper
          */
         // modify the cms
-        Paper p = cms.searchPaper(pTitle);
+        Paper p = cms.searchPaper(pTitle,conferenceName);
         p.setProgressStatus(progress);
         // write to csv file,  progress at col index 7
         this.updatePaperCsv(pathPaperCSV, progress, 7, p.getTitle());
     }
 
 
-    protected void updatePaperNoOfReviewer(String pTitle, int noOfReviewer){
+    protected void updatePaperNoOfReviewer(String pTitle, String conferenceName, int noOfReviewer){
         /**
          * To update the no of reviewer in cms paperlist and csv file
          * @param title of the paper to be updated
          * @param no of reviewer of the paper
          */
         // modify the number of reviewer in paperList
-        cms.searchPaper(pTitle).setNoOfReviewer(noOfReviewer);
+        cms.searchPaper(pTitle,conferenceName).setNoOfReviewer(noOfReviewer);
         // write to csv, ,  noOfReviewer at col index 3
         this.updatePaperCsv(pathPaperCSV,Integer.toString(noOfReviewer),3,pTitle);
 
     }
 
 
-    protected void updatePaperEvaluation(String pTitle, String evaluation){
+    protected void updatePaperEvaluation(String pTitle, String conferenceName, String evaluation){
         /**
          * To update the evaluation in cms paperlist and csv file
          * @param title of the paper to be updated
@@ -155,23 +155,23 @@ public class PaperController {
          */
         // modify cms
         // get the paper and update the evaluation
-        Paper p = cms.searchPaper(pTitle);
+        Paper p = cms.searchPaper(pTitle,conferenceName);
         ArrayList<String> evaluations = new ArrayList<String>();
         // if the paper has no evaluation before
-        if (p.retrieveEvaluation()== null) {
+        if (p.retrieveEvaluations()== null) {
             evaluations.add(evaluation);
-            p.setEvaluation(evaluations);
+            p.setEvaluations(evaluations);
         } else {
             // if there is existing evaluation for the paper
-            p.retrieveEvaluation().add(evaluation);
+            p.retrieveEvaluations().add(evaluation);
         }
         // get the evaluation
-        evaluations = p.retrieveEvaluation();
+        evaluations = p.retrieveEvaluations();
         // write to csv file the evaluation, evaluation at col index 4
         this.updatePaperCsv(pathPaperCSV, ut.arrayListToString(evaluations, "/"), 4, p.getTitle());
         // check if no of reviewer == number of evaluation, if yes, change status to reviewed
         if (p.getNoOfReviewer() == evaluations.size()) {
-            this.updatePaperProgressStatus(pTitle,"Reviewed");
+            this.updatePaperProgressStatus(pTitle,"Reviewed",conferenceName);
         }
     }
 
