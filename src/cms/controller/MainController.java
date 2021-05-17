@@ -43,6 +43,8 @@ public class MainController {
     public static final String OPTION_PROCEED = "Proceed";
     public static final String OPTION_EXIT = "Exit";
     public static final String OPTION_CONFIRM = "Confirm";
+    public static final String OPTION_JOINREVIEWER = "Join as Reviewer";
+    public static final String OPTION_JOINAUTHOR = "Join as Author";
     // Main page, Home Page, Admin, Chair, Author, Reviewer option
     // The option shown here are just the functionalities assigned by tutor.
     // The option for not assigned functionality are not shown here
@@ -53,6 +55,7 @@ public class MainController {
     private ArrayList<String> chairOp   = new ArrayList<>(Arrays.asList(OPTION_FINALDECISION, OPTION_ASSIGNREVIEWER,OPTION_BACK));
     private ArrayList<String> reviewerOp   = new ArrayList<>(Arrays.asList(OPTION_SUBMITEVALUATION,OPTION_BACK));
     private ArrayList<String> proceedOp = new ArrayList<>(Arrays.asList(OPTION_PROCEED,OPTION_BACK,OPTION_EXIT));
+    ArrayList<String> roleOption = new ArrayList<>(Arrays.asList(OPTION_JOINREVIEWER, OPTION_JOINAUTHOR, OPTION_BACK));
     private ArrayList<String> availableTopics = new ArrayList<>(Arrays.asList("Artificial Intelligence", "Human Computer Interaction", "Data Mining & Information Retrieval", "Image Processing", "Big Data", "Computer Networks", "Software Engineering ", "Security & Cryptography", "Robotics & Automation", "Database & Information Systems"));
     private Utility ut = new Utility();
 
@@ -351,7 +354,7 @@ public class MainController {
         // get the user option to proceed with topic area or go back
         String opt = ui.getUserOption(proceedOp, "", false);
         // if user choose to confirm
-        if (opt.equalsIgnoreCase("Proceed")){
+        if (opt.equalsIgnoreCase(OPTION_PROCEED)){
             // get the info required for paper submission
             String[] paperInfo = ui.getPaperSubmission();
             // truncate leading white space
@@ -479,7 +482,7 @@ public class MainController {
             // get user option to "Submit", "back" or "exit"
             String opt = ui.getUserOption(proceedOp, "", false);
             // if user choose to create
-            if (opt.equalsIgnoreCase("Proceed")){
+            if (opt.equalsIgnoreCase(OPTION_PROCEED)){
                 // create conference entity
                 cController.addConferenceEntity(confName, place, topicName, date, submitDueDate, reviewDueDate);
                 // append the conference to csv file
@@ -631,15 +634,15 @@ public class MainController {
             // get user option to join or exit
             String opt = ui.getUserOption(proceedOp, "", false);
             // if user choose to join
-            if (opt.equalsIgnoreCase("Proceed")) {
+            if (opt.equalsIgnoreCase(OPTION_PROCEED)) {
                 // get user option to "join as reviewer" or "join as author"
-                ArrayList<String> roleOption = new ArrayList<>(Arrays.asList("Join as Reviewer", "Join as Author", OPTION_BACK));
+
                 String chosenRole = ui.getUserOption(roleOption, name, true);
                 if (chosenRole.equalsIgnoreCase(OPTION_BACK)) {
                     // if user choose to go back
                     availableConf.remove(OPTION_BACK);
                     this.joinConference(name, emailAddress);
-                } else if (chosenRole.equalsIgnoreCase("Join as Reviewer")) {
+                } else if (chosenRole.equalsIgnoreCase(OPTION_JOINREVIEWER)) {
                     // if user join as reviewer
                     // get the topic areas
                     ArrayList<String> topicName = topicAreasProcess(name, emailAddress);
@@ -650,7 +653,7 @@ public class MainController {
                     // confirm the topic area
                     ui.topicAreasConfirmation(ut.arrayListToString(topicName, ","));
                     String opt2 = ui.getUserOption(proceedOp, "", false);
-                    if (opt2.equalsIgnoreCase("Proceed")) {
+                    if (opt2.equalsIgnoreCase(OPTION_PROCEED)) {
                         // if user choose to proceed
                         User u = cms.searchUser(emailAddress);
                         // create a new Reviewer object & add that object into user list
@@ -672,7 +675,7 @@ public class MainController {
                         availableConf.remove(OPTION_BACK);
                         this.homePageChoices(name, emailAddress);
                     }
-                } else if (chosenRole.equalsIgnoreCase("Join as Author")) {
+                } else if (chosenRole.equalsIgnoreCase(OPTION_JOINAUTHOR)) {
                     // if user choose to join as author
                     User u = cms.searchUser(emailAddress);
                     // create a new Reviewer object & add that object into user list
@@ -706,13 +709,12 @@ public class MainController {
          * @return the topic area list
          */
         // Get topic option
-        String[] topicTmp = ui.getTopicAreas(availableTopics);
+        String topicTmp = ui.getTopicAreas(availableTopics);
         // truncate white space and non visible character
-        topicTmp[1] = topicTmp[1].replaceAll("\\s","");
+        topicTmp = topicTmp.replaceAll("\\s","");
 
         // delimit the information
-        ArrayList<String> topicInd = ut.stringToArrayList(topicTmp[0], ",");
-        ArrayList<String> topicName = ut.stringToArrayList(topicTmp[1], ",");
+        ArrayList<String> topicInd = ut.stringToArrayList(topicTmp, ",");
         // convert user input index to programmer index
         ArrayList<Integer> topicInt = ut.convertIndexBound(topicInd, availableTopics.size());
         // if is empty
@@ -721,11 +723,8 @@ public class MainController {
             return null;
         }
         //use index of topic to retrieve index
-        ArrayList<String> topicName2 = ut.indexToElement(topicInt, availableTopics);
-        if (topicName != null) {
-            topicName2.addAll(topicName);
-        }
-        return topicName2;
+        ArrayList<String> topicName = ut.indexToElement(topicInt, availableTopics);
+        return topicName;
     }
 
 

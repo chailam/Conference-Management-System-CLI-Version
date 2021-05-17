@@ -302,7 +302,7 @@ public class UserInterface {
     }
 
 
-    public String[] getTopicAreas(ArrayList<String> topicAreas){
+    public String getTopicAreas(ArrayList<String> topicAreas){
         /**
          * To get the topic areas from the user
          * @param the available topic
@@ -310,19 +310,15 @@ public class UserInterface {
          */
         this.displayHeader();
         this.displayMessageLn("Please choose relevant the topic areas by entering their number index, separated by comma. ");
-        this.displayMessageLn("For example, input: 1,2,3");
         // print our all topic areas available
         for (int i = 0; i < topicAreas.size() ; i++){
             this.displayMessageLn((i+1) + " . " + topicAreas.get(i));
         }
+        this.displayMessageLn("For example, input: 1,2,3");
         this.displayMessage("Please enter your topic areas number index: ");
         String topicsInd = scanner.nextLine(); // Read the user input
-        this.displayMessageLn("If your topics are not in the list, please type your topic areas here, separated by comma.");
-        this.displayMessageLn("For example, input: Information Technology, Cybersecurity");
-        this.displayMessage("Please enter your topic areas name: ");
-        String topicsName = scanner.nextLine(); // Read the user input
         this.displayFooter();
-        return new String[] {topicsInd,topicsName};
+        return topicsInd;
     }
 
 
@@ -384,12 +380,14 @@ public class UserInterface {
      * @return the information retrieved
      */
         this.displayHeader();
-        this.displayMessageLn("Please enter the title of your paper and the path of your paper to upload and submit your paper");
-        this.displayMessageLn("[File format: PDF , Word only]");
+        this.displayMessageLn("Please enter the title of your paper.");
         this.displayMessageLn("Example path: c:\\my_folder\\my_folder\\file.pdf");
         this.displayMessageLn("");
         this.displayMessage("Title: ");
         String title = scanner.nextLine(); // Read the user input
+        this.displayMessageLn("");
+        this.displayMessageLn("Please enter the path of your paper to upload and submit your paper");
+        this.displayMessageLn("[File format: PDF , Word only]");
         this.displayMessage("Path: ");
         String path = scanner.nextLine(); // Read the user input
         this.displayMessage("");
