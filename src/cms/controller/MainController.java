@@ -18,51 +18,51 @@ public class MainController {
     // Main page, Home Page, Admin, Chair, Author, Reviewer option
     // The option shown here are just the functionalities assigned by tutor.
     // The option for not assigned functionality are not shown here
-    private static ArrayList<String> mainPageOp  = new ArrayList<>(Arrays.asList("Register", "Login"));
-    private static ArrayList<String> homePageOp   = new ArrayList<>(Arrays.asList("Manage Your Conference","Join Conference","Create Conference","Logout"));
-    private static ArrayList<String> adminOp   = new ArrayList<>(Arrays.asList("Retrieve User Information", "Retrieve Conference Information","Logout"));
-    private static ArrayList<String> authorOp   = new ArrayList<>(Arrays.asList("Submit Paper", "Back"));
-    private static ArrayList<String> chairOp   = new ArrayList<>(Arrays.asList("Final Decision on Paper", "Assign Reviewer to Paper","Back"));
-    private static ArrayList<String> reviewerOp   = new ArrayList<>(Arrays.asList("Submit Evaluation of Paper","Back"));
-    private static ArrayList<String> proceedOp = new ArrayList<>(Arrays.asList("Proceed","Back","Exit"));
-    private static ArrayList<String> avaiableTopics = new ArrayList<>(Arrays.asList("Artificial Intelligence", "Human Computer Interaction", "Data Mining & Information Retrieval", "Image Processing", "Big Data", "Computer Networks", "Software Engineering ", "Security & Cryptography", "Robotics & Automation", "Database & Information Systems"));
-    Utility ut = new Utility();
+    private ArrayList<String> mainPageOp  = new ArrayList<>(Arrays.asList("Register", "Login"));
+    private ArrayList<String> homePageOp   = new ArrayList<>(Arrays.asList("Manage Your Conference","Join Conference","Create Conference","Logout"));
+    private ArrayList<String> adminOp   = new ArrayList<>(Arrays.asList("Retrieve User Information", "Retrieve Conference Information","Logout"));
+    private ArrayList<String> authorOp   = new ArrayList<>(Arrays.asList("Submit Paper", "Back"));
+    private ArrayList<String> chairOp   = new ArrayList<>(Arrays.asList("Final Decision on Paper", "Assign Reviewer to Paper","Back"));
+    private ArrayList<String> reviewerOp   = new ArrayList<>(Arrays.asList("Submit Evaluation of Paper","Back"));
+    private ArrayList<String> proceedOp = new ArrayList<>(Arrays.asList("Proceed","Back","Exit"));
+    private ArrayList<String> availableTopics = new ArrayList<>(Arrays.asList("Artificial Intelligence", "Human Computer Interaction", "Data Mining & Information Retrieval", "Image Processing", "Big Data", "Computer Networks", "Software Engineering ", "Security & Cryptography", "Robotics & Automation", "Database & Information Systems"));
+    private Utility ut = new Utility();
 
     // Define the path to User.csv, Conference.csv, and Paper.csv
-    protected static String pathUserCSV = "src/resource/User.csv";
-    protected static String pathConferenceCSV = "src/resource/Conference.csv";
-    protected static String pathPaperCSV = "src/resource/Paper.csv";
+    protected String pathUserCSV = "src/resource/User.csv";
+    protected String pathConferenceCSV = "src/resource/Conference.csv";
+    protected String pathPaperCSV = "src/resource/Paper.csv";
 
     // Initialize user interface invoked
-    protected static UserInterface ui = new UserInterface();
+    protected UserInterface ui = new UserInterface();
     // Initialize the ConferenceManagementSystem (as DB)
-    protected static ConferenceManagementSystem cms = new ConferenceManagementSystem();
+    protected ConferenceManagementSystem cms = new ConferenceManagementSystem();
 
     // Initialize the workers controller
-    PaperController pController = new PaperController(cms,ui,pathPaperCSV);
-    ConferenceController cController = new ConferenceController(cms,ui,pathConferenceCSV);
-    UserController uController = new UserController(cms,ui,pathUserCSV);
+    private PaperController pController = new PaperController(cms,ui,pathPaperCSV);
+    private ConferenceController cController = new ConferenceController(cms,ui,pathConferenceCSV);
+    private UserController uController = new UserController(cms,ui,pathUserCSV);
 
     public MainController(){
         /**
          * The constructor of the controller.
          * It called function to initialize the ConferenceManagementSystem.
          */
+        // TODO: delete this testing code
         // /////////TESTTTTTTTTTTTTTTTT///
         // String op = ui.getUserOption(adminOp);
         // System.out.println("option selecteddddddd: "+op);
-        ArrayList<Conference> testC = new ArrayList<>();
-        ArrayList<Paper> testP = new ArrayList<>();
-        ArrayList<User> testU = new ArrayList<>();
-        testC = cms.retrieveConferenceList();
-        testP = cms.retrievePaperList();
-        testU = cms.retrieveUserList();
-
-        System.out.println(testC);
-        System.out.println(testP);
-        System.out.println(testU);
+//        ArrayList<Conference> testC = new ArrayList<>();
+//        ArrayList<Paper> testP = new ArrayList<>();
+//        ArrayList<User> testU = new ArrayList<>();
+//        testC = cms.retrieveConferenceList();
+//        testP = cms.retrievePaperList();
+//        testU = cms.retrieveUserList();
+//
+//        System.out.println(testC);
+//        System.out.println(testP);
+//        System.out.println(testU);
         ///////************TEST END */
-
     }
 
     public void run(){
@@ -337,7 +337,7 @@ public class MainController {
             // if the information is valid
             String title = paperInfo[0];
             // create a new Paper object and add to paper list
-            pController.createPaperEntity(title, emailAddress,null,0,null,confName,topicName,"Being Reviewed");
+            pController.addPaperEntity(title, emailAddress,null,0,null,confName,topicName,"Being Reviewed");
             //write paper to csv file
             pController.appendPaperCSV(title, emailAddress, null,"0",null,confName,ut.arrayListToString(topicName,"/"), "Being Reviewed");
             // Update the author information to include this paper
@@ -370,7 +370,7 @@ public class MainController {
          * @param conference name
          */
         // get a list of paper in that conference where status is reviewed
-        ArrayList<String> reviewedPaper = cms.getPaperWithSpecificStatus(confName, "Reviewed");
+        ArrayList<String> reviewedPaper = pController.getPaperWithSpecificStatus(confName, "Reviewed");
         if (reviewedPaper.size() == 0) {
             // if no paper all reviewed
             ui.displayMsgWithSleep("All papers are still under reviewing.");
@@ -453,14 +453,14 @@ public class MainController {
             // if user choose to create
             if (opt.equalsIgnoreCase("Proceed")){
                 // create conference entity
-                cController.createConferenceEntity(confName, place, topicName, date, submitDueDate, reviewDueDate);
+                cController.addConferenceEntity(confName, place, topicName, date, submitDueDate, reviewDueDate);
                 // append the conference to csv file
                 cController.appendConferenceCSV(confName, place, ut.arrayListToString(topicName,"/"), ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate));
                 // create a new Chair user entity with this conference name & add to user list
                 User u = cms.searchUser(emailAddress);
                 if (!u.getRole().equalsIgnoreCase("admin")) {
                     NormalUser nu = (NormalUser) u;
-                    uController.createUserEntity("Chair", u.getEmail(), u.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), confName, null, null);
+                    uController.addUserEntity("Chair", u.getEmail(), u.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), confName, null, null);
                     // write to csv file
                     uController.appendUserCSV("Chair", u.getEmail(), u.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), confName, null, null);
                     // display successful message
@@ -628,7 +628,7 @@ public class MainController {
                         // create a new Reviewer object & add that object into user list
                         if (!u.getRole().equalsIgnoreCase("admin")) {
                             NormalUser nu = (NormalUser) u;
-                            uController.createUserEntity("Reviewer", nu.getEmail(), nu.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), c.getName(), topicName, null);
+                            uController.addUserEntity("Reviewer", nu.getEmail(), nu.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), c.getName(), topicName, null);
                             // write to csv file
                             uController.appendUserCSV("Reviewer", nu.getEmail(), nu.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), c.getName(), ut.arrayListToString(topicName, "/"), null);
                             // display successful message & go to home page
@@ -650,7 +650,7 @@ public class MainController {
                     // create a new Reviewer object & add that object into user list
                     if (!u.getRole().equalsIgnoreCase("admin")) {
                         NormalUser nu = (NormalUser) u;
-                        uController.createUserEntity("Author", nu.getEmail(), nu.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), c.getName(), null, null);
+                        uController.addUserEntity("Author", nu.getEmail(), nu.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), c.getName(), null, null);
                         // write to csv file
                         uController.appendUserCSV("Author", nu.getEmail(), nu.getPassword(), nu.getFirstName(), nu.getLastName(), nu.getHighestQualification(), nu.getOccupation(), nu.getEmployerDetail(), nu.getMobileNumber(), c.getName(), null, null);
                         // display successful message & go to home page
@@ -671,14 +671,14 @@ public class MainController {
         }
     }
 
-    public ArrayList<String> topicAreasProcess(String name, String emailAddress) throws InterruptedException {
+    private ArrayList<String> topicAreasProcess(String name, String emailAddress) throws InterruptedException {
         /**
          * Method to get the topic areas, check the validity, get the topic name from index and
          * concatenate additional topic and index topic
          * @return the topic area list
          */
         // Get topic option
-        String[] topicTmp = ui.getTopicAreas(avaiableTopics);
+        String[] topicTmp = ui.getTopicAreas(availableTopics);
         // truncate white space and non visible character
         topicTmp[1] = topicTmp[1].replaceAll("\\s","");
 
@@ -686,14 +686,14 @@ public class MainController {
         ArrayList<String> topicInd = ut.stringToArrayList(topicTmp[0], ",");
         ArrayList<String> topicName = ut.stringToArrayList(topicTmp[1], ",");
         // convert user input index to programmer index
-        ArrayList<Integer> topicInt = ut.convertIndexBound(topicInd,avaiableTopics.size());
+        ArrayList<Integer> topicInt = ut.convertIndexBound(topicInd, availableTopics.size());
         // if is empty
         if (topicInt == null){
             ui.displayMsgWithSleep("Please enter a valid topic number.");
             return null;
         }
         //use index of topic to retrieve index
-        ArrayList<String> topicName2 = ut.indexToElement(topicInt,avaiableTopics);
+        ArrayList<String> topicName2 = ut.indexToElement(topicInt, availableTopics);
         if (topicName != null) {
             topicName2.addAll(topicName);
         }
@@ -748,7 +748,7 @@ public class MainController {
             // if user choose to "Register"
             if (op.equalsIgnoreCase("Register")){
                 // create user entity and add to cms user list
-                uController.createUserEntity("normal", info[2], info[3], info[0], info[1], info[4], info[5], info[6], info[7], null, null, null);
+                uController.addUserEntity("normal", info[2], info[3], info[0], info[1], info[4], info[5], info[6], info[7], null, null, null);
                 // write new user to csv file
                 uController.appendUserCSV("normal", info[2], info[3], info[0], info[1], info[4], info[5], info[6], info[7], null, null, null);
                 // redirect to main page

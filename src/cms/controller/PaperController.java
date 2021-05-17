@@ -20,10 +20,10 @@ import java.util.List;
 
 public class PaperController {
 
-    ConferenceManagementSystem cms;
-    UserInterface ui;
-    String pathPaperCSV;
-    Utility ut = new Utility();
+    protected ConferenceManagementSystem cms;
+    protected UserInterface ui;
+    protected String pathPaperCSV;
+    private Utility ut = new Utility();
 
     public PaperController (ConferenceManagementSystem cms, UserInterface ui, String pathPaperCSV){
         this.cms = cms;
@@ -34,7 +34,7 @@ public class PaperController {
     }
 
 
-    public void createPaperEntity (String title, String author, String content, int noOfReviewer, ArrayList<String> evaluation, String conferenceName, ArrayList<String> topic, String progress){
+    protected void addPaperEntity(String title, String author, String content, int noOfReviewer, ArrayList<String> evaluation, String conferenceName, ArrayList<String> topic, String progress){
         /**
          * Create Paper object and add to the cms paper list
          * @param the Paper information required
@@ -54,7 +54,7 @@ public class PaperController {
     }
 
 
-    public void importAllPaperCSV(){
+    private void importAllPaperCSV(){
         /**
          * Import all the paper data from csv file
          */
@@ -67,7 +67,7 @@ public class PaperController {
                     ArrayList<String> topic = ut.stringToArrayList(line[6],"/");
                     // Change the evaluation to ArrayList
                     ArrayList<String> evaluation = ut.stringToArrayList(line[4],"/");
-                    createPaperEntity(line[0],line[1],line[2],Integer.parseInt(line[3]),evaluation,line[5],topic,line[7]);
+                    addPaperEntity(line[0],line[1],line[2],Integer.parseInt(line[3]),evaluation,line[5],topic,line[7]);
                 }
             }
         } catch (Exception e){
@@ -76,7 +76,7 @@ public class PaperController {
     }
 
 
-    public void appendPaperCSV (String title, String authorEmail, String content, String noOfReviewer, String evaluation, String conference, String topics,String progressStatus){
+    protected void appendPaperCSV (String title, String authorEmail, String content, String noOfReviewer, String evaluation, String conference, String topics, String progressStatus){
         /**
          * Append the paper data to the csv file
          * @param the data to be appended
@@ -87,7 +87,7 @@ public class PaperController {
     }
 
 
-    public boolean checkPaperSubmitInfo (String title, String path, String confName) throws InterruptedException {
+    protected boolean checkPaperSubmitInfo (String title, String path, String confName) throws InterruptedException {
         /**
          *  Check the paper submission information
          * @param the paper submission information to be checked
@@ -119,7 +119,7 @@ public class PaperController {
     }
 
 
-    public void updatePaperProgressStatus(String pTitle, String progress){
+    protected void updatePaperProgressStatus(String pTitle, String progress){
         /**
          * To update the progress status in cms paperlist and csv file
          * @param title of the paper to be updated
@@ -133,7 +133,7 @@ public class PaperController {
     }
 
 
-    public void updatePaperNoOfReviewer(String pTitle, int noOfReviewer){
+    protected void updatePaperNoOfReviewer(String pTitle, int noOfReviewer){
         /**
          * To update the no of reviewer in cms paperlist and csv file
          * @param title of the paper to be updated
@@ -147,7 +147,7 @@ public class PaperController {
     }
 
 
-    public void updatePaperEvaluation(String pTitle, String evaluation){
+    protected void updatePaperEvaluation(String pTitle, String evaluation){
         /**
          * To update the evaluation in cms paperlist and csv file
          * @param title of the paper to be updated
@@ -176,7 +176,7 @@ public class PaperController {
     }
 
 
-    public void updatePaperCsv(String filePath, String dataToUpdate, int dataIndex, String title){
+    protected void updatePaperCsv(String filePath, String dataToUpdate, int dataIndex, String title){
         /**
          *  The method to update user data in csv file at specific col and row
          * @param the file path of the file to update
@@ -207,5 +207,22 @@ public class PaperController {
         } catch (Exception e){
             System.out.println("Paper File Write Error: " + e);
         }
+    }
+
+
+    protected ArrayList<String> getPaperWithSpecificStatus(String conferenceName, String status) {
+        /**
+         * Search through the user to get the paper of that conference which match the status
+         * @param the conference name
+         * @param the status of paper
+         * @return the paper title that match the status
+         */
+        ArrayList<String> papers = new ArrayList<String>();
+        for (Paper p: cms.retrievePaperList()){
+            if (p.getConferenceName().equals(conferenceName) && p.getProgressStatus().equalsIgnoreCase(status)){
+                papers.add(p.getTitle());
+            }
+        }
+        return papers;
     }
 }

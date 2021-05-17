@@ -14,7 +14,7 @@ import java.util.*;
 
 
 public class UserInterface {
-    String [] header = {"                                                                                                          ",
+    public String [] header = {"                                                                                                          ",
                         "                                                                                                          ",
                         "**********************************************************************************************************",
                         "                                                                                                          ",
@@ -22,7 +22,7 @@ public class UserInterface {
                         "                                                                                                          ",
                         "**********************************************************************************************************"};
 
-    String [] footer = {"***********************************************************************************************************",
+    public String [] footer = {"***********************************************************************************************************",
                         "                                                              powered by Monash Conference Centre (MCC)   ",
                         "***********************************************************************************************************"};
 
@@ -57,49 +57,6 @@ public class UserInterface {
         this.displayMessageLn("Hi "+ name );
         this.displayMessageLn("");
         this.displayMessageLn("");
-    }
-
-
-    public String getUserOption (ArrayList<String> options, String name, boolean bo){
-    /**
-     * To display the option available and then get the user input within option length
-     * @param the option selected
-     * @param the name to be greet
-     * @param true to show header and footer; false otherwise
-     */
-        if (bo == true){
-            this.displayHeader();
-            if (!name.equals("")){
-                this.displayGreeting(name);
-            }
-        }
-        this.displayMessageLn("Please enter your options:");
-
-        // Print out all options
-        for( int i = 0; i < options.size(); i++){
-            this.displayMessageLn((i+1) + ". " + options.get(i));
-        }
-        int choice = 0; 
-		while (choice < 1 || choice > options.size()) {//loop until a valid option has been obtained
-            if ( choice > options.size()){
-                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
-            }
-            this.displayMessage("Enter option (1 - "+ options.size() +"): ");
-			try{
-				choice = Integer.parseInt(scanner.nextLine());
-                // verify boundary value
-                if (choice <= 0){
-                    this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
-                }
-                
-			}catch (InputMismatchException | NumberFormatException e) { //catching the non integer inputs
-                choice = 0;
-                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
-			}
-		}
-		// Print the footer
-        this.displayFooter();
-		return options.get(choice-1);//return the option value selected	
     }
 
 
@@ -143,6 +100,62 @@ public class UserInterface {
     }
 
 
+    public String getUserOption (ArrayList<String> options, String name, boolean bo){
+        /**
+         * To display the option available and then get the user input within option length
+         * @param the option selected
+         * @param the name to be greet
+         * @param true to show header and footer; false otherwise
+         */
+        if (bo == true){
+            this.displayHeader();
+            if (!name.equals("")){
+                this.displayGreeting(name);
+            }
+        }
+        this.displayMessageLn("Please enter your options:");
+
+        // Print out all options
+        for( int i = 0; i < options.size(); i++){
+            this.displayMessageLn((i+1) + ". " + options.get(i));
+        }
+        int choice = 0;
+        while (choice < 1 || choice > options.size()) {//loop until a valid option has been obtained
+            if ( choice > options.size()){
+                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
+            }
+            this.displayMessage("Enter option (1 - "+ options.size() +"): ");
+            try{
+                choice = Integer.parseInt(scanner.nextLine());
+                // verify boundary value
+                if (choice <= 0){
+                    this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
+                }
+
+            }catch (InputMismatchException | NumberFormatException e) { //catching the non integer inputs
+                choice = 0;
+                this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
+            }
+        }
+        // Print the footer
+        this.displayFooter();
+        return options.get(choice-1);//return the option value selected
+    }
+
+
+    public boolean getExitCommand(){
+        /**
+         * The method to detect exit command
+         * @return true if exit entered
+         */
+        String input = "";
+        while (!input.equals("exit")){
+            this.displayMessageLn("Enter \"exit\" to return to previous page: ");
+            input = scanner.nextLine();
+        }
+        return true;
+    }
+
 
     public void adminDisplayUserInfo (ArrayList<User> userList){
         /**
@@ -178,20 +191,6 @@ public class UserInterface {
             this.displayMessageLn("");
         }
         this.displayFooter();
-    }
-
-
-    public boolean getExitCommand(){
-    /**
-     * The method to detect exit command
-     * @return true if exit entered
-     */
-        String input = "";
-        while (!input.equals("exit")){
-            this.displayMessageLn("Enter \"exit\" to return to previous page: ");
-            input = scanner.nextLine();
-        }
-        return true;
     }
 
 

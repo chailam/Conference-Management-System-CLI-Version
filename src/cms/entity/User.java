@@ -47,9 +47,9 @@ public class User {
      */
         return this.role;
     }
-    
 
-    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
+
+    //This toString method is for developer debugging purpose!
     @Override
     public String toString(){
         return String.format("emailAddress: " + getEmail()+ ", password: " + getPassword());

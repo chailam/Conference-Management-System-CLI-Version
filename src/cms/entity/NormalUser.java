@@ -194,7 +194,7 @@ public class NormalUser extends User {
     }
 
             
-    public void setConference(String conferenceName){
+    public void setConferenceName(String conferenceName){
     /**
      * Setter for conference
      * @param the conference of the user 
@@ -209,10 +209,10 @@ public class NormalUser extends User {
      * @param 	the notification to be added to the list
      **/
         this.notification.add(notification);
-    }  
+    }
 
 
-    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
+    //This toString method is for developer debugging purpose!
     @Override
     public String toString(){
         return String.format("emailAddress: " + getEmail() + ", password: " + getPassword() + ", firstName: " + getFirstName() + ", conferenceName: " + getConferenceName());

@@ -236,23 +236,9 @@ public class Utility {
     }
 
 
-    public String[] truncateWhiteSpace (String[] data){
-        /**
-         * To remove any white space and non visible character
-         * @param string to be validate
-         * @return valifated string
-         */
-        // truncate white space and non visible character
-        for (int i = 0; i < data.length; i++){
-            data[i] = data[i].replaceAll("\\s","");
-        }
-        return data;
-    }
-
-
     public String[] trimWhiteSpace (String[] data){
         /**
-         * To remove any white space and non visible character
+         * To trim any white space and non visible character
          * @param string to be validate
          * @return valifated string
          */
@@ -262,5 +248,4 @@ public class Utility {
         }
         return data;
     }
-
 }

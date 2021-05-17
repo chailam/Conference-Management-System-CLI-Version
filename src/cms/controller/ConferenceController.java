@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConferenceController {
-    ConferenceManagementSystem cms;
-    UserInterface ui;
-    String pathConferenceCSV;
-    Utility ut = new Utility();
+    protected ConferenceManagementSystem cms;
+    protected UserInterface ui;
+    protected String pathConferenceCSV;
+    private Utility ut = new Utility();
 
 
     public ConferenceController(ConferenceManagementSystem cms, UserInterface ui, String pathConferenceCSV){
@@ -27,7 +27,7 @@ public class ConferenceController {
         this.importAllConferenceCSV();
     }
 
-    public void createConferenceEntity (String name, String place, ArrayList<String> topic, LocalDate date, LocalDate submissionDue, LocalDate reviewDue){
+    protected void addConferenceEntity(String name, String place, ArrayList<String> topic, LocalDate date, LocalDate submissionDue, LocalDate reviewDue){
         /**
          * Create Conference object and add to the cms conference list
          * @param the conference information required
@@ -47,7 +47,7 @@ public class ConferenceController {
     }
 
 
-    public void importAllConferenceCSV(){
+    private void importAllConferenceCSV(){
         /**
          * Import all the conference data from csv file
          */
@@ -63,7 +63,7 @@ public class ConferenceController {
                     // Change the topicAreas to ArrayList
                     ArrayList<String> topic = ut.stringToArrayList(line[2],"/");
                     // Create conference entity and add into the conferenceList
-                    createConferenceEntity(line[0],line[1],topic,date,submitDueDate,reviewDueDate);
+                    addConferenceEntity(line[0],line[1],topic,date,submitDueDate,reviewDueDate);
                 }
             }
         } catch (Exception e){
@@ -72,7 +72,7 @@ public class ConferenceController {
     }
 
 
-    public void appendConferenceCSV (String confName, String place, String topics, String date, String submitDueDate, String reviewDueDate){
+    protected void appendConferenceCSV (String confName, String place, String topics, String date, String submitDueDate, String reviewDueDate){
         /**
          * Append the conference data to the csv file
          * @param the data to be appended
@@ -83,7 +83,7 @@ public class ConferenceController {
     }
 
 
-    public boolean checkCreateConfInfo (String confName, String place, String date, String submitDueDate, String reviewDueDate) throws InterruptedException {
+    protected boolean checkCreateConfInfo (String confName, String place, String date, String submitDueDate, String reviewDueDate) throws InterruptedException {
         /**
          * Check the conference creation information
          * @param the conference information to be checked

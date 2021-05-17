@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserController {
-    ConferenceManagementSystem cms;
-    UserInterface ui;
-    String pathUserCSV;
-    Utility ut = new Utility();
+    protected ConferenceManagementSystem cms;
+    protected UserInterface ui;
+    protected String pathUserCSV;
+    private Utility ut = new Utility();
 
     public UserController(ConferenceManagementSystem cms, UserInterface ui, String pathUserCSV) {
         this.cms = cms;
@@ -30,7 +30,7 @@ public class UserController {
     }
 
 
-    public void createUserEntity(String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, ArrayList<String> topicAreas, ArrayList<String> paper) {
+    protected void addUserEntity(String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, ArrayList<String> topicAreas, ArrayList<String> paper) {
         /**
          * Create User object and add to the cms user list
          * @param the user information required
@@ -75,7 +75,7 @@ public class UserController {
     }
 
 
-    public void importAllUserCSV() {
+    private void importAllUserCSV() {
         /**
          * Import all the user data from csv file
          */
@@ -88,7 +88,7 @@ public class UserController {
                     ArrayList<String> topic = ut.stringToArrayList(line[10], "/");
                     ArrayList<String> paper = ut.stringToArrayList(line[11], "/");
                     // Create user entity and add into the userList
-                    createUserEntity(line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7], line[8], line[9], topic, paper);
+                    addUserEntity(line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7], line[8], line[9], topic, paper);
                 }
             }
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class UserController {
     }
 
 
-    public void appendUserCSV (String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, String topics, String papers){
+    protected void appendUserCSV (String role, String emailAddress, String hashedPassword, String firstName, String lastName, String highestQualification, String occupation, String employerDetail, String mobileNumber, String conference, String topics, String papers){
         /**
          * Append the user data to the csv file
          * @param the data to be appended
@@ -108,7 +108,7 @@ public class UserController {
     }
 
 
-    public ArrayList<String> retrieveUpdatedUserPaperInfo(String emailAddress, String role, String confName, String paperTitle){
+    protected ArrayList<String> retrieveUpdatedUserPaperInfo(String emailAddress, String role, String confName, String paperTitle){
         /**
          * To update the user information in cms userlist to include the paper submitted/assigned for review
          * @param email address of the author/reviewer
@@ -118,7 +118,7 @@ public class UserController {
          * @return a list of papers submitted/assigned for review
          */
         // find that specific user with unique email address, role, and conference name
-        NormalUser u = cms.searchSpecificUser(emailAddress, role, confName);
+        User u = cms.searchSpecificUser(emailAddress, role, confName);
         ArrayList<String> papers = new ArrayList<String>();
         if (u != null){
             if (u.getRole().equalsIgnoreCase("reviewer")){
@@ -158,7 +158,7 @@ public class UserController {
     }
 
 
-    public void updateUserCsv(String filePath, String dataToUpdate, int dataIndex, String emailAddress, String role, String confName){
+    protected void updateUserCsv(String filePath, String dataToUpdate, int dataIndex, String emailAddress, String role, String confName){
         /**
          *  The method to update user data in csv file at specific col and row
          * @param the file path of the file to update
@@ -193,7 +193,7 @@ public class UserController {
     }
 
 
-    public boolean checkRegistrationInfo (String firstName, String lastName, String emailAddress, String password, String highestQualification, String occupation, String employerDetail, String mobileNumber) throws InterruptedException {
+    protected boolean checkRegistrationInfo (String firstName, String lastName, String emailAddress, String password, String highestQualification, String occupation, String employerDetail, String mobileNumber) throws InterruptedException {
         /**
          *  Check the user registration information
          * @param the registration information to be checked
@@ -223,7 +223,7 @@ public class UserController {
     }
 
 
-    public boolean checkAuthInfo(String emailAddress, String password) throws NoSuchAlgorithmException, InterruptedException {
+    protected boolean checkAuthInfo(String emailAddress, String password) throws NoSuchAlgorithmException, InterruptedException {
         /**
          *  Check the user authentication information
          * @param the authentication information to be checked

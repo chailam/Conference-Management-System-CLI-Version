@@ -15,23 +15,8 @@ public class Paper {
     private int noOfReviewer;
     private ArrayList<String> evaluation = new ArrayList<String>();
     private String conferenceName;
-    private ArrayList<String> chosenTopicAreas= new ArrayList<String>();
+    private ArrayList<String> chosenTopicAreas = new ArrayList<String>();
     private String currentProgressStatus;
-
-    public Paper(String title, String author, String conferenceName, ArrayList<String> topic){
-    /**
-	 * Constructor for the Paper.
-     * @param name is the name of the paper
-     * @param author is the author of the paper in full name
-     * @param conference is the conference where the paper submitted
-     * @param topic is the topic areas of the paper
-     **/
-        this.title = title;
-        this.author = author;
-        this.conferenceName = conferenceName;
-        this.chosenTopicAreas = topic;
-        this.currentProgressStatus = "Being Reviewed";
-    }
 
 
     public Paper(String title, String author, String content, int noOfReviewer, ArrayList<String> evaluation, String conferenceName, ArrayList<String> topic, String progress){
@@ -212,7 +197,7 @@ public class Paper {
 
 
 
-    //TODO: delete it when submit assignment, this is for developer debug purpose!!!
+    //This toString method is for developer debugging purpose!
     @Override
     public String toString(){
         return String.format("title: " + getTitle() + ", author: " + getAuthor() + ", content : " + getContent() + ", no of reviewer: " + getNoOfReviewer() + ", evaluation: " + retrieveEvaluation() + ", topic: " + retrieveTopicAreas() + ", conference: " + getConferenceName() + ", progress: " + getProgressStatus());
