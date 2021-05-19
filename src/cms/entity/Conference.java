@@ -16,8 +16,9 @@ public class Conference {
     private LocalDate date;
     private LocalDate paperSubmissionDueDate;
     private LocalDate paperReviewDueDate;
+    private ArrayList<String> listOfPaperSubmitted;
 
-    public Conference (String name, String place, ArrayList<String> topic, LocalDate date, LocalDate submissionDue, LocalDate reviewDue){
+    public Conference (String name, String place, ArrayList<String> topic, LocalDate date, LocalDate submissionDue, LocalDate reviewDue, ArrayList<String> listOfPaperSubmitted){
     /**
 	 * Constructor for the Conference.
      * @param name is the name of the conference
@@ -79,6 +80,14 @@ public class Conference {
         return this.paperReviewDueDate;
     }
 
+    public ArrayList<String> retrieveListOfPaperSubmitted(){
+        /**
+         * Getter for the list of paper submitted for the conference
+         * @return 	the list of paper submitted for the conference
+         **/
+        return this.listOfPaperSubmitted;
+    }
+
 
     public ArrayList<String> retrieveChosenTopicAreas(){
         /**
@@ -133,6 +142,14 @@ public class Conference {
        this.paperReviewDueDate = date;
     }
 
+    public void setListOfPaperSubmitted(ArrayList<String> papers){
+        /**
+         * Setter for the paper list of the conference
+         * @param 	the paper list of the conference
+         **/
+        this.listOfPaperSubmitted = papers;
+    }
+
 
     public void addChosenTopicAreas(String topic){
         /**
@@ -140,6 +157,14 @@ public class Conference {
          * @param 	the topic area to be added
          **/
         this.chosenTopicAreas.add(topic);
+    }
+
+    public void addListOfPaperSubmitted(String paper){
+        /**
+         * Add paper into the list of paper submitted
+         * @param 	the paper to be added
+         **/
+        this.listOfPaperSubmitted.add(paper);
     }
 
 

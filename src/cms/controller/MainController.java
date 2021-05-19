@@ -357,6 +357,14 @@ public class MainController {
             } else {
                 System.out.println("Error: papers is null in submitPaper.");
             }
+            // Update the conference information to include this paper
+            ArrayList<String> papersCon = cController.retrieveConferencePaper(confName,title);
+            if (papersCon != null){
+                // update csv file for conference to include this paper
+                cController.updateConferenceCsv(pathConferenceCSV,ut.arrayListToString(papersCon,"/"),6,confName);
+            } else {
+                System.out.println("Error: papers is null in submitPaper.");
+            }
             // display message & go to author page
             ui.displayMsgWithSleep("Congratulations!\n\tYou have submitted the paper.");
             this.authorChoices(name,emailAddress,confName);
@@ -441,7 +449,7 @@ public class MainController {
         String submitDue = confInfo[3].replaceAll("\\s","");
         String reviewDue = confInfo[4].replaceAll("\\s","");
         // check the validity of data
-        boolean flag = cController.checkCreateConfInfo(confName,place,sDate,submitDue,reviewDue);
+        boolean flag = cController.checkCreateConfInfo(confName,place,sDate,submitDue,reviewDue,null);
         if (flag == false) {
             // if data is not valid, redirect to home page
             this.homePageChoices(name,emailAddress);
@@ -462,9 +470,9 @@ public class MainController {
             // if user choose to create
             if (opt.equalsIgnoreCase(OPTION_PROCEED)){
                 // create conference entity
-                cController.addConferenceEntity(confName, place, topicName, date, submitDueDate, reviewDueDate);
+                cController.addConferenceEntity(confName, place, topicName, date, submitDueDate, reviewDueDate,null);
                 // append the conference to csv file
-                cController.appendConferenceCSV(confName, place, ut.arrayListToString(topicName,"/"), ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate));
+                cController.appendConferenceCSV(confName, place, ut.arrayListToString(topicName,"/"), ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate),null);
                 // create a new Chair user entity with this conference name & add to user list
                 User u = cms.searchUser(emailAddress);
                 if (!u.getRole().equalsIgnoreCase(ROLE_ADMIN)) {
