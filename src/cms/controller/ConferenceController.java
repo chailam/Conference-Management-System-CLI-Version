@@ -167,7 +167,7 @@ public class ConferenceController {
         Conference c  = cms.searchConference(confName);
         ArrayList<String> papers = new ArrayList<String>();
         if (c != null){
-            if (c.retrieveListOfPaperSubmitted().size() == 0) {
+            if (c.retrieveListOfPaperSubmitted() == null) {
                 // if assigned paper is empty, set the assigned paper
                 papers.add(paperTitle);
                 c.setListOfPaperSubmitted(papers);
