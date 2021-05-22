@@ -80,7 +80,7 @@ public class MainController {
          */
         try{
             // get user option to "Register" or "Login"
-            String opt = ui.getUserOption(mainPageOp,"Guest",true);
+            String opt = ui.getUserOption(mainPageOp,"Guest",true, "Please choose your option: ");
             // if user choose to "Register"
             if (opt.equalsIgnoreCase(OPTION_REGISTER)){
                 this.registration();
@@ -112,7 +112,7 @@ public class MainController {
          * @param emailAddress of the user
          */
         // get user option to "manage conference", "join conference", "create conference" or "logout"
-        String op = ui.getUserOption(homePageOp, name,true);
+        String op = ui.getUserOption(homePageOp, name,true,"Please choose your option: ");
         if (op.equalsIgnoreCase(OPTION_MANAGECONFERENCE)){
             // if user choose to manage conference
             // List all the conference available for that user.
@@ -121,7 +121,7 @@ public class MainController {
             if (!(userConf.get(0).equalsIgnoreCase(OPTION_BACK))){
                 // if user has conference
                 // get user chosen conference to be managed
-                String conf = ui.getUserOption(userConf, name,true);
+                String conf = ui.getUserOption(userConf, name,true, "Please choose a conference: ");
                 if (conf.equalsIgnoreCase(OPTION_BACK)){
                     // if user choose to go back
                     userConf.remove(OPTION_BACK);
@@ -171,7 +171,7 @@ public class MainController {
          * The option available for admin and its operation.
          */
         // get the admin option to "Retrieve User Information", "Retrieve Conference Information" or "Logout"
-        String op = ui.getUserOption(adminOp, ROLE_ADMIN,true);
+        String op = ui.getUserOption(adminOp, ROLE_ADMIN,true, "Please choose your option: ");
         if (op.equalsIgnoreCase(OPTION_RETRIEVEUSERINFO)){
             // if admin choose to Retrieve User Information
             // get the userlist and print out the information
@@ -206,7 +206,7 @@ public class MainController {
          * @param the conference name
          */
         // get the user option to "submit paper" or "go back"
-        String op = ui.getUserOption(authorOp, name, true);
+        String op = ui.getUserOption(authorOp, name, true, "Please choose your option: ");
         // if user choose to go back
         if (op.equalsIgnoreCase(OPTION_BACK)) {
             homePageChoices(name, emailAddress);
@@ -225,7 +225,7 @@ public class MainController {
          * @param the conference name
          */
         // get user decision to "Final Decision on Paper", "Assign Reviewer to Paper" or "Back"
-        String op = ui.getUserOption(chairOp, name,true);
+        String op = ui.getUserOption(chairOp, name,true, "Please choose your option: ");
         if (op.equalsIgnoreCase(OPTION_BACK)){
             // if user choose to go back
             this.homePageChoices(name, emailAddress);
@@ -247,7 +247,7 @@ public class MainController {
          * @param the conference name
          */
         // get user decision to "Submit Evaluation of Paper" or "Back"
-        String op = ui.getUserOption(reviewerOp, name,true);
+        String op = ui.getUserOption(reviewerOp, name,true, "Please choose your option: ");
         // if user choose to go back
         if (op.equalsIgnoreCase(OPTION_BACK)){
             homePageChoices(name, emailAddress);
@@ -276,7 +276,7 @@ public class MainController {
         // get the user option to choose which paper
         assignedPapers.add(OPTION_BACK);
         // get user option to select which paper or back
-        String chosenPaper = ui.getUserOption(assignedPapers, name, true);
+        String chosenPaper = ui.getUserOption(assignedPapers, name, true, "Please choose a paper: ");
         if (chosenPaper.equalsIgnoreCase(OPTION_BACK)) {
             // if user choose to go back
             assignedPapers.remove(OPTION_BACK);
@@ -295,7 +295,7 @@ public class MainController {
             // get confirmation for the evaluation
             ui.confirmEvaluation(chosenPaper,evaluation);
             ArrayList<String> choices = new ArrayList<>(Arrays.asList(OPTION_CONFIRM,OPTION_BACK));
-            String op = ui.getUserOption(choices,"",false);
+            String op = ui.getUserOption(choices,"",false, "Please choose your option: ");
             ui.displayFooter();
             if (op.equalsIgnoreCase(OPTION_CONFIRM)){
                 // if user choose to confirm
@@ -330,7 +330,7 @@ public class MainController {
         // get confirmation for the topic
         ui.topicAreasConfirmation(ut.arrayListToString(topicName,","));
         // get the user option to proceed with topic area or go back
-        String opt = ui.getUserOption(proceedOp, "", false);
+        String opt = ui.getUserOption(proceedOp, "", false, "Please choose your option: ");
         // if user choose to confirm
         if (opt.equalsIgnoreCase(OPTION_PROCEED)){
             // get the info required for paper submission
@@ -396,7 +396,7 @@ public class MainController {
             // if there is paper fully reviewed
             reviewedPaper.add(OPTION_BACK);
             // get the user option to choose a paper
-            String opt = ui.getUserOption(reviewedPaper, name, true);
+            String opt = ui.getUserOption(reviewedPaper, name, true, "Please choose a paper: ");
             if (opt.equalsIgnoreCase(OPTION_BACK)) {
                 // if user choose back
                 reviewedPaper.remove(OPTION_BACK);
@@ -409,7 +409,7 @@ public class MainController {
                 ui.confirmEvaluation(opt, ut.arrayListToString(evaluations, ";\n\t"));
                 // get user option to reject or accept
                 ArrayList<String> finalDecision = new ArrayList<>(Arrays.asList(STATUS_ACCEPTED, STATUS_REJECTED, OPTION_BACK));
-                String opt2 = ui.getUserOption(finalDecision, "", false);
+                String opt2 = ui.getUserOption(finalDecision, "", false,  "Please choose your option: ");
                 if (opt2.equalsIgnoreCase(OPTION_BACK)) {
                     // if user choose to go back
                     reviewedPaper.remove(OPTION_BACK);
@@ -466,7 +466,7 @@ public class MainController {
             // show the conference confirmation message
             ui.createConfConfirmation(confName,place, ut.dateToString(date), ut.dateToString(submitDueDate), ut.dateToString(reviewDueDate), ut.arrayListToString(topicName,","));
             // get user option to "Submit", "back" or "exit"
-            String opt = ui.getUserOption(proceedOp, "", false);
+            String opt = ui.getUserOption(proceedOp, "", false, "Please choose your option: ");
             // if user choose to create
             if (opt.equalsIgnoreCase(OPTION_PROCEED)){
                 // create conference entity
@@ -512,7 +512,7 @@ public class MainController {
         }
         availablePaper.add(OPTION_BACK);
         // get user option to select which paper or back
-        String chosenPaper = ui.getUserOption(availablePaper, name, true);
+        String chosenPaper = ui.getUserOption(availablePaper, name, true, "Please choose a paper: ");
         if (chosenPaper.equalsIgnoreCase(OPTION_BACK)) {
             // if user choose to go back
             availablePaper.remove(OPTION_BACK);
@@ -607,7 +607,7 @@ public class MainController {
         }
         availableConf.add(OPTION_BACK);
         // get user option to join which conference or back
-        String chosenConf = ui.getUserOption(availableConf, name, true);
+        String chosenConf = ui.getUserOption(availableConf, name, true, "Please choose a conference: ");
         if (chosenConf.equalsIgnoreCase(OPTION_BACK)) {
             // if user choose to go back
             availableConf.remove(OPTION_BACK);
@@ -618,12 +618,12 @@ public class MainController {
             // confirm the conference information
             ui.createConfConfirmation(c.getName(), c.getPlace(), ut.dateToString(c.getDate()), ut.dateToString(c.getPaperSubmissionDue()), ut.dateToString(c.getPaperReviewDue()), ut.arrayListToString(c.retrieveChosenTopicAreas(), ","));
             // get user option to join or exit
-            String opt = ui.getUserOption(proceedOp, "", false);
+            String opt = ui.getUserOption(proceedOp, "", false, "Please choose your option: ");
             // if user choose to join
             if (opt.equalsIgnoreCase(OPTION_PROCEED)) {
                 // get user option to "join as reviewer" or "join as author"
 
-                String chosenRole = ui.getUserOption(roleOption, name, true);
+                String chosenRole = ui.getUserOption(roleOption, name, true, "Please choose a role: ");
                 if (chosenRole.equalsIgnoreCase(OPTION_BACK)) {
                     // if user choose to go back
                     availableConf.remove(OPTION_BACK);
@@ -638,7 +638,7 @@ public class MainController {
                     }
                     // confirm the topic area
                     ui.topicAreasConfirmation(ut.arrayListToString(topicName, ","));
-                    String opt2 = ui.getUserOption(proceedOp, "", false);
+                    String opt2 = ui.getUserOption(proceedOp, "", false, "Please choose your option: ");
                     if (opt2.equalsIgnoreCase(OPTION_PROCEED)) {
                         // if user choose to proceed
                         User u = cms.searchUser(emailAddress);
@@ -757,7 +757,7 @@ public class MainController {
             ui.registerConfirmation(info[0], info[1], info[2], info[4], info[5], info[6], info[7]);
             // get user option to "Register", "Back" or "Exit"
             ArrayList<String> confirmOption   = new ArrayList<>(Arrays.asList(OPTION_REGISTER,OPTION_BACK,OPTION_EXIT));
-            String op = ui.getUserOption(confirmOption, "", false);
+            String op = ui.getUserOption(confirmOption, "", false, "Please choose your option: ");
             // if user choose to "Register"
             if (op.equalsIgnoreCase(OPTION_REGISTER)){
                 // create user entity and add to cms user list

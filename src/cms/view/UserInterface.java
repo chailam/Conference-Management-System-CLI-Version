@@ -100,12 +100,13 @@ public class UserInterface {
     }
 
 
-    public String getUserOption (ArrayList<String> options, String name, boolean bo){
+    public String getUserOption (ArrayList<String> options, String name, boolean bo, String optionDisplayString){
         /**
          * To display the option available and then get the user input within option length
          * @param the option selected
          * @param the name to be greet
          * @param true to show header and footer; false otherwise
+         * @param to display the option string
          */
         if (bo == true){
             this.displayHeader();
@@ -113,7 +114,7 @@ public class UserInterface {
                 this.displayGreeting(name);
             }
         }
-        this.displayMessageLn("Please enter your options:");
+        this.displayMessageLn(optionDisplayString);
 
         // Print out all options
         for( int i = 0; i < options.size(); i++){
