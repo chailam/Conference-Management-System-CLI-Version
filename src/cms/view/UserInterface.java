@@ -375,6 +375,7 @@ public class UserInterface {
             this.displayMessageLn(r[1] + " " + r[2] + " (" + r[0] + " )");
         }
         this.displayMessageLn("");
+        this.displayFooter();
         TimeUnit.SECONDS.sleep(2);
     }
 
@@ -412,6 +413,7 @@ public class UserInterface {
         this.displayMessage("Evaluation: ");
         String evaluation = scanner.nextLine(); // Read the user input
         this.displayMessage("");
+        this.displayFooter();
         return evaluation;
     }
 
