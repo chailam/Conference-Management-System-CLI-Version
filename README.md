@@ -11,5 +11,6 @@
 Instruction to run:
 1. Run the "Application.java" file.
 
-**Precondition: The working directory of your system should be set to .../team-30-repo, so that the reading and writing to csv file are not crashing.**
+**Precondition: The working directory of your system should be set to path/team-30-repo, so that the reading and writing to csv file are not crashing. **
+**A configuration setting is attached in the user manual**
 
