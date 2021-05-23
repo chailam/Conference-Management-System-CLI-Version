@@ -120,6 +120,8 @@ public class UserInterface {
         for( int i = 0; i < options.size(); i++){
             this.displayMessageLn((i+1) + ". " + options.get(i));
         }
+        // Print the footer
+        this.displayFooter();
         int choice = 0;
         while (choice < 1 || choice > options.size()) {//loop until a valid option has been obtained
             if ( choice > options.size()){
@@ -138,8 +140,6 @@ public class UserInterface {
                 this.displayMessageLn("Error: Invalid value. Please enter a valid value.");
             }
         }
-        // Print the footer
-        this.displayFooter();
         return options.get(choice-1);//return the option value selected
     }
 
