@@ -40,10 +40,10 @@ The Monash Conference Centre (MCC) Conference Management System (CMS) CLI Versio
 - **Detailed Paper Information:** Admin can view details about the reviewing process and final outcomes for each paper.
 
 ## Getting Started
-Run the "Application.java" file.
+Run the `Application.java` file.
 
 
 ## User Manual
- Refer to the user manual under the "doc" folder to understand how to utilize the various features of the CMS.
+ Refer to the user manual under the `doc` folder to understand how to utilize the various features of the CMS.
 
 
